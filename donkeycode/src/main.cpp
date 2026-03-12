@@ -1,33 +1,45 @@
-/*
-Raylib example file.
-This is an example main file for a simple raylib project.
-Use this as a starting point or replace it with your code.
-
-by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/
-
-*/
-
 #include "raylib.h"
-
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
 int main ()
 {
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
+	const int screenWidth = 1280;
+	const int screenHeight = 800;
 	// Create the window and OpenGL context
-	InitWindow(1280, 800, "DonkeyCode");
+	InitWindow(screenWidth, screenHeight, "Donkey Code");
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
-
+	
 	// Load a texture from the resources directory
 	Texture wabbit = LoadTexture("wabbit_alpha.png");
 	
+	SetTargetFPS(60);
+	
+	static double x = 500, y = 900;
+	
+	static double speed_x = 2, speed_y = 1;
+	static double jump_time = 0.5;
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
+		if (IsKeyDown(KEY_RIGHT)) x += speed_x;
+		if (IsKeyDown(KEY_LEFT)) x -= speed_x;
+		if (IsKeyPressed(KEY_SPACE)) {
+			float goomba = GetFrameTime();
+			while (goomba < jump_time) {
+				y -= speed_y;
+				goomba+= 0.01f;
+				DrawTexture(wabbit, x, y, WHITE);
+			}
+		}
+
+		if (y > screenHeight-40) y = screenHeight-40;
+		if (y < 0) y = 0;
+		if (x > screenWidth) x = screenWidth;
+		if (x < 0) x = 0;
 		// drawing
 		BeginDrawing();
 
@@ -35,10 +47,10 @@ int main ()
 		ClearBackground(BLACK);
 
 		// draw some text using the default font
-		DrawText("Hello Raylib", 200,200,20,WHITE);
+		DrawText("Donkey Kong", 200,200,20,WHITE);
 
 		// draw our texture to the screen
-		DrawTexture(wabbit, 400, 200, WHITE);
+		DrawTexture(wabbit, x, y, WHITE);
 		
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
