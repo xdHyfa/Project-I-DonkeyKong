@@ -13,6 +13,6 @@
 
 ## git  commands
 
-add remote repo to local: git remote add origin https://github.com/xdHyfa/Project-I-DonkeyKong
-update new files: git add .
-commit: git commit -m 'MENSAJE"
+add remote repo to local: git remote add origin https://github.com/xdHyfa/Project-I-DonkeyKong  
+update new files: git add .  
+commit: git commit -m 'MENSAJE"  
