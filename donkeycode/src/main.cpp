@@ -1,6 +1,16 @@
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
+
+
+////////////////////////////////
+#include "raymath.h"
+#include <stdbool.h>
+#include <iostream>
+////////////////////////////////
+
+
+
 #define MARIO_SIZE 16
 
 #define SCREEN_WIDTH 224
@@ -13,7 +23,18 @@ Rectangle dest = { 0, SCREEN_HEIGHT-20, source.width, source.height };
 Vector2 origin = { 0, 0 };
 
 
-int mariosize = MARIO_SIZE;
+
+
+////////////////////////////////
+bool isTextureValid(const Texture2D* texture) {
+	return texture->id > 0;
+}
+////////////////////////////////
+
+
+
+
+
 
 int main ()
 {
@@ -21,45 +42,105 @@ int main ()
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 	const int screenWidth = SCREEN_WIDTH;
 	const int screenHeight = SCREEN_HEIGHT;
+
+	//////////////////////////
+	const int marioSpeed = 5;
+	//////////////////////////
+	
 	// Create the window and OpenGL context
 	InitWindow(screenWidth, screenHeight, "Donkey Code");
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
+
+
+	////////////////////////////////////////////////////////////////////
+
+	mario = LoadTexture("MARIO.png");
+
+	if (!isTextureValid(&mario)) {
+
+		while (!WindowShouldClose()) {
+			BeginDrawing();
+			ClearBackground(RAYWHITE);
+			DrawText(TextFormat("ERROR: Couldn't load %s.", mario), 20, 20, 20, BLACK);
+			EndDrawing();
+		}
+		return 10;
+	}
+
 	
-	// Load a texture from the resources directory
-	Texture wabbit = LoadTexture("wabbit_alpha.png");
-	
-	SetTargetFPS(60);
+
+	unsigned numFrames = 4;
+	float marioFrameWidth = MARIO_SIZE;  
+	float marioFrameHeight = MARIO_SIZE;
+	Rectangle frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
+	Vector2 marioPosition = { screenWidth / 2.0f, screenHeight / 2.0f };
+	Vector2 marioVelocity = { 0.0f,0.0f };
+
+	unsigned frameDelay = 5;
+	unsigned frameDelayCounter = 0;
+	unsigned frameIndex = 0;
+
+	///////////////////////////////////////////////////////////////////
+
+	SetTargetFPS(24);
 	
 	static double x = 500, y = 900;
 	
-	static double speed_x = 2, speed_y = 1;
-	static double jump_time = 0.5;
 
 
-	mario = LoadTexture("MARIO.png");
+	
 
 
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
-		if (IsKeyDown(KEY_RIGHT)) x += speed_x;
-		if (IsKeyDown(KEY_LEFT)) x -= speed_x;
-		if (IsKeyPressed(KEY_SPACE)) {
-			float goomba = GetFrameTime();
-			while (goomba < jump_time) {
-				y -= speed_y;
-				goomba+= 0.01f;
-				DrawTexture(wabbit, x, y, WHITE);
-			}
-		}
+		
 
 		if (y > screenHeight-40) y = screenHeight-40;
 		if (y < 0) y = 0;
 		if (x > screenWidth) x = screenWidth;
 		if (x < 0) x = 0;
 		// drawing
+
+
+		/////////////////////////////////////////////////////////////
+if (IsKeyDown(KEY_RIGHT)) {
+			marioVelocity.x = marioSpeed;
+			if(frameRec.width < 0) {
+				frameRec.width = -frameRec.width;
+			}
+        } else if (IsKeyDown(KEY_LEFT)) {
+			marioVelocity.x = -marioSpeed;
+			if(frameRec.width > 0) {
+				frameRec.width = -frameRec.width;
+			}
+		} else {
+			marioVelocity.x = 0;
+		}
+		bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
+        //----------------------------------------------------------------------------------
+		marioPosition = Vector2Add(marioPosition, marioVelocity);
+		
+		++frameDelayCounter;
+		if(frameDelayCounter > frameDelay) {
+			frameDelayCounter = 0;
+			
+			if(marioMoving) {
+				++frameIndex;
+				frameIndex %= numFrames;
+				frameRec.x = (float) MARIO_SIZE * frameIndex;
+			}
+		}
+
+		/////////////////////////////////////////////////////////////
+
+
+
+
+
+
 		BeginDrawing();
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
@@ -69,10 +150,10 @@ int main ()
 		DrawText("Donkey Kong", 200,200,20,WHITE);
 
 		// draw our texture to the screen
-		DrawTexture(wabbit, x, y, WHITE);
+		DrawTextureRec(mario, frameRec, marioPosition, WHITE);
 
-		DrawTexturePro(mario, source, dest, origin, 0.0f, WHITE);
-		source.x += MARIO_SIZE;
+		//DrawTexturePro(mario, source, dest, origin, 0.0f, WHITE);
+		//source.x += MARIO_SIZE;
 
 
 		
@@ -83,7 +164,6 @@ int main ()
 
 	// cleanup
 	// unload our texture so it can be cleaned up
-	UnloadTexture(wabbit);
 	UnloadTexture(mario);
 
 	// destroy the window and cleanup the OpenGL context
