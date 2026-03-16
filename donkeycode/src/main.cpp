@@ -1,12 +1,26 @@
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
+#define MARIO_SIZE 16
+
+#define SCREEN_WIDTH 224
+#define SCREEN_HEIGHT 256
+
+
+Texture2D mario;
+Rectangle source = { 0, 0, MARIO_SIZE, MARIO_SIZE };
+Rectangle dest = { 0, SCREEN_HEIGHT-20, source.width, source.height };
+Vector2 origin = { 0, 0 };
+
+
+int mariosize = MARIO_SIZE;
+
 int main ()
 {
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-	const int screenWidth = 1280;
-	const int screenHeight = 800;
+	const int screenWidth = SCREEN_WIDTH;
+	const int screenHeight = SCREEN_HEIGHT;
 	// Create the window and OpenGL context
 	InitWindow(screenWidth, screenHeight, "Donkey Code");
 
@@ -22,6 +36,11 @@ int main ()
 	
 	static double speed_x = 2, speed_y = 1;
 	static double jump_time = 0.5;
+
+
+	mario = LoadTexture("MARIO.png");
+
+
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
@@ -51,6 +70,12 @@ int main ()
 
 		// draw our texture to the screen
 		DrawTexture(wabbit, x, y, WHITE);
+
+		DrawTexturePro(mario, source, dest, origin, 0.0f, WHITE);
+		source.x += MARIO_SIZE;
+
+
+		
 		
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
@@ -59,6 +84,7 @@ int main ()
 	// cleanup
 	// unload our texture so it can be cleaned up
 	UnloadTexture(wabbit);
+	UnloadTexture(mario);
 
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
