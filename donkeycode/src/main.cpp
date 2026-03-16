@@ -44,7 +44,8 @@ int main ()
 	const int screenHeight = SCREEN_HEIGHT;
 
 	//////////////////////////
-	const int marioSpeed = 5;
+	const int marioSpeed = 2;
+	const int gravity = 2;
 	//////////////////////////
 	
 	// Create the window and OpenGL context
@@ -86,7 +87,6 @@ int main ()
 
 	SetTargetFPS(24);
 	
-	static double x = 500, y = 900;
 	
 
 
@@ -98,15 +98,12 @@ int main ()
 	{
 		
 
-		if (y > screenHeight-40) y = screenHeight-40;
-		if (y < 0) y = 0;
-		if (x > screenWidth) x = screenWidth;
-		if (x < 0) x = 0;
-		// drawing
-
 
 		/////////////////////////////////////////////////////////////
-if (IsKeyDown(KEY_RIGHT)) {
+		if (IsKeyDown(KEY_UP)) {
+			marioVelocity.y = -marioSpeed;
+		}
+		if (IsKeyDown(KEY_RIGHT)) {
 			marioVelocity.x = marioSpeed;
 			if(frameRec.width < 0) {
 				frameRec.width = -frameRec.width;
@@ -116,7 +113,8 @@ if (IsKeyDown(KEY_RIGHT)) {
 			if(frameRec.width > 0) {
 				frameRec.width = -frameRec.width;
 			}
-		} else {
+		}
+		else {
 			marioVelocity.x = 0;
 		}
 		bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
