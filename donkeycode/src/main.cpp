@@ -5,11 +5,7 @@
 
 Scene current_scene = LEVEL1;
 bool Scene_Init = false;
-////////////////////////////////
-#include "raymath.h"
-#include <stdbool.h>
-#include <iostream>
-////////////////////////////////
+
 
 #define SCREEN_WIDTH 224
 #define SCREEN_HEIGHT 256
