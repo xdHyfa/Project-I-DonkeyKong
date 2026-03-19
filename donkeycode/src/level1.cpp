@@ -24,10 +24,11 @@ void runLevel1(){
 
     ClearBackground(BLACK);
     
-    DrawTextureRec(mario, frameRec, marioPosition, WHITE);
+    DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
     
-    if (IsKeyPressed(KEY_K)|| Fire1Spawned) SpawnFire();
+    if (IsKeyPressed(KEY_K)&& !Fire1Spawned) SpawnFire();
     if (Fire1Spawned) {
+        Fire1.MoveFire();
         DrawTexture(Fire1.texture,Fire1.posX ,Fire1.posY , WHITE);
 ;    }
 
