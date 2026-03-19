@@ -2,9 +2,16 @@
 
 class Fire {
 public:
+    float posX;
+    float posY;
     Texture2D texture;
-    int posX;
-    int posY;
+    void SetPos(float x, float y) {
+        posX = x; posY = y;
+    }
+    void MoveFire() {
+        posX += 0.5;
+        //Future expansion of movement tech
+    }
 };
 
 extern Fire Fire1;
