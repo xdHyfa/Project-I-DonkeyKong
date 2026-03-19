@@ -1,6 +1,7 @@
 #include "Headers/level1.h"
 #include "Headers/Mario_Controller.h"
 #include "Headers/scenes.h"
+#include "Headers/Fire_Spawner.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "raylib.h"
 void runLevel1(){
@@ -24,6 +25,11 @@ void runLevel1(){
     ClearBackground(BLACK);
     
     DrawTextureRec(mario, frameRec, marioPosition, WHITE);
+    
+    if (IsKeyPressed(KEY_K)|| Fire1Spawned) SpawnFire();
+    if (Fire1Spawned) {
+        DrawTexture(Fire1.texture,Fire1.posX ,Fire1.posY , WHITE);
+;    }
 
     EndDrawing();
 
@@ -35,7 +41,8 @@ void runLevel1(){
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(mario);
-
+        UnloadTexture(Fire1.texture);
+        UnloadTexture(Fire2.texture);
         Scene_Init = false; // reset initialization boolean.
     }
 }
