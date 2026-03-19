@@ -7,12 +7,12 @@ void runLevel1(){
     
     // Like start() function from unity
     
-    if (!Scene_Init) {
+    if (!Scene_Init) { 
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
 
-        mario = LoadTexture("MARIO.png");
-
+        marioTexture = LoadTexture("MARIO.png");
+        Setup();
         Scene_Init = true;
     }
 
@@ -23,7 +23,7 @@ void runLevel1(){
 
     ClearBackground(BLACK);
     
-    DrawTextureRec(mario, frameRec, marioPosition, WHITE);
+    DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
 
     EndDrawing();
 
@@ -34,7 +34,7 @@ void runLevel1(){
     if (current_scene != LEVEL1) {
 
         //TO DO: UNLOAD STUFF.
-        UnloadTexture(mario);
+        UnloadTexture(marioTexture);
 
         Scene_Init = false; // reset initialization boolean.
     }
