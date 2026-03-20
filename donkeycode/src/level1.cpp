@@ -2,7 +2,7 @@
 #include "Headers/Mario_Controller.h"
 #include "Headers/scenes.h"
 #include "Headers/Fire_Spawner.h"
-#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
+#include "resource_dir.h"	
 #include "raylib.h"
 void runLevel1(){
     
@@ -11,7 +11,6 @@ void runLevel1(){
     if (!Scene_Init) { 
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
-
         marioTexture = LoadTexture("MARIO.png");
         Setup();
         Scene_Init = true;
@@ -19,25 +18,21 @@ void runLevel1(){
 
     // Like update() function from unity
     Mario_Movement();
-
-    BeginDrawing();
-
-    ClearBackground(BLACK);
     
     DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
     
-    if (IsKeyPressed(KEY_K)&& !Fire1Spawned) SpawnFire();
-    if (Fire1Spawned) {
+    if (IsKeyPressed(KEY_K)&& !Fire1.has_Spawned) SpawnFire();
+    if (Fire1.has_Spawned) {
         Fire1.MoveFire();
-        DrawTexture(Fire1.texture,Fire1.posX ,Fire1.posY , WHITE);
-;    }
+        DrawTextureRec(Fire1.texture, Fire1.FireSprite, Fire1.FirePosition , WHITE);
+    }
 
-    EndDrawing();
 
     // TO DO: RUN PLAYER MOVEMENT MECHANICS (Function to check inputs, draw textures, etc)
 
 
     // Like onDestroy() function from unity, run before scene change.
+    
     if (current_scene != LEVEL1) {
 
         //TO DO: UNLOAD STUFF.

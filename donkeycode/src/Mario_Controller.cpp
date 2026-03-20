@@ -3,9 +3,8 @@
 #include "raymath.h"
 #include <stdbool.h>
 #include <iostream>
+#include "Headers/constants.h"
 
-const int SCREEN_WIDTH = 224;
-const int SCREEN_HEIGHT = 256;
 const float GRAVITY = 1.0f;
 
 class Mario
