@@ -2,29 +2,31 @@
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "Headers/scenes.h"
 #include "Headers/level1.h"
+#include "Headers/constants.h"
 
 Scene current_scene = LEVEL1;
 bool Scene_Init = false;
-
-
-#define SCREEN_WIDTH 224
-#define SCREEN_HEIGHT 256
 
 int main ()
 {
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-	const int screenWidth = SCREEN_WIDTH;
-	const int screenHeight = SCREEN_HEIGHT;
+	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
 
-	// Create the window and OpenGL context
-	InitWindow(screenWidth, screenHeight, "Donkey Code");
-
+	Camera2D camera = { 0 };
+	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
+	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
+	camera.zoom = 4.0f;
+	
 	SetTargetFPS(24);
 
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
+		BeginDrawing();
+		ClearBackground(BLACK);
+		BeginMode2D(camera);
+
 		switch (current_scene) {
 		case INTRO:
 			
@@ -41,7 +43,8 @@ int main ()
 			break;
 		}
 	
-	
+		EndMode2D();
+		EndDrawing();	
 	}
 
 	CloseWindow();
