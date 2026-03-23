@@ -2,6 +2,7 @@
 #include "Headers/Mario_Controller.h"
 #include "Headers/scenes.h"
 #include "Headers/Fire_Spawner.h"
+#include "Headers/Ground.h"
 #include "resource_dir.h"	
 #include "raylib.h"
 void runLevel1(){
@@ -13,14 +14,16 @@ void runLevel1(){
         SearchAndSetResourceDir("resources");
         marioTexture = LoadTexture("MARIO.png");
         Setup();
+        RampSetter(Ramp_0, 16);
         Scene_Init = true;
+
     }
 
     // Like update() function from unity
     Mario_Movement();
     
     DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
-    
+    RampDrawer(Ramp_0, 16);
     if (IsKeyPressed(KEY_K)&& !Fire1.has_Spawned) SpawnFire();
     if (Fire1.has_Spawned) {
         Fire1.MoveFire();
