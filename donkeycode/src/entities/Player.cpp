@@ -1,9 +1,9 @@
-﻿#include "Headers/Mario_Controller.h"
+﻿#include "entities/Player.h"
 #include "raylib.h"
 #include "raymath.h"
 #include <stdbool.h>
 #include <iostream>
-#include "Headers/constants.h"
+#include "core/constants.h"
 
 const float GRAVITY = 1.0f;
 
@@ -15,8 +15,8 @@ protected:
     float x = 0.0f;
     float y = 0.0f;
 public:
-    const int VELOCITY = 2;
-    const int JUMP = 10;
+    const float VELOCITY = 1.5f;
+    const int JUMP = 8;
     const int MARIO_SIZE = 16;
 
     float getPosX()       const { return x; }
@@ -90,12 +90,12 @@ void Mario_Movement()
     if (IsKeyDown(KEY_RIGHT))
     {
         marioVelocity.x = (float)entityMario.VELOCITY;
-        if (frameRec.width < 0) frameRec.width = -frameRec.width;
+        if (frameRec.width < 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
     else if (IsKeyDown(KEY_LEFT))
     {
         marioVelocity.x = -(float)entityMario.VELOCITY;
-        if (frameRec.width > 0) frameRec.width = -frameRec.width;
+        if (frameRec.width > 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input ---

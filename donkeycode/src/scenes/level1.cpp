@@ -1,8 +1,8 @@
-#include "Headers/level1.h"
-#include "Headers/Mario_Controller.h"
-#include "Headers/scenes.h"
-#include "Headers/Fire_Spawner.h"
-#include "Headers/Ground.h"
+#include "scenes/level1.h"
+#include "entities/Player.h"
+#include "scenes/scenes.h"
+#include "entities/Fire_Spawner.h"
+#include "entities/Ground.h"
 #include "resource_dir.h"	
 #include "raylib.h"
 void runLevel1(){
@@ -12,7 +12,7 @@ void runLevel1(){
     if (!Scene_Init) { 
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
-        marioTexture = LoadTexture("MARIO.png");
+        marioTexture = LoadTexture("sprites/MARIO.png");
         Setup();
         RampSetter(Ramp_0, 16);
         Scene_Init = true;
