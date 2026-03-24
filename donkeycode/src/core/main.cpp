@@ -1,8 +1,8 @@
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
-#include "Headers/scenes.h"
-#include "Headers/level1.h"
-#include "Headers/constants.h"
+#include "scenes/scenes.h"
+#include "scenes/level1.h"
+#include "core/constants.h"
 
 Scene current_scene = LEVEL1;
 bool Scene_Init = false;

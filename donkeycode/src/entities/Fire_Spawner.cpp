@@ -1,6 +1,6 @@
 #include "raylib.h"
-#include "Headers/Fire_Spawner.h"
-#include "Headers/constants.h"
+#include "entities/Fire_Spawner.h"
+#include "core/constants.h"
 Fire Fire1;
 Fire Fire2;
 
