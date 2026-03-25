@@ -23,12 +23,12 @@ public:
         if (Facing_left) { FireSprite.width = -16.0f; }
         else { FireSprite.width = 16.0f; }
 
-        if (fireTick >= 0.1f && !Anim_blink) {
+        if (fireTick >= 0.05f && !Anim_blink) {
             FireSprite.x += 16;
             Anim_blink = true;
             fireTick = 0;
         }
-        if (fireTick >= 0.1f && Anim_blink) {
+        if (fireTick >= 0.05f && Anim_blink) {
             FireSprite.x -= 16;
             Anim_blink = false;
             fireTick = 0;
@@ -39,8 +39,8 @@ public:
         if (FirePosition.x > 208 || FirePosition.x < 0) {
             Facing_left = !Facing_left;
         }
-        if (!Facing_left) FirePosition.x += 0.75;
-        else FirePosition.x -= 0.75;
+        if (!Facing_left) FirePosition.x += 1.5;
+        else FirePosition.x -= 1.5;
         if (GetRandomValue(1, 150) == 100) {
             Facing_left = !Facing_left;
         }
