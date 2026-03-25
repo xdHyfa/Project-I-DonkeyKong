@@ -16,8 +16,9 @@ public:
 	}
 };
 
-void RampSetter(Truss* Ramp, int size);
+void RampSetter(Truss* Ramp, int size, int level, bool TiltLeft, int plane);
 
 void RampDrawer(Truss* Ramp, int size);
 
-extern Truss Ramp_0 [16];
+void RampCollision(Truss* Ramp, int size, int plane);
+extern Truss Ramp_0 [14];
