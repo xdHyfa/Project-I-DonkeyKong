@@ -14,7 +14,10 @@ void runLevel1(){
         SearchAndSetResourceDir("resources");
         marioTexture = LoadTexture("sprites/MARIO.png");
         Setup();
-        RampSetter(Ramp_0, 16, 0, true, 7);
+        RampSetter(Ramp_0, 14, 0, true, 7, 225);
+        RampSetter(Ramp_1, 13, 0, false, 0, 225-48);
+        RampSetter(Ramp_2, 13, 0, true, 0, 225-(80));
+        RampSetter(Ramp_3, 13, 0, false, 0, 225 - (128));
         Scene_Init = true;
 
     }
@@ -23,8 +26,10 @@ void runLevel1(){
     Mario_Movement();
     RampCollision(Ramp_0, 14, 7);
     DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
-    RampDrawer(Ramp_0, 16);
-    
+    RampDrawer(Ramp_0, 14);
+    RampDrawer(Ramp_1, 13);
+    RampDrawer(Ramp_2, 13);
+    RampDrawer(Ramp_3, 13);
     if (IsKeyPressed(KEY_K)&& !Fire1.has_Spawned) SpawnFire();
     if (Fire1.has_Spawned) {
         Fire1.MoveFire();

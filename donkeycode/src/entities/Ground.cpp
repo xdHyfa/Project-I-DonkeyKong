@@ -3,11 +3,15 @@
 #include "entities/Player.h"
 
 Truss Ramp_0[14];
+Truss Ramp_1[13];
+Truss Ramp_2[13];
+Truss Ramp_3[13];
 
-void RampSetter(Truss* Ramp, int size, int level, bool TiltLeft, int plane) {
+void RampSetter(Truss* Ramp, int size, int level, bool TiltLeft, int plane, int adderY) {
 	int adderX = -13;
-	int adderY = 225;
-	
+	if (TiltLeft) {
+		adderX += 16;
+	}
 	for (int i = 0; i < size; i++) {
 		if (i >= plane) {
 			if (TiltLeft)	adderY--;
