@@ -5,6 +5,7 @@ public:
 
     bool has_Spawned = false;
     Vector2 FirePosition = { 100.0f, 200.0f };
+    Vector2 FireFloorCollider;
     Texture2D texture;
     
     Rectangle FireSprite = { 0.0f, 0.0f, 16, 16 };
@@ -14,6 +15,8 @@ public:
     
     void SetPos(float x, float y) {
         FirePosition.x = x; FirePosition.y = y;
+        FireFloorCollider.x = FirePosition.x +8;
+        FireFloorCollider.y = FirePosition.y +16;
     }
     void PlayAnimation() {       
         fireTick += GetFrameTime();
@@ -33,11 +36,16 @@ public:
     }
     void MoveFire() {
         PlayAnimation();
-        if (!Facing_left) FirePosition.x += 0.5;
-        else FirePosition.x -= 0.5;
-        if (GetRandomValue(1, 100) == 100) {
+        if (FirePosition.x > 208 || FirePosition.x < 0) {
             Facing_left = !Facing_left;
         }
+        if (!Facing_left) FirePosition.x += 0.75;
+        else FirePosition.x -= 0.75;
+        if (GetRandomValue(1, 150) == 100) {
+            Facing_left = !Facing_left;
+        }
+        FireFloorCollider.x = FirePosition.x + 8;
+        FireFloorCollider.y = FirePosition.y + 16;
         //Future expansion of movement tech
         
     }

@@ -20,6 +20,7 @@ Vector2   marioVelocity = { 0.0f, 0.0f };
 unsigned  frameDelay = 5;
 unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
+Vector2 marioFloorCollider;
 
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
@@ -102,11 +103,19 @@ void Mario_Movement()
         isJumping = false;
         entityMario.setGrounded(true);
     }
+    // --- Detección de paredes ---
+    if (marioPosition.x > 208) {
+        marioPosition.x = 208;
+    }
+    if (marioPosition.x < 0) {
+        marioPosition.x = 0;
+    }
 
     // --- Sincronizar entidad ---
     entityMario.setPosX(marioPosition.x);
     entityMario.setPosY(marioPosition.y);
-
+    marioFloorCollider.x = marioPosition.x + 8;
+    marioFloorCollider.y = marioPosition.y + 16;
     // --- Animación ---
     bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
 

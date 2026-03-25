@@ -5,6 +5,7 @@
 #include "entities/Ground.h"
 #include "resource_dir.h"	
 #include "raylib.h"
+#include "core/constants.h"
 void runLevel1(){
     
     // Like start() function from unity
@@ -14,17 +15,18 @@ void runLevel1(){
         SearchAndSetResourceDir("resources");
         marioTexture = LoadTexture("sprites/MARIO.png");
         Setup();
-        RampSetter(Ramp_0, 14, 0, true, 7, 225);
-        RampSetter(Ramp_1, 13, 0, false, 0, 225-48);
-        RampSetter(Ramp_2, 13, 0, true, 0, 225-(80));
-        RampSetter(Ramp_3, 13, 0, false, 0, 225 - (128));
+        Truss:: LoadSharedTexture();
+        RampSetter(Ramp_0, 14, true , true, 7, SCREEN_HEIGHT-32);
+        RampSetter(Ramp_1, 13, false , false, 0, 225-48);
+        RampSetter(Ramp_2, 13, false, true, 0, 225-(80));
+        RampSetter(Ramp_3, 13, false , false, 0, 225 - (128));
         Scene_Init = true;
 
     }
 
     // Like update() function from unity
     Mario_Movement();
-    RampCollision(Ramp_0, 14, 7);
+    RampCollision(Ramp_0, 14, marioFloorCollider, marioPosition,16,true);
     DrawTextureRec(marioTexture, frameRec, marioPosition, WHITE);
     RampDrawer(Ramp_0, 14);
     RampDrawer(Ramp_1, 13);
@@ -33,6 +35,7 @@ void runLevel1(){
     if (IsKeyPressed(KEY_K)&& !Fire1.has_Spawned) SpawnFire();
     if (Fire1.has_Spawned) {
         Fire1.MoveFire();
+        RampCollision(Ramp_0, 14, Fire1.FireFloorCollider, Fire1.FirePosition, 16, false);
         DrawTextureRec(Fire1.texture, Fire1.FireSprite, Fire1.FirePosition , WHITE);
     }
 

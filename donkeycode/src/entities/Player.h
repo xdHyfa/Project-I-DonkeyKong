@@ -41,6 +41,7 @@ extern Rectangle frameRec;
 extern Vector2 marioVelocity;
 extern Mario entityMario;
 extern bool isJumping;
+extern Vector2 marioFloorCollider;
 
 void Mario_Movement();
 void Setup();
