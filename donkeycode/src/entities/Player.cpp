@@ -5,7 +5,7 @@
 #include <iostream>
 #include "core/constants.h"
 
-const float GRAVITY = 1.0f;
+const float GRAVITY = 0.9f;
 
 
 
@@ -17,7 +17,7 @@ float     marioFrameHeight = 0.0f;
 Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
 Vector2   marioPosition = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
 Vector2   marioVelocity = { 0.0f, 0.0f };
-unsigned  frameDelay = 5;
+float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
 Vector2 marioFloorCollider;
@@ -123,11 +123,15 @@ void Mario_Movement()
     if (frameDelayCounter > frameDelay)
     {
         frameDelayCounter = 0;
-        if (marioMoving)
+        if (marioMoving && !isJumping)
         {
             ++frameIndex;
             frameIndex %= numFrames;
             frameRec.x = marioFrameWidth * (float)frameIndex;
+        }
+        else if (isJumping)
+        {
+            frameRec.x = 3 * entityMario.MARIO_SIZE;
         }
         else
         {
