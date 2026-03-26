@@ -2,6 +2,7 @@
 #include "entities/Player.h"
 #include "scenes/scenes.h"
 #include "entities/Fire_Spawner.h"
+#include "entities/Barrel.h"
 #include "entities/Ground.h"
 #include "resource_dir.h"	
 #include "raylib.h"
@@ -33,10 +34,16 @@ void runLevel1(){
     RampDrawer(Ramp_2, 13);
     RampDrawer(Ramp_3, 13);
     if (IsKeyPressed(KEY_K)&& !Fire1.has_Spawned) SpawnFire();
+    if (IsKeyPressed(KEY_J)) SpawnBarrel();
     if (Fire1.has_Spawned) {
         Fire1.MoveFire();
         RampCollision(Ramp_0, 14, Fire1.FireFloorCollider, Fire1.FirePosition, 16, false);
         DrawTextureRec(Fire1.texture, Fire1.FireSprite, Fire1.FirePosition , WHITE);
+    }
+    if (barrel1.has_Spawned) {
+        barrel1.MoveBarrel();
+        RampCollision(Ramp_0, 14, barrel1.BarrelFloorCollider, barrel1.BarrelPosition, 13, false);
+        DrawTextureRec(barrel1.texture, barrel1.BarrelSprite, barrel1.BarrelPosition, WHITE);
     }
 
 
@@ -51,6 +58,8 @@ void runLevel1(){
         UnloadTexture(marioTexture);
         UnloadTexture(Fire1.texture);
         UnloadTexture(Fire2.texture);
+
+        UnloadTexture(barrel1.texture);
         
 
         Scene_Init = false; // reset initialization boolean.
