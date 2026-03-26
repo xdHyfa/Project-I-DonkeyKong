@@ -10,9 +10,8 @@ bool Scene_Init = false;
 int main ()
 {
 	// Tell the window to use vsync and work on high DPI displays
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
-
 	Camera2D camera = { 0 };
 	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
 	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
