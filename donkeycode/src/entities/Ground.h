@@ -29,3 +29,5 @@ extern Truss Ramp_0 [14];
 extern Truss Ramp_1[13];
 extern Truss Ramp_2[13];
 extern Truss Ramp_3[13];
+extern Truss Ramp_4[13];
+extern Truss Ramp_5[13];

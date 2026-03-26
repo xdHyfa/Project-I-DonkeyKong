@@ -8,6 +8,8 @@ Truss Ramp_0[14];
 Truss Ramp_1[13];
 Truss Ramp_2[13];
 Truss Ramp_3[13];
+Truss Ramp_4[13];
+Truss Ramp_5[13];
 
 void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, int adderY) {
 	int adderX = 0;
