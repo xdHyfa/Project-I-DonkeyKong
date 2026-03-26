@@ -42,7 +42,7 @@ void runLevel1(){
     }
     if (barrel1.has_Spawned) {
         barrel1.MoveBarrel();
-        RampCollision(Ramp_0, 14, barrel1.BarrelFloorCollider, barrel1.BarrelPosition, 16, false);
+        RampCollision(Ramp_0, 14, barrel1.BarrelFloorCollider, barrel1.BarrelPosition, 13, false);
         DrawTextureRec(barrel1.texture, barrel1.BarrelSprite, barrel1.BarrelPosition, WHITE);
     }
 
