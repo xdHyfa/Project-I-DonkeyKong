@@ -3,8 +3,9 @@
 #include "scenes/scenes.h"
 #include "scenes/level1.h"
 #include "core/constants.h"
+#include "scenes/TitleScreen.h"
 
-Scene current_scene = LEVEL1;
+Scene current_scene = TITLE;
 bool Scene_Init = false;
 
 int main ()
@@ -32,6 +33,9 @@ int main ()
 
 			break;
 		case TITLE:
+			runMainMenu();
+			
+
 			
 
 			break;
