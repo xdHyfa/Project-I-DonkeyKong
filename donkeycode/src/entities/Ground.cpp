@@ -52,7 +52,25 @@ void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, in
 }
 
 void MultiRampSetter() {
+	Truss::LoadSharedTexture();
 
+	Ramp_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;
+	RampSetter(Ramp_0, 14, true, true, 7, Ramp_0_YPos);
+
+	Ramp_1_YPos = (SCREEN_HEIGHT - TrussHeight) - 43;
+	RampSetter(Ramp_1, 13, false, false, 0, Ramp_1_YPos);
+
+	Ramp_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 62;
+	RampSetter(Ramp_2, 13, false, true, 0, Ramp_2_YPos);
+
+	Ramp_3_YPos = (SCREEN_HEIGHT - TrussHeight) - 110;
+	RampSetter(Ramp_3, 13, false, false, 0, Ramp_3_YPos);
+
+	Ramp_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 130;
+	RampSetter(Ramp_4, 13, false, true, 0, Ramp_4_YPos);
+
+	Ramp_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 168;
+	RampSetter(Ramp_5, 13, false, false, 9, Ramp_5_YPos);
 }
 
 
@@ -76,15 +94,43 @@ void RampCollision(Truss* Ramp, int size, Vector2 &CollisionPoint, Vector2 &spri
 				marioVelocity.y = 0.0f;
 				isJumping = false;
 				entityMario.setGrounded(true);
+				isFalling = false;
 				}
 			}
 			
-			if ((isEntityMario && !isJumping) || !isEntityMario) {
+			if ((isEntityMario && !isJumping && !isFalling) || !isEntityMario) {
 				//Check if higher than the Truss and not Jumping
 				if(CollisionPoint.y < (Ramp[i].TrussPos.y + 8)){
 				spritePosition.y = Ramp[i].TrussPos.y +8 - spriteHeight;
 				}
 			}
 		}
+	}
+}
+
+void MarioGroundCollisions() {
+	
+	//DrawColliders();
+
+	if (CheckCollisionPointRec(marioFloorCollider, Ramp_0_Zone)) {
+		RampCollision(Ramp_0, 14, marioFloorCollider, marioPosition, 16, true);
+	}
+	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_1_Zone)) {
+		RampCollision(Ramp_1, 13, marioFloorCollider, marioPosition, 16, true);
+	}
+	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_2_Zone)) {
+		RampCollision(Ramp_2, 13, marioFloorCollider, marioPosition, 16, true);
+	}
+	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_3_Zone)) {
+		RampCollision(Ramp_3, 13, marioFloorCollider, marioPosition, 16, true);
+	}
+	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_4_Zone)) {
+		RampCollision(Ramp_4, 13, marioFloorCollider, marioPosition, 16, true);
+	}
+	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_5_Zone)) {
+		RampCollision(Ramp_5, 13, marioFloorCollider, marioPosition, 16, true);
+	}
+	else {
+		isFalling = true;
 	}
 }

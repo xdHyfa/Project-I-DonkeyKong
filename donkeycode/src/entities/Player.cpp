@@ -25,6 +25,7 @@ Vector2 marioFloorCollider;
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
 bool        isJumping = false;
+bool        isFalling = false;
 
 bool isTextureValid(const Texture2D& texture)
 {
@@ -85,7 +86,7 @@ void Mario_Movement()
     }
 
     // --- Física: gravedad ---
-    if (!entityMario.getIsGrounded())
+    if (!entityMario.getIsGrounded() || isFalling)
     {
         marioVelocity.y += GRAVITY;
     }

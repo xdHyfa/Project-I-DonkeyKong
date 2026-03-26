@@ -17,6 +17,9 @@ public:
 	static void LoadSharedTexture() {
 			truss = LoadTexture("sprites/TRUSS.png");
 	}
+	static void UnloadSharedTexture() {
+		UnloadTexture(truss);
+	}
 };
 
 
@@ -38,6 +41,8 @@ void RampDrawer(Truss* Ramp, int size);
 void RampCollision(Truss* Ramp, int size, Vector2 &CollisionPoint, Vector2 &spritePosition, int spriteHeight, bool isEntityMario);
 
 void DrawColliders();
+
+void MarioGroundCollisions();
 
 extern Truss Ramp_0 [14];
 extern Rectangle Ramp_0_Zone;
