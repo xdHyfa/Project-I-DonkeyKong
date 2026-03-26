@@ -41,6 +41,6 @@ public:
     }
 };
 
-extern Barrel barrel1;
+//extern Barrel barrel1;
 
-void SpawnBarrel();
+//void SpawnBarrel();

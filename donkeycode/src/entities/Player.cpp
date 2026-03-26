@@ -15,7 +15,7 @@ unsigned  numFrames = 4;
 float     marioFrameWidth = 0.0f;
 float     marioFrameHeight = 0.0f;
 Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
-Vector2   marioPosition = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
+Vector2   marioPosition = { 64, SCREEN_HEIGHT - entityMario.MARIO_SIZE - 17 };
 Vector2   marioVelocity = { 0.0f, 0.0f };
 float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
@@ -109,6 +109,13 @@ void Mario_Movement()
     }
     if (marioPosition.x < 0) {
         marioPosition.x = 0;
+    }
+
+    if (IsKeyPressed(KEY_R)) {
+        marioPosition.y -= 32;
+    }
+    if (IsKeyPressed(KEY_Q)) {
+        marioPosition.y += 32;
     }
 
     // --- Sincronizar entidad ---
