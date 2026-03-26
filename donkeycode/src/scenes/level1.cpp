@@ -18,7 +18,7 @@ void runLevel1() {
         marioTexture = LoadTexture("sprites/MARIO.png");
         //Mario Setup
         Setup();
-           
+
         MultiRampSetter();
 
         Scene_Init = true;
@@ -41,22 +41,15 @@ void runLevel1() {
 
     FireSpawner();
 
+    BarrelSpawner();
 
-    //if (IsKeyPressed(KEY_J)) SpawnBarrel();
-    
-
-    //if (barrel1.has_Spawned) {
-    //    barrel1.MoveBarrel();
-    //    RampCollision(Ramp_0, 14, barrel1.BarrelFloorCollider, barrel1.BarrelPosition, 13, false);
-    //    DrawTextureRec(barrel1.texture, barrel1.BarrelSprite, barrel1.BarrelPosition, WHITE);
-    //}
 
 
     // TO DO: RUN PLAYER MOVEMENT MECHANICS (Function to check inputs, draw textures, etc)
 
 
     // Like onDestroy() function from unity, run before scene change.
-    
+
     if (current_scene != LEVEL1) {
 
         //TO DO: UNLOAD STUFF.
@@ -64,8 +57,8 @@ void runLevel1() {
         UnloadTexture(Fire1.texture);
         UnloadTexture(Fire2.texture);
         Truss::UnloadSharedTexture();
-        //UnloadTexture(barrel1.texture);
-        
+        UnloadTexture(barrel1.texture);
+
 
         Scene_Init = false; // reset initialization boolean.
     }

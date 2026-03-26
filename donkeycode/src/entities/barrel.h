@@ -1,3 +1,4 @@
+
 #include "raylib.h"
 #pragma once
 
@@ -41,6 +42,8 @@ public:
     }
 };
 
-//extern Barrel barrel1;
+extern Barrel barrel1;
+extern Barrel barrel2;
 
-//void SpawnBarrel();
+void SpawnBarrel();
+void BarrelSpawner();
