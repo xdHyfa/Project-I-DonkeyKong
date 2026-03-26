@@ -10,7 +10,7 @@ protected:
     float y = 0.0f;
 public:
     const float VELOCITY = 1.5f;
-    const int JUMP = 8;
+    const int JUMP = 6;
     const int MARIO_SIZE = 16;
 
     float getPosX()       const { return x; }
