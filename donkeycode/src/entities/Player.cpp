@@ -57,19 +57,19 @@ void Mario_Movement()
 
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         marioVelocity.x = (float)entityMario.VELOCITY;
         if (frameRec.width < 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         marioVelocity.x = -(float)entityMario.VELOCITY;
         if (frameRec.width > 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input ---
-    if (IsKeyPressed(KEY_UP))
+    if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_W))
     {
         if (entityMario.tryJump())
         {

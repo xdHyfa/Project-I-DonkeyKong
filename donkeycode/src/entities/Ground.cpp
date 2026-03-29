@@ -134,3 +134,47 @@ void MarioGroundCollisions() {
 		isFalling = true;
 	}
 }
+
+void BarrelGroundCollisions(Barrel& barrel) {
+	Vector2& pos = barrel.BarrelPosition;
+	Vector2& col = barrel.BarrelFloorCollider;
+	bool onGround = false;
+
+	auto checkTrussArray = [&](Truss* Ramp, int size, float leftEdge, float rightEdge) {
+		if (onGround) return;
+		for (int i = 0; i < size; i++) {
+			float trussLeft = Ramp[i].TrussPos.x;
+			float trussRight = Ramp[i].TrussPos.x + 16;
+			float trussSurface = Ramp[i].TrussPos.y + 8;
+
+			bool inRangeX = (col.x >= trussLeft && col.x < trussRight);
+			bool hitSurface = (col.y >= trussSurface && col.y <= trussSurface + barrel.velocityY + 2);
+
+			if (inRangeX && hitSurface) {
+				pos.y = trussSurface - BARRELSIZE;
+				barrel.velocityY = 0.0f;
+				onGround = true;
+				barrel.justFlipped = false;
+				return;
+			}
+		}
+		};
+
+	checkTrussArray(Ramp_0, 14, 0, SCREEN_WIDTH);
+	checkTrussArray(Ramp_1, 13, 0, SCREEN_WIDTH - 16);
+	checkTrussArray(Ramp_2, 13, 16, SCREEN_WIDTH);
+	checkTrussArray(Ramp_3, 13, 0, SCREEN_WIDTH - 16);
+	checkTrussArray(Ramp_4, 13, 16, SCREEN_WIDTH);
+	checkTrussArray(Ramp_5, 13, 0, SCREEN_WIDTH - 16);
+
+	if (!onGround) return;
+
+	if (pos.x + BARRELSIZE >= SCREEN_WIDTH) {
+		pos.x = SCREEN_WIDTH - BARRELSIZE;
+		barrel.FlipDirection();
+	}
+	else if (pos.x <= 0) {
+		pos.x = 0;
+		barrel.FlipDirection();
+	}
+}
