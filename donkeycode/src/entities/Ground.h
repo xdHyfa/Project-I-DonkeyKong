@@ -1,5 +1,7 @@
 #pragma once
 
+#include "entities/Barrel.h"
+
 class Truss {
 public:
 	static Texture truss;
@@ -61,3 +63,5 @@ extern Rectangle Ramp_4_Zone;
 
 extern Truss Ramp_5[13];
 extern Rectangle Ramp_5_Zone;
+
+void BarrelGroundCollisions(Barrel& barrel);
