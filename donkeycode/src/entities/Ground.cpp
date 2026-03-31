@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "entities/Ground.h"
-#include "entities/Player.h"
+#include "entities/entity.h"
 #include "core/constants.h"
 
 Texture Truss::truss;
@@ -111,23 +111,32 @@ void RampCollision(Truss* Ramp, int size, Vector2 &CollisionPoint, Vector2 &spri
 void MarioGroundCollisions() {
 	
 	//DrawColliders();
+	
+	
 
-	if (CheckCollisionPointRec(marioFloorCollider, Ramp_0_Zone)) {
+	if (CheckCollisionRecs(entityMario.boxCollider, Ramp_0[13].trussCollider)) {
+		
+		DrawText("Ramp0", 0, 0, 14, RED);
 		RampCollision(Ramp_0, 14, marioFloorCollider, marioPosition, 16, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_1_Zone)) {
+	else if (CheckCollisionRecs(entityMario.boxCollider, Ramp_1[13].trussCollider)) {
+		DrawText("Ramp1", 0, 0, 14, RED);
 		RampCollision(Ramp_1, 13, marioFloorCollider, marioPosition, 16, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_2_Zone)) {
+	else if (CheckCollisionRecs(entityMario.boxCollider, Ramp_2[13].trussCollider)) {
+		DrawText("Ramp2", 0, 0, 14, RED);
 		RampCollision(Ramp_2, 13, marioFloorCollider, marioPosition, 16, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_3_Zone)) {
+	else if (CheckCollisionRecs(entityMario.boxCollider, Ramp_3[13].trussCollider)) {
+		DrawText("Ramp3", 0, 0, 14, RED);
 		RampCollision(Ramp_3, 13, marioFloorCollider, marioPosition, 16, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_4_Zone)) {
+	else if (CheckCollisionRecs(entityMario.boxCollider, Ramp_4[13].trussCollider)) {
+		DrawText("Ramp4", 0, 0, 14, RED);
 		RampCollision(Ramp_4, 13, marioFloorCollider, marioPosition, 16, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_5_Zone)) {
+	else if (CheckCollisionRecs(entityMario.boxCollider, Ramp_5[13].trussCollider)) {
+		DrawText("Ramp5", 0, 0, 14, RED);
 		RampCollision(Ramp_5, 13, marioFloorCollider, marioPosition, 16, true);
 	}
 	else {

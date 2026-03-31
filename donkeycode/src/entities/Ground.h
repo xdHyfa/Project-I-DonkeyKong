@@ -6,15 +6,13 @@ class Truss {
 public:
 	static Texture truss;
 	Vector2 TrussPos = { 0 ,0 };
-	Rectangle TrussBox = {TrussPos.x, TrussPos.y , 16, 8};
-	
+	Rectangle trussCollider = {0, 0 , 16, 8};
+
 	void setPos(float x, float y) {
 		TrussPos.x = x; TrussPos.y = y;
-		TrussBox.x = TrussPos.x; TrussBox.y = TrussPos.y;
 	}
 	void setPos(float x) {
 		TrussPos.x = x;
-		TrussBox.x = TrussPos.x;
 	}
 	static void LoadSharedTexture() {
 			truss = LoadTexture("sprites/TRUSS.png");
