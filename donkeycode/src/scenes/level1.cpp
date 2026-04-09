@@ -28,7 +28,7 @@ void runLevel1() {
     // Like update() function from unity
     Mario_Movement();
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
-    MarioGroundCollisions();
+    MarioGroundCollisions(); 
 
     RampDrawer(Ramp_0, 14);
     RampDrawer(Ramp_1, 13);
