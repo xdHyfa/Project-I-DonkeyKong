@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Entities/entity.h"
 #include "Entities/Barrel.h"
 
 class Truss {
@@ -40,7 +40,7 @@ void MultiRampSetter();
 
 void RampDrawer(Truss* Ramp, int size);
 
-void RampCollision(Truss* Ramp, int size, Vector2 &CollisionPoint, Vector2 &spritePosition, int spriteHeight, bool isEntityMario);
+void RampCollision(Truss* Ramp, int size, Entity &entity, bool isEntityMario);
 
 void DrawColliders();
 

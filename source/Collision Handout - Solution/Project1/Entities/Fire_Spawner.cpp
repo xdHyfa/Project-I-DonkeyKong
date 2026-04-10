@@ -19,7 +19,7 @@ void FireSpawner() {
 	
 	if (Fire1.has_Spawned) {
 		Fire1.MoveFire();
-		RampCollision(Ramp_0, 14, Fire1.FireFloorCollider, Fire1.FirePosition, 16, false);
+		//RampCollision(Ramp_0, 14, Fire1.FireFloorCollider, Fire1.FirePosition, 16, false);
 		DrawTextureRec(Fire1.texture, Fire1.FireSprite, Fire1.FirePosition, WHITE);
 	}
 }

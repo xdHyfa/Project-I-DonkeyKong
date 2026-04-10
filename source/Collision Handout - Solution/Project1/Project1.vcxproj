@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Core\constants.h" />
     <ClInclude Include="Entities\barrel.h" />
+    <ClInclude Include="Entities\entity.h" />
     <ClInclude Include="Entities\Fire_Spawner.h" />
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Player.h" />

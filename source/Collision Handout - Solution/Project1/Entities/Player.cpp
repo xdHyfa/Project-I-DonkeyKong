@@ -4,46 +4,43 @@
 #include <stdbool.h>
 #include <iostream>
 #include "Core/constants.h"
+#include "Entities/entity.h"
 
-const float GRAVITY = 0.9f;
+Player Mario;
 
-
-
-Mario     entityMario;
-Texture2D marioTexture;
+/*---Animation Stuff---*/
+Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
 unsigned  numFrames = 4;
 float     marioFrameWidth = 0.0f;
 float     marioFrameHeight = 0.0f;
-Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
-Vector2   marioPosition = { 64, SCREEN_HEIGHT - entityMario.MARIO_SIZE - 17 };
-Vector2   marioVelocity = { 0.0f, 0.0f };
 float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
-Vector2 marioFloorCollider;
+
 
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
-bool        isJumping = false;
-bool        isFalling = false;
 
 bool isTextureValid(const Texture2D& texture)
 {
     return texture.id > 0;
 }
 
-void Setup()
+void Player::Setup()
 {
-    marioFrameWidth = (float)entityMario.MARIO_SIZE;
-    marioFrameHeight = (float)entityMario.MARIO_SIZE;
+    SpriteSize = (float)playerSize;
+    marioFrameWidth = (float)Mario.SpriteSize;
+    marioFrameHeight = (float)Mario.SpriteSize;
     frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
-    entityMario.setPosX(marioPosition.x);
-    entityMario.setPosY(marioPosition.y);
+    Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
 }
 
-void Mario_Movement()
+void Player::Movement()
 {
-    if (!isTextureValid(marioTexture))
+  
+    //UNCOMMENT TO CHECK IF TEXTURE WORKS
+    
+    /*  if (!isTextureValid(Texture))
     {
         while (!WindowShouldClose())
         {
@@ -53,29 +50,29 @@ void Mario_Movement()
             EndDrawing();
         }
         return;
-    }
+    }*/
 
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        marioVelocity.x = (float)entityMario.VELOCITY;
-        if (frameRec.width < 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
+        marioVelocity.x = (float)Mario.velocity;
+        if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
     else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        marioVelocity.x = -(float)entityMario.VELOCITY;
-        if (frameRec.width > 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
+        marioVelocity.x = -(float)Mario.velocity;
+        if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input ---
     if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_W))
     {
-        if (entityMario.tryJump())
+        if (Mario.tryJump())
         {
             lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
             isJumping = true;
-            marioVelocity.y = -(float)entityMario.JUMP;
+            marioVelocity.y = -(float)Mario.jumpHeight;
         }
     }
 
@@ -86,50 +83,51 @@ void Mario_Movement()
     }
 
     // --- Física: gravedad ---
-    if (!entityMario.getIsGrounded() || isFalling)
+    if (!Mario.getIsGrounded() || isFalling)
     {
         marioVelocity.y += GRAVITY;
     }
 
     // --- Aplicar velocidad ---
-    marioPosition = Vector2Add(marioPosition, marioVelocity);
+    Position = Vector2Add(Position, marioVelocity);
 
     // --- Detección de suelo ---
-    if (marioPosition.y >= GROUND_Y)
+    if (Position.y >= GROUND_Y)
     {
-        marioPosition.y = GROUND_Y;
+        Position.y = GROUND_Y;
         marioVelocity.y = 0.0f;
         // FIX: NO reseteamos x aquí, para que la animación funcione correctamente
         lockedVelocityX = 0.0f;
         isJumping = false;
-        entityMario.setGrounded(true);
+        Mario.setGrounded(true);
     }
     // --- Detección de paredes ---
-    if (marioPosition.x > 208) {
-        marioPosition.x = 208;
+    if (Position.x > 208) {
+        Position.x = 208;
     }
-    if (marioPosition.x < 0) {
-        marioPosition.x = 0;
+    if (Position.x < 0) {
+        Position.x = 0;
     }
 
     if (IsKeyPressed(KEY_R)) {
-        marioPosition.y -= 32;
+        Position.y -= 32;
     }
     if (IsKeyPressed(KEY_Q)) {
-        marioPosition.y += 32;
+        Position.y += 32;
     }
 
     // --- Sincronizar entidad ---
-    entityMario.setPosX(marioPosition.x);
-    entityMario.setPosY(marioPosition.y);
-    marioFloorCollider.x = marioPosition.x + 8;
-    marioFloorCollider.y = marioPosition.y + 16;
+    FloorCollider.x = Position.x + 8;
+    FloorCollider.y = Position.y + 16;
     // --- Animación ---
     bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
-
+    
+    //Check for Animation Check DrawRectangle(Mario.Position.x, Mario.Position.y, (int)SpriteSize, (int)SpriteSize, WHITE);
+    
     ++frameDelayCounter;
     if (frameDelayCounter > frameDelay)
     {
+        
         frameDelayCounter = 0;
         if (marioMoving && !isJumping)
         {
@@ -139,7 +137,7 @@ void Mario_Movement()
         }
         else if (isJumping)
         {
-            frameRec.x = 3 * entityMario.MARIO_SIZE;
+            frameRec.x = 3 * SpriteSize;
         }
         else
         {

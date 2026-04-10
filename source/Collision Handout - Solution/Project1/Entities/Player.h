@@ -1,28 +1,26 @@
-#include "raylib.h"
 #pragma once
+#include "raylib.h"
+#include "Entities/entity.h"
 
-class Mario
-{
-protected:
-    bool  isAlive = true;
-    bool  isGrounded = true;
-    float x = 0.0f;
-    float y = 0.0f;
+class Player : public Entity
+{   
 public:
-    const float VELOCITY = 1.5f;
-    const int JUMP = 6;
-    const int MARIO_SIZE = 16;
+        const int playerSize = 16;
 
-    float getPosX()       const { return x; }
-    float getPosY()       const { return y; }
-    bool  getIsGrounded() const { return isGrounded; }
+    
+    Vector2 marioVelocity = { 0.0f, 0.0f };
+ 
+    bool  isAlive = true;
+    bool isJumping = false;
+    bool isFalling = false;
 
-    void setPosX(float newX) { x = newX; }
-    void setPosY(float newY) { y = newY; }
-    void setGrounded(bool g) { isGrounded = g; }
+    const Rectangle boxCollider = { 0.0f, 0.0f, SpriteSize, SpriteSize };
+
+    const float velocity = 1.5f;
+    const int jumpHeight = 6;
+    
+
     void die() { isAlive = false; }
-    void moveLeft() { x -= VELOCITY; }
-    void moveRight() { x += VELOCITY; }
 
     bool tryJump()
     {
@@ -33,16 +31,9 @@ public:
         }
         return false;
     }
+    void Movement();
+    void Setup();
 };
 
-extern Texture2D marioTexture;
-extern Vector2 marioPosition;
+extern Player Mario;
 extern Rectangle frameRec;
-extern Vector2 marioVelocity;
-extern Mario entityMario;
-extern bool isJumping;
-extern bool isFalling;
-extern Vector2 marioFloorCollider;
-
-void Mario_Movement();
-void Setup();

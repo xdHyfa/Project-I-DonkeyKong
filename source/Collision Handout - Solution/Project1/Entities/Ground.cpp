@@ -12,12 +12,16 @@ float Ramp_2_YPos;
 float Ramp_3_YPos;
 float Ramp_4_YPos;
 float Ramp_5_YPos;
+
+/*---ACTIVE AREA HITBOX FOR EACH RAMP---*/
+//Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
 Rectangle Ramp_0_Zone = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
 Rectangle Ramp_1_Zone = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32, SCREEN_WIDTH -16, 22 };
 Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34 -32 -34, SCREEN_WIDTH -16, 22 };
 Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32 -34 -32, SCREEN_WIDTH -16, 22 };
+
 Truss Ramp_0[14];
 Truss Ramp_1[13];
 Truss Ramp_2[13];
@@ -80,28 +84,28 @@ void RampDrawer(Truss* Ramp, int size) {
 	}
 }
 
-void RampCollision(Truss* Ramp, int size, Vector2 &CollisionPoint, Vector2 &spritePosition, int spriteHeight, bool isEntityMario) {
+void RampCollision(Truss* Ramp, int size,Entity &entity, bool isEntityMario) {
 	//Collision point should be X middle value and Y lowest point in sprite.
 	
 	for (int i = 0; i < size; i++) {
-		if (CollisionPoint.x < (Ramp[i].TrussPos.x + 16) && CollisionPoint.x >= Ramp[i].TrussPos.x) {
+		if (entity.FloorCollider.x < (Ramp[i].TrussPos.x + 16) && entity.FloorCollider.x >= Ramp[i].TrussPos.x) {
 			//First check if in range of Truss x (Width)
 			
-			if (CollisionPoint.y > (Ramp[i].TrussPos.y+8)) {
+			if (entity.FloorCollider.y > (Ramp[i].TrussPos.y+8)) {
 				//Check if lower than the Truss
-				spritePosition.y = Ramp[i].TrussPos.y+8 -spriteHeight;
+				entity.Position.y = Ramp[i].TrussPos.y+8 -entity.SpriteSize;
 				if(isEntityMario){
-				marioVelocity.y = 0.0f;
-				isJumping = false;
-				entityMario.setGrounded(true);
-				isFalling = false;
+				Mario.marioVelocity.y = 0.0f;
+				Mario.isJumping = false;
+				Mario.setGrounded(true);
+				Mario.isFalling = false;
 				}
 			}
 			
-			if ((isEntityMario && !isJumping && !isFalling) || !isEntityMario) {
+			if ((isEntityMario && !Mario.isJumping && !Mario.isFalling) || !isEntityMario) {
 				//Check if higher than the Truss and not Jumping
-				if(CollisionPoint.y < (Ramp[i].TrussPos.y + 8)){
-				spritePosition.y = Ramp[i].TrussPos.y +8 - spriteHeight;
+				if(entity.FloorCollider.y < (Ramp[i].TrussPos.y + 8)){
+				entity.Position.y = Ramp[i].TrussPos.y +8 - entity.SpriteSize;
 				}
 			}
 		}
@@ -112,26 +116,26 @@ void MarioGroundCollisions() {
 	
 	//DrawColliders();
 
-	if (CheckCollisionPointRec(marioFloorCollider, Ramp_0_Zone)) {
-		RampCollision(Ramp_0, 14, marioFloorCollider, marioPosition, 16, true);
+	if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_0_Zone)) {
+		RampCollision(Ramp_0, 14, Mario, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_1_Zone)) {
-		RampCollision(Ramp_1, 13, marioFloorCollider, marioPosition, 16, true);
+	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_1_Zone)) {
+		RampCollision(Ramp_1, 13, Mario, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_2_Zone)) {
-		RampCollision(Ramp_2, 13, marioFloorCollider, marioPosition, 16, true);
+	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_2_Zone)) {
+		RampCollision(Ramp_2, 13, Mario, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_3_Zone)) {
-		RampCollision(Ramp_3, 13, marioFloorCollider, marioPosition, 16, true);
+	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_3_Zone)) {
+		RampCollision(Ramp_3, 13, Mario, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_4_Zone)) {
-		RampCollision(Ramp_4, 13, marioFloorCollider, marioPosition, 16, true);
+	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_4_Zone)) {
+		RampCollision(Ramp_4, 13, Mario, true);
 	}
-	else if (CheckCollisionPointRec(marioFloorCollider, Ramp_5_Zone)) {
-		RampCollision(Ramp_5, 13, marioFloorCollider, marioPosition, 16, true);
+	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_5_Zone)) {
+		RampCollision(Ramp_5, 13, Mario, true);
 	}
 	else {
-		isFalling = true;
+		Mario.isFalling = true;
 	}
 }
 
