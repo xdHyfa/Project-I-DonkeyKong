@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\level1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Barrel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Fire_Spawner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Ground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libraries\raylib\include\raylib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libraries\raylib\include\raymath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libraries\raylib\include\rlgl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\level1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\scenes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\barrel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Fire_Spawner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Ground.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\resource_dir.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Sprites\Blue barrel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Blue truss.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Button stage 3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\commonbarrel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\donko 2-0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\fire.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\FIREBALL.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\FIREBALL2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\game over.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Golden Hammer.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Hammer.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\HEARTS.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\HELP.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\HOW HIGH CAN U GET.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Items.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Kill aura.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\LADY.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Main menu.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\MARIO GOLDEN HAMMER.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\MARIO HAMMER.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\MARIO.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\oil.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\POINTS.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\REAL BONUS.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\red truss.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\ROTOR.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\SAND BOXES.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\SMALLFIREBALL.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\SMALLFIREBALL2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Stairs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\TRAMPOLIN.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\TRUSS.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\wabbit_alpha.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Yellow grid.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Yellow triangle truss.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\Yellow truss.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
