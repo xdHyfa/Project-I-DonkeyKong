@@ -32,11 +32,9 @@ int main ()
 			runInitialScreen();
 
 			break;
+
 		case TITLE:
 			runMainMenu();
-			
-
-			
 
 			break;
 		case LEVEL1:

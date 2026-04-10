@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "TitleScreen.h"
+#include "InitialScreen.h"
 #include "resource_dir.h"
 #include "core/constants.h"
 #include "scenes.h"
@@ -43,7 +43,7 @@ void runInitialScreen() {
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         Scene_Init = false;
-        current_scene = LEVEL1;
+        current_scene = TITLE;
 
     }
     DrawTextureRec(DonkoTitleBlue, rectitle, {22.0f, 64.0f}, WHITE);
