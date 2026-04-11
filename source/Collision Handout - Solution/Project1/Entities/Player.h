@@ -5,9 +5,8 @@
 class Player : public Entity
 {   
 public:
-        const int playerSize = 16;
+    const int playerSize = 16;
 
-    
     Vector2 marioVelocity = { 0.0f, 0.0f };
  
     bool  isAlive = true;
@@ -31,8 +30,12 @@ public:
         }
         return false;
     }
-    void Movement();
+    void Movement() override;
     void Setup();
+
+    Player() {
+        tag = EntityTag::PLAYER;
+    }
 };
 
 extern Player Mario;

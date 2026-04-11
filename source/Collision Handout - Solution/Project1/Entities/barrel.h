@@ -1,20 +1,21 @@
+#pragma once
 #include "raylib.h"
 #include "Core/constants.h"
+#include "Entities/entity.h"
 #pragma once
 #define NORMAL 0
 #define RANDOM 1
 #define BARRELSIZE 13
-#define BARRELVELOCITY 2.0f
+#define BARRELVELOCITY 2.2f
 #define BARREL_GRAVITY 0.3f
 
-class Barrel {
+class Barrel : public Entity {
 public:
     bool has_Spawned = false;
-    Vector2 BarrelPosition = { 100.0f, 200.0f };
-    Vector2 BarrelFloorCollider;
+    
     float velocityX = BARRELVELOCITY;   
     float velocityY = 0.0f;
-    Texture2D texture;
+
     Rectangle frameRec = { 0.0f, 0.0f, BARRELSIZE+2, BARRELSIZE+2 };
     float     frameDelay = 1.0f;
     unsigned  frameDelayCounter = 0;
@@ -26,23 +27,23 @@ public:
 
     
     void SetPos(float x, float y) {
-        BarrelPosition.x = x;
-        BarrelPosition.y = y;
-        BarrelFloorCollider.x = BarrelPosition.x + 8;
-        BarrelFloorCollider.y = BarrelPosition.y + BARRELSIZE;
+        Position.x = x;
+        Position.y = y;
+        FloorCollider.x = Position.x + 8;
+        FloorCollider.y = Position.y + BARRELSIZE;
     }
 
     void UpdateCollider() {
-        BarrelFloorCollider.x = BarrelPosition.x + 8;
-        BarrelFloorCollider.y = BarrelPosition.y + BARRELSIZE;
+        FloorCollider.x = Position.x + 8;
+        FloorCollider.y = Position.y + BARRELSIZE;
     }
 
-    void MoveBarrel() {
+    void Movement() override{
         velocityY += BARREL_GRAVITY;
-        BarrelPosition.y += velocityY;
-        BarrelPosition.x += velocityX;
+        Position.y += velocityY;
+        Position.x += velocityX;
 
-        if (BarrelPosition.x + BARRELSIZE >= SCREEN_WIDTH || BarrelPosition.x <= 0) {
+        if (Position.x + BARRELSIZE >= SCREEN_WIDTH || Position.x <= 0) {
             FlipDirection();
         }
 
@@ -70,4 +71,4 @@ public:
 extern Barrel barrel1;
 extern Barrel barrel2;
 void SpawnBarrel();
-void BarrelSpawner();
+void BarrelRoutine();

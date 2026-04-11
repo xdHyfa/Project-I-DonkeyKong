@@ -34,17 +34,18 @@ extern float Ramp_3_YPos;
 extern float Ramp_4_YPos;
 extern float Ramp_5_YPos;
 
+
 void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, int adderY);
 
 void MultiRampSetter();
 
 void RampDrawer(Truss* Ramp, int size);
 
-void RampCollision(Truss* Ramp, int size, Entity &entity, bool isEntityMario);
+void RampCollision(Truss* Ramp, int size, Entity &entity);
 
 void DrawColliders();
 
-void MarioGroundCollisions();
+void MapCollision(Entity &entity);
 
 extern Truss Ramp_0 [14];
 extern Rectangle Ramp_0_Zone;

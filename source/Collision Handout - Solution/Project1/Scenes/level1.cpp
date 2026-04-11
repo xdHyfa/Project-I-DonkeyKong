@@ -32,8 +32,8 @@ void runLevel1() {
     /*---GROUND COLLISIONS---*/
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
-    MarioGroundCollisions();
-
+    MapCollision(Mario);
+    DrawColliders();
 
     /*---TEXTURE DRAW---*/
     RampDrawer(Ramp_0, 14);
@@ -47,9 +47,8 @@ void runLevel1() {
 
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
-    //FireSpawner();
-
-    //BarrelSpawner();
+    FireRoutine();
+    BarrelRoutine();
 
 
 
@@ -59,10 +58,10 @@ void runLevel1() {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
-        UnloadTexture(Fire1.texture);
-        UnloadTexture(Fire2.texture);
+        UnloadTexture(Fire1.Texture);
+        UnloadTexture(Fire2.Texture);
         Truss::UnloadSharedTexture();
-        UnloadTexture(barrel1.texture);
+        UnloadTexture(barrel1.Texture);
 
 
         Scene_Init = false; // reset initialization boolean.
