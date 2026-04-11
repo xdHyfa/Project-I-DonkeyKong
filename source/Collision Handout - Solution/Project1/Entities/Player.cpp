@@ -52,6 +52,7 @@ void Player::Movement()
         return;
     }*/
 
+
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
@@ -65,8 +66,8 @@ void Player::Movement()
         if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
 
-    // --- Salto: captura la velocidad X DESPUÉS de leer input ---
-    if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_W))
+    // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
+    if (IsKeyPressed(KEY_SPACE))
     {
         if (Mario.tryJump())
         {

@@ -18,9 +18,9 @@ float Ramp_5_YPos;
 Rectangle Ramp_0_Zone = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
 Rectangle Ramp_1_Zone = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32, SCREEN_WIDTH -16, 22 };
-Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34 -32 -34, SCREEN_WIDTH -16, 22 };
-Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32 -34 -32, SCREEN_WIDTH -16, 22 };
+Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -33, SCREEN_WIDTH -16, 22 };
+Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34 -32 -35, SCREEN_WIDTH -16, 22 };
+Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32 -34 -35, SCREEN_WIDTH -16, 22 };
 
 Truss Ramp_0[14];
 Truss Ramp_1[13];
@@ -33,9 +33,9 @@ void DrawColliders() {
 	DrawRectangle(0, 256 - 20, 224, 20, WHITE);
 	DrawRectangle(0, 256 - 20 - 36, 224 - 16, 22, WHITE);
 	DrawRectangle(16, 256 - 20 - 36 - 34, 224 - 16, 22, WHITE);
-	DrawRectangle(0, 256 - 20 - 36 - 34 - 32, 224 - 16, 22, WHITE);
-	DrawRectangle(16, 256 - 20 - 36 - 34 - 32 - 34, 224 - 16, 22, WHITE);
-	DrawRectangle(0, 256 - 20 - 36 - 34 - 32 - 34 -32, 224 - 16, 22, WHITE);
+	DrawRectangle(0, 256 - 20 - 36 - 34 - 33, 224 - 16, 22, WHITE);
+	DrawRectangle(16, 256 - 20 - 36 - 34 - 32 - 35, 224 - 16, 22, WHITE);
+	DrawRectangle(0, 256 - 20 - 36 - 34 - 32 - 34 -35, 224 - 16, 22, WHITE);
 }
 
 void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, int adderY) {
@@ -73,7 +73,7 @@ void MultiRampSetter() {
 	Ramp_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 130;
 	RampSetter(Ramp_4, 13, false, true, 0, Ramp_4_YPos);
 
-	Ramp_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 168;
+	Ramp_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 169;
 	RampSetter(Ramp_5, 13, false, false, 9, Ramp_5_YPos);
 }
 
@@ -84,7 +84,7 @@ void RampDrawer(Truss* Ramp, int size) {
 	}
 }
 
-void RampCollision(Truss* Ramp, int size,Entity &entity, bool isEntityMario) {
+void RampCollision(Truss* Ramp, int size, Entity &entity) {
 	//Collision point should be X middle value and Y lowest point in sprite.
 	
 	for (int i = 0; i < size; i++) {
@@ -94,7 +94,7 @@ void RampCollision(Truss* Ramp, int size,Entity &entity, bool isEntityMario) {
 			if (entity.FloorCollider.y > (Ramp[i].TrussPos.y+8)) {
 				//Check if lower than the Truss
 				entity.Position.y = Ramp[i].TrussPos.y+8 -entity.SpriteSize;
-				if(isEntityMario){
+				if(entity.tag == EntityTag::PLAYER){
 				Mario.marioVelocity.y = 0.0f;
 				Mario.isJumping = false;
 				Mario.setGrounded(true);
@@ -102,7 +102,7 @@ void RampCollision(Truss* Ramp, int size,Entity &entity, bool isEntityMario) {
 				}
 			}
 			
-			if ((isEntityMario && !Mario.isJumping && !Mario.isFalling) || !isEntityMario) {
+			if ((entity.tag == EntityTag::PLAYER && !Mario.isJumping && !Mario.isFalling) || entity.tag != EntityTag::PLAYER) {
 				//Check if higher than the Truss and not Jumping
 				if(entity.FloorCollider.y < (Ramp[i].TrussPos.y + 8)){
 				entity.Position.y = Ramp[i].TrussPos.y +8 - entity.SpriteSize;
@@ -112,36 +112,38 @@ void RampCollision(Truss* Ramp, int size,Entity &entity, bool isEntityMario) {
 	}
 }
 
-void MarioGroundCollisions() {
+void MapCollision(Entity &entity) {
 	
 	//DrawColliders();
 
-	if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_0_Zone)) {
-		RampCollision(Ramp_0, 14, Mario, true);
+	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone)) {
+		RampCollision(Ramp_0, 14, entity);
 	}
-	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_1_Zone)) {
-		RampCollision(Ramp_1, 13, Mario, true);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone)) {
+		RampCollision(Ramp_1, 13, entity);
 	}
-	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_2_Zone)) {
-		RampCollision(Ramp_2, 13, Mario, true);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone)) {
+		RampCollision(Ramp_2, 13, entity);
 	}
-	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_3_Zone)) {
-		RampCollision(Ramp_3, 13, Mario, true);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_3_Zone)) {
+		RampCollision(Ramp_3, 13, entity);
 	}
-	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_4_Zone)) {
-		RampCollision(Ramp_4, 13, Mario, true);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_4_Zone)) {
+		RampCollision(Ramp_4, 13, entity);
 	}
-	else if (CheckCollisionPointRec(Mario.FloorCollider, Ramp_5_Zone)) {
-		RampCollision(Ramp_5, 13, Mario, true);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_5_Zone)) {
+		RampCollision(Ramp_5, 13, entity);
 	}
 	else {
-		Mario.isFalling = true;
+		if(entity.tag == EntityTag::PLAYER){
+			Mario.isFalling = true;
+		}
 	}
 }
 
 void BarrelGroundCollisions(Barrel& barrel) {
-	Vector2& pos = barrel.BarrelPosition;
-	Vector2& col = barrel.BarrelFloorCollider;
+	Vector2& pos = barrel.Position;
+	Vector2& col = barrel.FloorCollider;
 	bool onGround = false;
 
 	auto checkTrussArray = [&](Truss* Ramp, int size, float leftEdge, float rightEdge) {
