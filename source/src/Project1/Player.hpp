@@ -28,17 +28,23 @@ private:
 	Vector2 position;
 	Rectangle framerec;
 	float mariosize;
+
+	Rectangle hitbox;
+
 	bool isGrounded;
+	bool isJumping;			// isJumping e isMoving usadas para poder aplicar las animaciones
+	bool isMoving;
+
 	float velocityY;		// Usado para el salto en parabola (así hacemos que no sea instantaneo)
 	float velocityX;
 	float lockedVelocityX;  // Usado para que en el salto no puedes moverte horizontalmente
-	bool isJumping;
-	bool isMoving;
+	
+	
 
 	// Animación
-	unsigned  numFrames       = 4;
-	float     frameDelay      = 0.5f;
-	unsigned  frameDelayCounter = 0;
-	unsigned  frameIndex      = 0;
+	unsigned  numFrames;
+	float     frameDelay;
+	unsigned  frameDelayCounter;
+	unsigned  frameIndex;
 };
 

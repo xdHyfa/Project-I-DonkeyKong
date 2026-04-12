@@ -6,7 +6,10 @@ Player::Player()
 	spritesheet = LoadTexture("resources/mario.png");
 	position.x = GetScreenWidth() / 4 / 4;				// Screen divided by camera zoom divided by position at 1/4
 	position.y = GetScreenHeight() / 4  - 32;			// Screen divided by camera zoom divided by the size of mario times two
+	
 	mariosize = 16;
+
+	hitbox = { 0, 0, mariosize, mariosize };
 	framerec = { 0, 0, mariosize, mariosize };
 
 	isGrounded = false;
@@ -18,6 +21,8 @@ Player::Player()
 	isJumping = false;
 	isMoving = false;
 
+	numFrames = 4;
+	frameDelay = 0.5f;
 	frameDelayCounter = 0;
 	frameIndex = 0;
 }
@@ -137,4 +142,7 @@ void Player::Gravity()
 		isJumping = false;
 	}
 	velocityX = 0;
+
+	hitbox.x = position.x;
+	hitbox.y = position.y;
 }
