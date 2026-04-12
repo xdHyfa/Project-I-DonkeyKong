@@ -8,8 +8,18 @@ Player::Player()
 	position.y = GetScreenHeight() / 4  - 32;			// Screen divided by camera zoom divided by the size of mario times two
 	mariosize = 16;
 	framerec = { 0, 0, mariosize, mariosize };
+
 	isGrounded = false;
+
 	velocityY = 0.0f;
+	velocityX = 0.0f;
+	lockedVelocityX = 0.0f;
+
+	isJumping = false;
+	isMoving = false;
+
+	frameDelayCounter = 0;
+	frameIndex = 0;
 }
 
 Player::~Player()
@@ -41,36 +51,66 @@ void Player::Draw()
 	DrawTextureRec(spritesheet, framerec, position, WHITE);
 }
 
+void Player::UpdateAnimation()
+{
+	++frameDelayCounter;
+	if (frameDelayCounter <= frameDelay) return;
+	frameDelayCounter = 0;
+
+	if (isJumping)
+	{
+		framerec.x = 3 * mariosize;
+	}
+	else if (isMoving && IsKeyDown(KEY_RIGHT))
+	{
+		framerec.width = mariosize;   
+		++frameIndex %= numFrames;
+		framerec.x = mariosize * (float)frameIndex;
+	}
+	else if (isMoving && IsKeyDown(KEY_LEFT))
+	{
+		framerec.width = -mariosize;  
+		++frameIndex %= numFrames;
+		framerec.x = mariosize * (float)frameIndex;
+	}
+	else
+	{
+		frameIndex = 0;
+		framerec.x = 0.0f;
+	}
+
+	isMoving = false;
+}
+
 void Player::MoveLeft()
 {
-	if (isGrounded) { 
-		velocityX = -MARIOVELOCITY;
-		position.x += velocityX;
-		if (position.x < 0) position.x = 0;
-	}
+	if (!isGrounded) return;  
+
+	isMoving = true;
+	velocityX = -MARIOVELOCITY;
+	position.x += velocityX;
+	if (position.x < 0) position.x = 0;
 }
 
 void Player::MoveRight()
 {
-	if (isGrounded) {
-		velocityX = MARIOVELOCITY;
-		position.x += velocityX;
-		if (position.x > GetScreenWidth() / 4 - framerec.width) {
-			position.x = GetScreenWidth() / 4 - framerec.width;		// Constrain mario inside the window considering the x4 camera zoom
-		}
-	}
+	if (!isGrounded) return;  
+
+	isMoving = true;
+	velocityX = MARIOVELOCITY;
+	position.x += velocityX;
+	if (position.x > GetScreenWidth() / 4 - framerec.width)
+		position.x = GetScreenWidth() / 4 - framerec.width;		// Constrain mario inside the window considering the x4 camera zoom
 }
 
 void Player::Jump()
 {
-	if (isGrounded) {
-		lockedVelocityX = MARIOVELOCITY;
-		velocityY -= JUMPHEIGHT;
-		isGrounded = false;
-	}
-	else return;
+	if (!isGrounded) return;
 
-	
+	lockedVelocityX = velocityX;          
+	velocityY = -(float)JUMPHEIGHT; 
+	isGrounded = false;
+	isJumping = true;
 }
 
 void Player::ClimbLadder()
@@ -84,14 +124,17 @@ void Player::ClimbLadder()
 void Player::Gravity()
 {
 	if (!isGrounded) {
-		velocityY  += GRAVITY;
+		velocityY += GRAVITY;
 		position.y += velocityY;
+		position.x += lockedVelocityX;
 	}
 
-	if (position.y >= GetScreenHeight() / 4 - framerec.height) {
-		position.y      = GetScreenHeight() / 4 - framerec.height; 
-		velocityY       = 0.0f;
+	if (position.y >= GetScreenHeight() / 4 - framerec.height) {	// Condicional para cuando toca el suelo o trusses (IMPLEMENTAR)
+		position.y = GetScreenHeight() / 4 - framerec.height; 
+		velocityY = 0.0f;
 		lockedVelocityX = 0.0f;
-		isGrounded      = true;
+		isGrounded  = true;
+		isJumping = false;
 	}
+	velocityX = 0;
 }
