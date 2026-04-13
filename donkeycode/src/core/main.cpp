@@ -30,6 +30,7 @@ int main ()
 
 		switch (current_scene) {
 		case INTRO:
+
 			runInitialScreen();
 
 			break;

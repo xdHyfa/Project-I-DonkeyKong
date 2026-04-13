@@ -5,13 +5,20 @@
 #include "scenes.h"
 
 
+Texture LogoGrupo;
+Texture Names;
+Rectangle LOGO = { 0, 0, 180, 88 };
+Rectangle NAMES = { 85, 2, 46, 32 };
 
 
 void runInitialScreen() {
 
     if (!Scene_Init) {
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
-        
+        SearchAndSetResourceDir("resources");
+        //LogoGrupo = LoadTexture("SPRITES/MISSING PNG");
+        //Names = LoadTexture("SPRITES/MISSING PNG");
+        Scene_Init = true;
 
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
