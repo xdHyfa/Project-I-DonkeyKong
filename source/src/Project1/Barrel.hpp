@@ -13,6 +13,8 @@ public:
 
 	//void UpdateCollider();
 
+	Rectangle GetHitbox();
+
 	void UpdateAnimation();
 
 private:

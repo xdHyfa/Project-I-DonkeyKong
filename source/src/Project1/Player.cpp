@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "constants.hpp"
+#include <iostream>
 
 Player::Player()
 {
@@ -12,19 +13,20 @@ Player::Player()
 	hitbox = { 0, 0, mariosize, mariosize };
 	framerec = { 0, 0, mariosize, mariosize };
 
-	isGrounded = false;
-
 	velocityY = 0.0f;
 	velocityX = 0.0f;
 	lockedVelocityX = 0.0f;
 
+	isGrounded = false;
 	isJumping = false;
 	isMoving = false;
+	isDead = false;
 
 	numFrames = 4;
 	frameDelay = 0.5f;
 	frameDelayCounter = 0;
 	frameIndex = 0;
+	deathLoopCount = 0;
 }
 
 Player::~Player()
@@ -49,6 +51,11 @@ void Player::SetVelocityY(float velocityY)
 	this->velocityY = velocityY;
 }
 
+Rectangle Player::GetHitbox()
+{
+	return Rectangle(hitbox);
+}
+
 
 
 void Player::Draw()
@@ -58,6 +65,23 @@ void Player::Draw()
 
 void Player::UpdateAnimation()
 {
+	if (isDead)
+	{
+		framerec.width = mariosize;
+		framerec.y = 3 * mariosize;
+
+		if (deathLoopCount < 2)
+		{
+			++frameIndex %= numFrames;
+			framerec.x = mariosize * (float)frameIndex;
+			if (frameIndex == 0) ++deathLoopCount;
+		}
+		else
+		{
+			framerec.x = 5 * mariosize;  
+		}
+	}
+
 	++frameDelayCounter;
 	if (frameDelayCounter <= frameDelay) return;
 	frameDelayCounter = 0;
@@ -74,7 +98,7 @@ void Player::UpdateAnimation()
 	}
 	else if (isMoving && IsKeyDown(KEY_LEFT))
 	{
-		framerec.width = -mariosize;  
+		framerec.width = -mariosize;
 		++frameIndex %= numFrames;
 		framerec.x = mariosize * (float)frameIndex;
 	}
@@ -84,12 +108,23 @@ void Player::UpdateAnimation()
 		framerec.x = 0.0f;
 	}
 
+
 	isMoving = false;
 }
+
+void Player::Die()
+{
+	isDead = true;
+	isGrounded = false;
+	isJumping = false;
+}
+
+
 
 void Player::MoveLeft()
 {
 	if (!isGrounded) return;  
+	if (isDead) return;
 
 	isMoving = true;
 	velocityX = -MARIOVELOCITY;
@@ -100,6 +135,7 @@ void Player::MoveLeft()
 void Player::MoveRight()
 {
 	if (!isGrounded) return;  
+	if (isDead) return;
 
 	isMoving = true;
 	velocityX = MARIOVELOCITY;
@@ -111,6 +147,7 @@ void Player::MoveRight()
 void Player::Jump()
 {
 	if (!isGrounded) return;
+	if (isDead) return;
 
 	lockedVelocityX = velocityX;          
 	velocityY = -(float)JUMPHEIGHT; 
@@ -120,6 +157,8 @@ void Player::Jump()
 
 void Player::ClimbLadder()
 {
+	if (isDead) return;
+
 	if (IsKeyDown(KEY_UP)) {
 		position.y -= MARIOVELOCITY;
 	}
@@ -128,6 +167,8 @@ void Player::ClimbLadder()
 
 void Player::Gravity()
 {
+	if (isDead) return;
+
 	if (!isGrounded) {
 		velocityY += GRAVITY;
 		position.y += velocityY;

@@ -14,7 +14,11 @@ Game::~Game()
 void Game::Draw()
 {
 	player.Draw();
-    barrel.Draw();
+
+    for (int i = 0; i<1; i++)
+    {
+        barrel.Draw();
+    }
 }
 
 void Game::HandleInput()
@@ -37,6 +41,21 @@ void Game::Update()
 	player.Gravity();
     player.UpdateAnimation();
 
-    barrel.Movement();
-    barrel.UpdateAnimation();
+    for (int i = 0; i < 1; i++)
+    {
+        barrel.Movement();
+        barrel.UpdateAnimation();
+    }
 }
+
+void Game::CheckForCollisions()
+{
+    for (int i = 0; i < 1; i++) 
+    {
+        if (CheckCollisionRecs(player.GetHitbox(), barrel.GetHitbox())) 
+        {
+            player.Die();
+        }
+    }
+}
+

@@ -21,9 +21,10 @@ Barrel::Barrel()
 	frameDelayCounter = 0;
 	frameIndex = 0;
 	barrelFrameWidth = 18;
-	numFrames = 2;
+	numFrames = 4;
 
 	justFlipped = false;
+
 }
 
 Barrel::~Barrel() 
@@ -48,6 +49,11 @@ void Barrel::UpdateAnimation()
 	
 }
 
+Rectangle Barrel::GetHitbox()
+{
+	return Rectangle(hitbox);
+}
+
 //void Barrel::UpdateCollider() {
 //	FloorCollider.x = Position.x + 8;
 //	FloorCollider.y = Position.y + barrelsize;
@@ -68,6 +74,9 @@ void Barrel::Movement() {
 	if (position.y >= GetScreenHeight() / 4 - framerec.height) {	// Condicional para cuando toca el suelo o trusses (IMPLEMENTAR)
 		position.y = GetScreenHeight() / 4 - framerec.height;
 	}
+
+	hitbox.x = position.x;
+	hitbox.y = position.y;
 
 	//UpdateCollider();
 }

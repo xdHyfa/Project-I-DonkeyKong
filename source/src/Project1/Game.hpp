@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.hpp"
 #include "Barrel.hpp"
+#include <vector>
+using namespace std;
 
 class Game
 {
@@ -10,6 +12,8 @@ public:
 	void Draw();
 	void HandleInput();
 	void Update();
+
+	void CheckForCollisions();
 
 private:
 	Player player;

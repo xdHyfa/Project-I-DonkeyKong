@@ -22,6 +22,8 @@ int main()
 
         game.Update();
 
+        game.CheckForCollisions();
+
         BeginDrawing();
 
         ClearBackground(BLACK);
