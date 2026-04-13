@@ -17,8 +17,8 @@ public:
 	Rectangle SpriteSelector = {3,0,10,3};
 
 	void UpdateHitbox() {
-		Hitbox.x = Position.x; Hitbox.y = Position.y;
-		Hitbox.width = SpriteSelector.width; Hitbox.height = SpriteSelector.height;
+		Hitbox.x = Position.x; Hitbox.y = Position.y -9;
+		Hitbox.width = SpriteSelector.width; Hitbox.height = SpriteSelector.height + 10;
 	}
 
 	void setPos(float x, float y) {
@@ -64,6 +64,7 @@ public:
 	static void UnloadSharedTexture() {
 		UnloadTexture(texture);
 	}
+	void CheckEntityOnLadder(Entity& entity);
 };
 
 extern Ladder Level1Ladders[9];
@@ -73,3 +74,4 @@ void Level1LadderSetter();
 void DrawLadderCollider();
 
 void Level1LadderDraw();
+

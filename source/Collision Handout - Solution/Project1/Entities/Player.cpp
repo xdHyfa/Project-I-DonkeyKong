@@ -51,7 +51,12 @@ void Player::Movement()
         }
         return;
     }*/
-
+    if (OnLadder && IsKeyDown(KEY_UP)) {
+        marioVelocity.y = -(float)Mario.velocity;
+    }
+    if (OnLadder && IsKeyDown(KEY_DOWN)) {
+        marioVelocity.y = +(float)Mario.velocity;
+    }
 
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;

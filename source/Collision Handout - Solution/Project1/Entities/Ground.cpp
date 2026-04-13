@@ -92,7 +92,6 @@ void RampCollision(Truss* Ramp, int size, Entity &entity) {
 	for (int i = 0; i < size; i++) {
 		if (entity.FloorCollider.x < (Ramp[i].TrussPos.x + 16) && entity.FloorCollider.x >= Ramp[i].TrussPos.x) {
 			//First check if in range of Truss x (Width)
-			
 			if (entity.FloorCollider.y > (Ramp[i].TrussPos.y+8)) {
 				//Check if lower than the Truss
 				entity.Position.y = Ramp[i].TrussPos.y+8 -entity.SpriteSize;
@@ -104,7 +103,7 @@ void RampCollision(Truss* Ramp, int size, Entity &entity) {
 				}
 			}
 			
-			if ((entity.tag == EntityTag::PLAYER && !Mario.isJumping && !Mario.isFalling) || entity.tag != EntityTag::PLAYER) {
+			if (!entity.OnLadder && ((entity.tag == EntityTag::PLAYER && !Mario.isJumping && !Mario.isFalling) || entity.tag != EntityTag::PLAYER)) {
 				//Check if higher than the Truss and not Jumping
 				if(entity.FloorCollider.y < (Ramp[i].TrussPos.y + 8)){
 				entity.Position.y = Ramp[i].TrussPos.y +8 - entity.SpriteSize;
