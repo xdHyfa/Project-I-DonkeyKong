@@ -66,6 +66,8 @@ void Level1RampSetter() {
 	Ramp_1_YPos = (SCREEN_HEIGHT - TrussHeight) - 43;
 	RampSetter(Ramp_1, 13, false, false, 0, Ramp_1_YPos);
 
+	Ramp_1[11].hasLadderBelow = true;
+
 	Ramp_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 62;
 	RampSetter(Ramp_2, 13, false, true, 0, Ramp_2_YPos);
 
@@ -92,14 +94,19 @@ void RampCollision(Truss* Ramp, int size, Entity &entity) {
 	for (int i = 0; i < size; i++) {
 		if (entity.FloorCollider.x < (Ramp[i].TrussPos.x + 16) && entity.FloorCollider.x >= Ramp[i].TrussPos.x) {
 			//First check if in range of Truss x (Width)
-			if (entity.FloorCollider.y > (Ramp[i].TrussPos.y+8)) {
+
+			if (entity.FloorCollider.y >= (Ramp[i].TrussPos.y+8)) {
 				//Check if lower than the Truss
-				entity.Position.y = Ramp[i].TrussPos.y+8 -entity.SpriteSize;
-				if(entity.tag == EntityTag::PLAYER){
-				Mario.marioVelocity.y = 0.0f;
-				Mario.isJumping = false;
-				Mario.setGrounded(true);
-				Mario.isFalling = false;
+				if (!Ramp[i].hasLadderBelow || !entity.OnLadder) {
+					entity.OnLadder = false;
+					entity.Position.y = Ramp[i].TrussPos.y + 8 - entity.SpriteSize;
+
+					if (entity.tag == EntityTag::PLAYER) {
+						Mario.marioVelocity.y = 0.0f;
+						Mario.isJumping = false;
+						Mario.setGrounded(true);
+						Mario.isFalling = false;
+					}
 				}
 			}
 			
@@ -109,6 +116,7 @@ void RampCollision(Truss* Ramp, int size, Entity &entity) {
 				entity.Position.y = Ramp[i].TrussPos.y +8 - entity.SpriteSize;
 				}
 			}
+			return;
 		}
 	}
 }

@@ -39,7 +39,7 @@ void runLevel1() {
     Level1Ladders[0].CheckEntityOnLadder(Mario);
 
     //DrawLevel1Colliders();
-    DrawLadderCollider();
+    
     /*---TEXTURE DRAW---*/
     Level1LadderDraw();
     RampDrawer(Ramp_0, 14);
@@ -49,8 +49,15 @@ void runLevel1() {
     RampDrawer(Ramp_4, 13);
     RampDrawer(Ramp_5, 13);
 
+    //--Debugging tool: Ladder Hitboxes
+    //DrawLadderCollider();
+    
+    
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-
+    
+    //--Debugging tool: Mario Origin Point (RED) and Mario Floor Collider (YELLOW)
+    //DrawMarioCollider();
+    
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
     FireRoutine();

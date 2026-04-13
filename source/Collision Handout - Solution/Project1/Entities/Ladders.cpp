@@ -14,6 +14,7 @@ void Level1LadderSetter() {
 	Ladder::LoadSharedTexture();
 	Level1Ladders[0].setPos(Ramp_1[11].TrussPos.x + Ramp_1[11].TrussBox.width/4, Ramp_1[11].TrussPos.y + Ramp_1[11].TrussBox.height*2);
 	Level1Ladders->setSprite(1, true);
+	Level1Ladders[0].Hitbox.y += 1;
 	
 }
 
@@ -27,7 +28,11 @@ void Level1LadderDraw() {
 
 void Ladder :: CheckEntityOnLadder(Entity& entity) {
 	if (CheckCollisionPointRec(entity.FloorCollider, Hitbox)) {
-		entity.OnLadder = true;
-		cout << "On ladder" << endl;
+		entity.CanClimb = true;
+		cout << "Can Climb" << endl;
+	}
+	else{
+		entity.OnLadder = false;
+		entity.CanClimb = false;
 	}
 }

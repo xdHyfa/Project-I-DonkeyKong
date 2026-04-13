@@ -18,6 +18,7 @@ public:
     Vector2 FloorCollider = { 0.0f, 0.0f };
     float SpriteSize = 16.0f;
     bool OnLadder = false;
+    bool CanClimb = false;
 
     bool  getIsGrounded() const { return isGrounded; }
     void setGrounded(bool g) { isGrounded = g; }

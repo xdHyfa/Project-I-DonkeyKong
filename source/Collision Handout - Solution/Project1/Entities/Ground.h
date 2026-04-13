@@ -7,6 +7,7 @@ public:
 	static Texture truss;
 	Vector2 TrussPos = { 0 ,0 };
 	Rectangle TrussBox = {TrussPos.x, TrussPos.y , 16, 8};
+	bool hasLadderBelow = false;
 	
 	void setPos(float x, float y) {
 		TrussPos.x = x; TrussPos.y = y;
