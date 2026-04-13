@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.hpp"
+#include "Barrel.hpp"
 
 class Game
 {
@@ -12,4 +13,5 @@ public:
 
 private:
 	Player player;
+	Barrel barrel;
 };

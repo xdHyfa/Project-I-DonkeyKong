@@ -14,6 +14,7 @@ Game::~Game()
 void Game::Draw()
 {
 	player.Draw();
+    barrel.Draw();
 }
 
 void Game::HandleInput()
@@ -35,4 +36,7 @@ void Game::Update()
 {
 	player.Gravity();
     player.UpdateAnimation();
+
+    barrel.Movement();
+    barrel.UpdateAnimation();
 }

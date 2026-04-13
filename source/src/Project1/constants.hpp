@@ -7,3 +7,6 @@
 #define GRAVITY 0.9f
 #define MARIOVELOCITY 1.5f
 #define JUMPHEIGHT 6
+
+#define BARRELVELOCITY 2.2f
+#define BARRELGRAVITY 0.3f

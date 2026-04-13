@@ -22,18 +22,13 @@ int main()
 
         game.Update();
 
-
-
         BeginDrawing();
 
         ClearBackground(BLACK);
 
         BeginMode2D(camera);
 
-
-
         game.Draw();
-
 
 
         EndDrawing();
