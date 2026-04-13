@@ -46,7 +46,7 @@ void runMainMenu() {
         current_scene = LEVEL1;
 
     }
-    DrawTextureRec(DonkoTitleBlue, rectitle, {22.0f, 64.0f}, WHITE);
+    DrawTextureRec(DonkoTitleBlue, rectitle, { 22.0f, 64.0f }, WHITE);
     DrawTextureRec(DonkoTitleRed, rectitle, { 22.0f, 64.0f }, WHITE);
     DrawTextureRec(Donko, recdonko, { 88.0f, 168.0f }, WHITE);
     

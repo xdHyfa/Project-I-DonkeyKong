@@ -16,7 +16,7 @@ void runInitialScreen() {
     if (!Scene_Init) {
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
-        //LogoGrupo = LoadTexture("SPRITES/MISSING PNG");
+        LogoGrupo = LoadTexture("SPRITES/LOGOGRUPO.png");
         //Names = LoadTexture("SPRITES/MISSING PNG");
         Scene_Init = true;
 
@@ -26,7 +26,5 @@ void runInitialScreen() {
         current_scene = TITLE;
 
     }
-  
-    
-   
+    DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 64.0f }, WHITE);
 }
