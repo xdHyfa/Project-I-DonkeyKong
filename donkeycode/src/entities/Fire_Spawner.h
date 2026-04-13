@@ -54,4 +54,5 @@ public:
 extern Fire Fire1;
 extern Fire Fire2;
 
+void FireSpawner();
 void SpawnFire();

@@ -15,7 +15,7 @@ unsigned  numFrames = 4;
 float     marioFrameWidth = 0.0f;
 float     marioFrameHeight = 0.0f;
 Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
-Vector2   marioPosition = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
+Vector2   marioPosition = { 64, SCREEN_HEIGHT - entityMario.MARIO_SIZE - 17 };
 Vector2   marioVelocity = { 0.0f, 0.0f };
 float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
@@ -25,6 +25,7 @@ Vector2 marioFloorCollider;
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
 bool        isJumping = false;
+bool        isFalling = false;
 
 bool isTextureValid(const Texture2D& texture)
 {
@@ -56,19 +57,19 @@ void Mario_Movement()
 
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         marioVelocity.x = (float)entityMario.VELOCITY;
         if (frameRec.width < 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         marioVelocity.x = -(float)entityMario.VELOCITY;
         if (frameRec.width > 0 && entityMario.getIsGrounded()) frameRec.width = -frameRec.width;
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input ---
-    if (IsKeyPressed(KEY_UP))
+    if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_W))
     {
         if (entityMario.tryJump())
         {
@@ -85,7 +86,7 @@ void Mario_Movement()
     }
 
     // --- Física: gravedad ---
-    if (!entityMario.getIsGrounded())
+    if (!entityMario.getIsGrounded() || isFalling)
     {
         marioVelocity.y += GRAVITY;
     }
@@ -109,6 +110,13 @@ void Mario_Movement()
     }
     if (marioPosition.x < 0) {
         marioPosition.x = 0;
+    }
+
+    if (IsKeyPressed(KEY_R)) {
+        marioPosition.y -= 32;
+    }
+    if (IsKeyPressed(KEY_Q)) {
+        marioPosition.y += 32;
     }
 
     // --- Sincronizar entidad ---
