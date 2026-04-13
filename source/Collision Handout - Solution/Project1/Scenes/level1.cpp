@@ -4,9 +4,12 @@
 #include "Entities/Fire_Spawner.h"
 #include "Entities/Barrel.h"
 #include "Entities/Ground.h"
+#include "Entities/Ladders.h"
 #include "include/resource_dir.h"	
 #include "raylib.h"
 #include "Core/constants.h"
+
+
 
 void runLevel1() {
 
@@ -19,8 +22,8 @@ void runLevel1() {
         //Mario Setup
         Mario.Setup();
 
-        MultiRampSetter();
-
+        Level1RampSetter();
+        Level1LadderSetter();
         Scene_Init = true;
 
     }
@@ -33,9 +36,10 @@ void runLevel1() {
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
     MapCollision(Mario);
-    DrawColliders();
-
+    //DrawLevel1Colliders();
+    DrawLadderCollider();
     /*---TEXTURE DRAW---*/
+    Level1LadderDraw();
     RampDrawer(Ramp_0, 14);
     RampDrawer(Ramp_1, 13);
     RampDrawer(Ramp_2, 13);

@@ -37,17 +37,17 @@ extern float Ramp_5_YPos;
 
 void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, int adderY);
 
-void MultiRampSetter();
+void Level1RampSetter();
 
 void RampDrawer(Truss* Ramp, int size);
 
 void RampCollision(Truss* Ramp, int size, Entity &entity);
 
-void DrawColliders();
+void DrawLevel1Colliders();
 
 void MapCollision(Entity &entity);
 
-extern Truss Ramp_0 [14];
+extern Truss Ramp_0[14];
 extern Rectangle Ramp_0_Zone;
 
 extern Truss Ramp_1[13];

@@ -3,6 +3,8 @@
 #include "Entities/Player.h"
 #include "Core/constants.h"
 
+
+/*---MAP DATA VARIABLES HERE---*/
 Texture Truss::truss;
 
 float TrussHeight = 16;
@@ -15,12 +17,12 @@ float Ramp_5_YPos;
 
 /*---ACTIVE AREA HITBOX FOR EACH RAMP---*/
 //Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
-Rectangle Ramp_0_Zone = {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20};
+Rectangle Ramp_0_Zone = { 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20 };
 Rectangle Ramp_1_Zone = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -33, SCREEN_WIDTH -16, 22 };
-Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 -34 -32 -35, SCREEN_WIDTH -16, 22 };
-Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 -34 -32 -34 -35, SCREEN_WIDTH -16, 22 };
+Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34, SCREEN_WIDTH - 16, 22 };
+Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 33, SCREEN_WIDTH - 16, 22 };
+Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 35, SCREEN_WIDTH - 16, 22 };
+Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 34 - 35, SCREEN_WIDTH - 16, 22 };
 
 Truss Ramp_0[14];
 Truss Ramp_1[13];
@@ -29,7 +31,7 @@ Truss Ramp_3[13];
 Truss Ramp_4[13];
 Truss Ramp_5[13];
 
-void DrawColliders() {
+void DrawLevel1Colliders() {
 	DrawRectangle(0, 256 - 20, 224, 20, WHITE);
 	DrawRectangle(0, 256 - 20 - 36, 224 - 16, 22, WHITE);
 	DrawRectangle(16, 256 - 20 - 36 - 34, 224 - 16, 22, WHITE);
@@ -55,7 +57,7 @@ void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, in
 
 }
 
-void MultiRampSetter() {
+void Level1RampSetter() {
 	Truss::LoadSharedTexture();
 
 	Ramp_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;

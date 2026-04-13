@@ -147,6 +147,7 @@
     <ClCompile Include="Entities\Barrel.cpp" />
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
+    <ClCompile Include="Entities\Ladders.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Entities\entity.h" />
     <ClInclude Include="Entities\Fire_Spawner.h" />
     <ClInclude Include="Entities\Ground.h" />
+    <ClInclude Include="Entities\Ladders.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="include\resource_dir.h" />
     <ClInclude Include="libraries\raylib\include\raylib.h" />
