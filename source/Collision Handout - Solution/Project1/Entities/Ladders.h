@@ -7,7 +7,7 @@
 // Level 4 Ladder Sprite Starts at X = 
 // Broken Pieces Start at Y = 0, Full Pieces start at Y = 16.
 // Broken Pieces have x = 10 width and y = 3 height.
-// Full Pieces have x = 10  width and y =  height.
+// Full Pieces have x = 10  width and y = 16 height.
 
 class Ladder {
 public:
@@ -64,7 +64,7 @@ public:
 	static void UnloadSharedTexture() {
 		UnloadTexture(texture);
 	}
-	void CheckEntityOnLadder(Entity& entity);
+	bool CheckEntityOnLadder(Entity& entity);
 };
 
 extern Ladder Level1Ladders[9];
@@ -75,3 +75,4 @@ void DrawLadderCollider();
 
 void Level1LadderDraw();
 
+void Level1LadderCollision(Entity &entity);

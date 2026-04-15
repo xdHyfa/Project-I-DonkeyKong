@@ -66,4 +66,6 @@ extern Rectangle Ramp_4_Zone;
 extern Truss Ramp_5[13];
 extern Rectangle Ramp_5_Zone;
 
+extern Truss Ramp_6[3];
+
 void BarrelGroundCollisions(Barrel& barrel);

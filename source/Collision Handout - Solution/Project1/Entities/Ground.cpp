@@ -14,6 +14,7 @@ float Ramp_2_YPos;
 float Ramp_3_YPos;
 float Ramp_4_YPos;
 float Ramp_5_YPos;
+float Ramp_6_YPos;
 
 /*---ACTIVE AREA HITBOX FOR EACH RAMP---*/
 //Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
@@ -30,14 +31,15 @@ Truss Ramp_2[13];
 Truss Ramp_3[13];
 Truss Ramp_4[13];
 Truss Ramp_5[13];
+Truss Ramp_6[3];
 
 void DrawLevel1Colliders() {
-	DrawRectangle(0, 256 - 20, 224, 20, WHITE);
-	DrawRectangle(0, 256 - 20 - 36, 224 - 16, 22, WHITE);
-	DrawRectangle(16, 256 - 20 - 36 - 34, 224 - 16, 22, WHITE);
-	DrawRectangle(0, 256 - 20 - 36 - 34 - 33, 224 - 16, 22, WHITE);
-	DrawRectangle(16, 256 - 20 - 36 - 34 - 32 - 35, 224 - 16, 22, WHITE);
-	DrawRectangle(0, 256 - 20 - 36 - 34 - 32 - 34 -35, 224 - 16, 22, WHITE);
+	DrawRectangle(Ramp_0_Zone.x, Ramp_0_Zone.y, Ramp_0_Zone.width, Ramp_0_Zone.height, WHITE);
+	DrawRectangle(Ramp_1_Zone.x, Ramp_1_Zone.y, Ramp_1_Zone.width, Ramp_1_Zone.height, WHITE);
+	DrawRectangle(Ramp_2_Zone.x, Ramp_2_Zone.y, Ramp_2_Zone.width, Ramp_2_Zone.height, WHITE);
+	DrawRectangle(Ramp_3_Zone.x, Ramp_3_Zone.y, Ramp_3_Zone.width, Ramp_3_Zone.height, WHITE);
+	DrawRectangle(Ramp_4_Zone.x, Ramp_4_Zone.y, Ramp_4_Zone.width, Ramp_4_Zone.height, WHITE);
+	DrawRectangle(Ramp_5_Zone.x, Ramp_5_Zone.y, Ramp_5_Zone.width, Ramp_5_Zone.height, WHITE);
 }
 
 void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, int adderY) {
@@ -71,14 +73,30 @@ void Level1RampSetter() {
 	Ramp_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 62;
 	RampSetter(Ramp_2, 13, false, true, 0, Ramp_2_YPos);
 
+	Ramp_2[1].hasLadderBelow = true;
+	Ramp_2[5].hasLadderBelow = true;
+
 	Ramp_3_YPos = (SCREEN_HEIGHT - TrussHeight) - 110;
 	RampSetter(Ramp_3, 13, false, false, 0, Ramp_3_YPos);
+
+	Ramp_3[7].hasLadderBelow = true;
+	Ramp_3[11].hasLadderBelow = true;
 
 	Ramp_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 130;
 	RampSetter(Ramp_4, 13, false, true, 0, Ramp_4_YPos);
 
+	Ramp_4[1].hasLadderBelow = true;
+	Ramp_4[3].hasLadderBelow = true;
+
 	Ramp_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 169;
 	RampSetter(Ramp_5, 13, false, false, 9, Ramp_5_YPos);
+
+	Ramp_5[11].hasLadderBelow = true;
+
+	Ramp_6_YPos = (SCREEN_HEIGHT - TrussHeight) - 200;
+	for (int i = 0; i < 3; i++) {
+		Ramp_6[i].setPos(SCREEN_WIDTH/3+(i+1)*16, Ramp_6_YPos);
+	}
 }
 
 

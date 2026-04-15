@@ -36,7 +36,8 @@ void runLevel1() {
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
     MapCollision(Mario);
-    Level1Ladders[0].CheckEntityOnLadder(Mario);
+    Level1LadderCollision(Mario);
+
 
     //DrawLevel1Colliders();
     
@@ -48,6 +49,7 @@ void runLevel1() {
     RampDrawer(Ramp_3, 13);
     RampDrawer(Ramp_4, 13);
     RampDrawer(Ramp_5, 13);
+    RampDrawer(Ramp_6, 3);
 
     //--Debugging tool: Ladder Hitboxes
     //DrawLadderCollider();
