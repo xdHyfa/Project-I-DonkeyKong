@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "Entities/Fire_Spawner.h"
 #include "Core/constants.h"
-#include "Entities/Ground.h"
+#include "Maps/Level1Map.h"
 
 #define FIREVELOCITY 2.0f
 
@@ -59,7 +59,7 @@ void FireRoutine() {
 	
 	if (Fire1.has_Spawned) {
 		Fire1.Movement();
-		MapCollision(Fire1);
+		Level1RampCollisions(Fire1);
 		DrawTextureRec(Fire1.Texture, Fire1.FireSprite, Fire1.Position, WHITE);
 	}
 }

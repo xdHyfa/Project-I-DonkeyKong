@@ -1,6 +1,6 @@
 #pragma once
-
-
+#include "raylib.h"
+#include "Entities/entity.h"
 // Level 1 Ladder Sprite Starts at X = 3   
 // Level 2 Ladder Sprite Starts at X = 19 (Offset 16.) 
 // Level 3 Ladder Sprite Starts at X = 34 and Has X = 12 Width.
@@ -65,14 +65,11 @@ public:
 		UnloadTexture(texture);
 	}
 	bool CheckEntityOnLadder(Entity& entity);
+
 };
 
-extern Ladder Level1Ladders[9];
+void DrawLadderCollider(Ladder* Map_Ladders, int size);
 
-void Level1LadderSetter();
+void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size);
 
-void DrawLadderCollider();
 
-void Level1LadderDraw();
-
-void Level1LadderCollision(Entity &entity);

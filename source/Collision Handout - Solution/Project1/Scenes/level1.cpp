@@ -3,8 +3,7 @@
 #include "Scenes/scenes.h"
 #include "Entities/Fire_Spawner.h"
 #include "Entities/Barrel.h"
-#include "Entities/Ground.h"
-#include "Entities/Ladders.h"
+#include "Maps/Level1Map.h"
 #include "include/resource_dir.h"	
 #include "raylib.h"
 #include "Core/constants.h"
@@ -35,21 +34,14 @@ void runLevel1() {
     /*---GROUND COLLISIONS---*/
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
-    MapCollision(Mario);
+    Level1RampCollisions(Mario);
     Level1LadderCollision(Mario);
-
 
     //DrawLevel1Colliders();
     
     /*---TEXTURE DRAW---*/
     Level1LadderDraw();
-    RampDrawer(Ramp_0, 14);
-    RampDrawer(Ramp_1, 13);
-    RampDrawer(Ramp_2, 13);
-    RampDrawer(Ramp_3, 13);
-    RampDrawer(Ramp_4, 13);
-    RampDrawer(Ramp_5, 13);
-    RampDrawer(Ramp_6, 3);
+    Level1RampDraw();
 
     //--Debugging tool: Ladder Hitboxes
     //DrawLadderCollider();
@@ -77,6 +69,7 @@ void runLevel1() {
         UnloadTexture(Fire2.Texture);
         Truss::UnloadSharedTexture();
         UnloadTexture(barrel1.Texture);
+        Ladder::UnloadSharedTexture();
 
 
         Scene_Init = false; // reset initialization boolean.
