@@ -43,6 +43,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\InitialScreen.cpp">
+    <ClCompile Include="EntityCollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,6 +94,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\InitialScreen.h">
+    <ClInclude Include="EntityCollision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
