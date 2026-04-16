@@ -105,8 +105,6 @@ void Level2RampDraw() {
 }
 void Level2RampCollisions(Entity& entity) {
 
-	//DrawColliders();
-
 	if (CheckCollisionPointRec(entity.FloorCollider, Base_0_Zone)) {
 		RampCollision(Base_0, 14, entity);
 	}
@@ -247,10 +245,10 @@ void Level2LadderCollision(Entity& entity) {
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel2Colliders() {
-	//DrawLadderCollider(Level2Ladders, 1);
-	/*DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
+	DrawLadderCollider(Level2Ladders, 14);
+	DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
 	DrawRectangle(Base_1_Zone.x, Base_1_Zone.y, Base_1_Zone.width, Base_1_Zone.height, WHITE);
 	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
 	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
-	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);*/
+	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
 }

@@ -42,8 +42,7 @@ void runMainMenu() {
 
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-        Scene_Init = false;
-        current_scene = LEVEL1;
+        ChangeScene();
 
     }
     DrawTextureRec(DonkoTitleBlue, rectitle, {22.0f, 64.0f}, WHITE);

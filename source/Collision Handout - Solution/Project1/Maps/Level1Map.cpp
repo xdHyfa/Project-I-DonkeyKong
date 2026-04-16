@@ -5,10 +5,22 @@
 #include "Core/constants.h"
 #include "Entities/entity.h"
 #include "Entities/Player.h"
+#include "Scenes/scenes.h"
 #include <iostream>
 using namespace std;
 
 #define TrussHeight 16.0f
+
+
+//---WIN CONDITION HITBOX:
+
+Rectangle WinHitbox = { SCREEN_WIDTH/2,40, SCREEN_WIDTH / 8 , 10 };
+
+void Level1CheckWinCondition(Entity& entity) {
+	if (entity.tag == EntityTag::PLAYER && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
+		ChangeScene();
+	}
+}
 
 //---RAMPS---
 
@@ -244,6 +256,7 @@ void Level1LadderCollision(Entity& entity) {
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel1Colliders() {
+	DrawRectangle(WinHitbox.x, WinHitbox.y, WinHitbox.width, WinHitbox.height, YELLOW);
 	DrawLadderCollider(Level1Ladders, 9);
 	DrawRectangle(Ramp_0_Zone.x, Ramp_0_Zone.y, Ramp_0_Zone.width, Ramp_0_Zone.height, WHITE);
 	DrawRectangle(Ramp_1_Zone.x, Ramp_1_Zone.y, Ramp_1_Zone.width, Ramp_1_Zone.height, WHITE);

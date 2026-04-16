@@ -156,6 +156,7 @@
     <ClCompile Include="Scenes\InitialScreen.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
     <ClCompile Include="Scenes\level2.cpp" />
+    <ClCompile Include="Scenes\scenes.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>

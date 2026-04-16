@@ -35,8 +35,7 @@ void runInitialScreen() {
 
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-        Scene_Init = false;
-        current_scene = TITLE;
+        ChangeScene();
 
     }
     DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 64.0f }, WHITE);

@@ -44,7 +44,7 @@ void runLevel2() {
     Level2RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    DrawLevel2Colliders();
+    //DrawLevel2Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -58,12 +58,12 @@ void runLevel2() {
     BarrelRoutine();
 
     if (IsKeyPressed(KEY_ONE)) {
-        current_scene = LEVEL1;
+        ChangeScene();
     }
 
     /*Like onDestroy() function from unity, run before scene change.*/
 
-    if (current_scene != LEVEL2) {
+    if (GetCurrentScene() != LEVEL2) {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);

@@ -5,7 +5,7 @@
 #include "Entities/Ground.h"
 #include "Entities/Barrel.h"
 
-
+void Level1CheckWinCondition(Entity &entity);
 
 void Level1LadderSetter();
 

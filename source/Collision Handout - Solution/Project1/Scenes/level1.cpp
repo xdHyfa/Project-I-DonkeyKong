@@ -59,17 +59,19 @@ void runLevel1() {
     FireRoutine();
     BarrelRoutine();
 
+    Level1CheckWinCondition(Mario);
+
     if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
     {
         Mario.die();
     }
 
     if (IsKeyPressed(KEY_TWO)) {
-        current_scene = LEVEL2;
+        ChangeScene();
     }
     /*Like onDestroy() function from unity, run before scene change.*/
 
-    if (current_scene != LEVEL1) {
+    if (GetCurrentScene() != LEVEL1) {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);

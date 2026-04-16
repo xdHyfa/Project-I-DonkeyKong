@@ -7,8 +7,7 @@
 #include "Scenes/TitleScreen.h"
 #include "Scenes/InitialScreen.h"
 
-Scene current_scene = INTRO;
-bool Scene_Init = false;
+
 
 int main()
 {
@@ -29,7 +28,7 @@ int main()
 		ClearBackground(BLACK);
 		BeginMode2D(camera);
 
-		switch (current_scene) {
+		switch (GetCurrentScene()) {
 		case INTRO:
 
 			runInitialScreen();
