@@ -40,3 +40,4 @@ void RampDrawer(Truss* Ramp, int size);
 
 void RampCollision(Truss* Ramp, int size, Entity &entity);
 
+void BaseSetter(Truss* Base, int size, int InitialX, int Ypos);

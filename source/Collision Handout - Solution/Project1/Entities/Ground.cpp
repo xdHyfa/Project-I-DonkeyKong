@@ -25,6 +25,14 @@ void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, in
 
 }
 
+void BaseSetter(Truss* Base, int size, int InitialX ,int Ypos) {
+	int adderX = InitialX;
+	for (int i = 0; i < size; i++) {
+		Base[i].setPos(Base[i].TrussPos.x + adderX, Ypos);
+		adderX += 16;
+	}
+}
+
 void RampDrawer(Truss* Ramp, int size) {
 	for (int i = 0; i < size; i++) {
 		DrawTexture(Ramp[i].truss, Ramp[i].TrussPos.x, Ramp[i].TrussPos.y, WHITE);

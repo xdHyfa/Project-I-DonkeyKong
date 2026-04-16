@@ -32,7 +32,7 @@ Rectangle Ramp_4_Zone2 = { 16, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 35, SCREEN_WI
 Rectangle Ramp_5_Zone2 = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 34 - 35, SCREEN_WIDTH - 16, 22 };
 
 Truss Ramp2_0[14];
-Truss Ramp2_1[13];
+Truss Ramp2_1[12];
 Truss Ramp2_2[13];
 Truss Ramp2_3[13];
 Truss Ramp2_4[13];
@@ -44,7 +44,7 @@ void Level2RampSetter() {
 	Truss::LoadSharedTexture(2);
 
 	Ramp_0_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 1;
-	RampSetter(Ramp2_0, 14, true, true, 14, Ramp_0_YPos2);
+	BaseSetter(Ramp2_0,14 ,0, Ramp_0_YPos2);
 
 	Ramp_1_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 43;
 	RampSetter(Ramp2_1, 13, false, false, 12, Ramp_1_YPos2);
@@ -82,7 +82,7 @@ void Level2RampSetter() {
 
 void Level2RampDraw() {
 	RampDrawer(Ramp2_0, 14);
-	RampDrawer(Ramp2_1, 13);
+	RampDrawer(Ramp2_1, 12);
 	RampDrawer(Ramp2_2, 13);
 	RampDrawer(Ramp2_3, 13);
 	RampDrawer(Ramp2_4, 13);
@@ -97,7 +97,7 @@ void Level2RampCollisions(Entity& entity) {
 		RampCollision(Ramp2_0, 14, entity);
 	}
 	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone2)) {
-		RampCollision(Ramp2_1, 13, entity);
+		RampCollision(Ramp2_1, 12, entity);
 	}
 	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone2)) {
 		RampCollision(Ramp2_2, 13, entity);
