@@ -31,11 +31,6 @@ void runLevel1() {
 
     Mario.Movement();
 
-    if (EntityCollision(Mario, barrel1))
-    {
-        
-        Mario.die();
-    }
    
     
     /*---GROUND COLLISIONS---*/
@@ -64,7 +59,10 @@ void runLevel1() {
     FireRoutine();
     BarrelRoutine();
 
-
+    if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
+    {
+        Mario.die();
+    }
 
     /*Like onDestroy() function from unity, run before scene change.*/
 

@@ -54,6 +54,7 @@ void Player::Setup()
 
 void Player::Movement()
 {
+    if (!isAlive) return;
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
     
     /*  if (!isTextureValid(Texture))
