@@ -14,102 +14,98 @@ using namespace std;
 
 
 //RAMP DATA FOR LEVEL 1 DEFINED HERE
-float Ramp_0_YPos2;
-float Ramp_1_YPos2;
-float Ramp_2_YPos2;
-float Ramp_3_YPos2;
-float Ramp_4_YPos2;
-float Ramp_5_YPos2;
-float Ramp_6_YPos2;
+float Base_0_YPos;
+float Base_1_YPos;
+float Base_2_YPos;
+float Base_3_YPos;
+float Base_4_YPos;
+float Base_5_YPos;
+float Base_6_YPos;
 
 //ACTIVE AREA HITBOX FOR EACH RAMP
 //Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
-Rectangle Ramp_0_Zone2 = { 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20 };
-Rectangle Ramp_1_Zone2 = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_2_Zone2 = { 16, SCREEN_HEIGHT - 20 - 36 - 34, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_3_Zone2 = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 33, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_4_Zone2 = { 16, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 35, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_5_Zone2 = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 34 - 35, SCREEN_WIDTH - 16, 22 };
+Rectangle Base_0_Zone = { 0, SCREEN_HEIGHT - 22 -1, SCREEN_WIDTH, 22 };
+Rectangle Base_1_Zone = { 8, SCREEN_HEIGHT - 22 - 49 + 8, SCREEN_WIDTH - 16, 22 };
+Rectangle Base_2_Zone = { 16, SCREEN_HEIGHT - 22 - 98 + 16, SCREEN_WIDTH - 32, 22 };
+Rectangle Base_3_Zone = { 24, SCREEN_HEIGHT - 22 -147 + 24, SCREEN_WIDTH - 48, 22 };
+Rectangle Base_4_Zone = { 32, SCREEN_HEIGHT - 22 - 196 + 32, SCREEN_WIDTH - 64, 22 };
 
-Truss Ramp2_0[14];
-Truss Ramp2_1[12];
-Truss Ramp2_2[13];
-Truss Ramp2_3[13];
-Truss Ramp2_4[13];
-Truss Ramp2_5[13];
-Truss Ramp2_6[3];
+Truss Base_0[14];
+Truss Base_1[14];
+Truss Base_2[12];
+Truss Base_3[12];
+Truss Base_4[10];
+Truss Base_5[8];
+
+Texture button;
+
 
 //RAMP POSITIONS DEFINED HERE
 void Level2RampSetter() {
 	Truss::LoadSharedTexture(2);
 
-	Ramp_0_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 1;
-	BaseSetter(Ramp2_0,14 ,0, Ramp_0_YPos2);
+	Base_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;
+	BaseSetter(Base_0,14 ,0, Base_0_YPos, false);
 
-	Ramp_1_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 43;
-	RampSetter(Ramp2_1, 13, false, false, 12, Ramp_1_YPos2);
+	Base_1_YPos = (SCREEN_HEIGHT - TrussHeight) - 49+8;
+	BaseSetter(Base_1, 14, 8, Base_1_YPos, true);
 
-	Ramp2_1[11].hasLadderBelow = true;
+	Base_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 98+16;
+	BaseSetter(Base_2, 12, 16, Base_2_YPos, false);
 
-	Ramp_2_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 62;
-	RampSetter(Ramp2_2, 13, false, true, 0, Ramp_2_YPos2);
+	Base_3_YPos = (SCREEN_HEIGHT - TrussHeight) - 147+24;
+	BaseSetter(Base_3, 12, 24, Base_3_YPos, true);
 
-	Ramp2_2[1].hasLadderBelow = true;
-	Ramp2_2[5].hasLadderBelow = true;
+	Base_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 196+32;
+	BaseSetter(Base_4, 10, 32, Base_4_YPos, false);
 
-	Ramp_3_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 110;
-	RampSetter(Ramp2_3, 13, false, false, 0, Ramp_3_YPos2);
+	Base_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 245 + 40;
+	BaseSetter(Base_5, 8, 56, Base_5_YPos, true);
 
-	Ramp2_3[7].hasLadderBelow = true;
-	Ramp2_3[11].hasLadderBelow = true;
-
-	Ramp_4_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 130;
-	RampSetter(Ramp2_4, 13, false, true, 0, Ramp_4_YPos2);
-
-	Ramp2_4[1].hasLadderBelow = true;
-	Ramp2_4[3].hasLadderBelow = true;
-
-	Ramp_5_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 169;
-	RampSetter(Ramp2_5, 13, false, false, 9, Ramp_5_YPos2);
-
-	Ramp2_5[11].hasLadderBelow = true;
-
-	Ramp_6_YPos2 = (SCREEN_HEIGHT - TrussHeight) - 200;
-	for (int i = 0; i < 3; i++) {
-		Ramp2_6[i].setPos(SCREEN_WIDTH / 3 + (i + 1) * 16, Ramp_6_YPos2);
-	}
+	button = LoadTexture("sprites/Button stage 3.png");
 }
 
 void Level2RampDraw() {
-	RampDrawer(Ramp2_0, 14);
-	RampDrawer(Ramp2_1, 12);
-	RampDrawer(Ramp2_2, 13);
-	RampDrawer(Ramp2_3, 13);
-	RampDrawer(Ramp2_4, 13);
-	RampDrawer(Ramp2_5, 13);
-	RampDrawer(Ramp2_6, 3);
+	RampDrawer(Base_0, 14);
+	RampDrawer(Base_1, 14);
+	RampDrawer(Base_2, 12);
+	RampDrawer(Base_3, 12);
+	RampDrawer(Base_4, 10);
+	RampDrawer(Base_5, 8);
+	DrawTexture(button, 59, Base_1[0].TrussPos.y, WHITE);
+	DrawTexture(button, 163, Base_1[0].TrussPos.y, WHITE);
+	DrawTexture(button, 59, Base_2[0].TrussPos.y, WHITE);
+	DrawTexture(button, 163, Base_2[0].TrussPos.y, WHITE);
+	DrawTexture(button, 59, Base_3[0].TrussPos.y, WHITE);
+	DrawTexture(button, 163, Base_3[0].TrussPos.y, WHITE);
+	DrawTexture(button, 59, Base_4[0].TrussPos.y, WHITE);
+	DrawTexture(button, 163, Base_4[0].TrussPos.y, WHITE);
+
+	/*Rectangle test = { 0,0,16,16 };
+	Vector2 test2 = { 0,0 };
+	for (int i = 0; i < 14; i++){
+		DrawTextureRec(Base_0[i].truss, test,test2 , WHITE);
+		test2.x += 16;
+	}*/
 }
 void Level2RampCollisions(Entity& entity) {
 
 	//DrawColliders();
 
-	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone2)) {
-		RampCollision(Ramp2_0, 14, entity);
+	if (CheckCollisionPointRec(entity.FloorCollider, Base_0_Zone)) {
+		RampCollision(Base_0, 14, entity);
 	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone2)) {
-		RampCollision(Ramp2_1, 12, entity);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_1_Zone)) {
+		RampCollision(Base_1, 14, entity);
 	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone2)) {
-		RampCollision(Ramp2_2, 13, entity);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_2_Zone)) {
+		RampCollision(Base_2, 12, entity);
 	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_3_Zone2)) {
-		RampCollision(Ramp2_3, 13, entity);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_3_Zone)) {
+		RampCollision(Base_3, 12, entity);
 	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_4_Zone2)) {
-		RampCollision(Ramp2_4, 13, entity);
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_5_Zone2)) {
-		RampCollision(Ramp2_5, 13, entity);
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_4_Zone)) {
+		RampCollision(Base_4, 10, entity);
 	}
 	else {
 		if (entity.tag == EntityTag::PLAYER) {
@@ -134,7 +130,7 @@ void Level2LadderSetter() {
 		ExtraPieces2[i].setSprite(1, false);
 	}
 
-	Level2Ladders[0].setPos(Ramp2_1[11].TrussPos.x + Ramp2_1[11].TrussBox.width / 4 + 2, Ramp2_1[11].TrussPos.y + Ramp2_1[11].TrussBox.height * 2);
+	/*Level2Ladders[0].setPos(Ramp2_1[11].TrussPos.x + Ramp2_1[11].TrussBox.width / 4 + 2, Ramp2_1[11].TrussPos.y + Ramp2_1[11].TrussBox.height * 2);
 	Level2Ladders[0].Hitbox.y += 1;
 	ExtraPieces2[0].setPos(Level2Ladders[0].Position.x, Level2Ladders[0].Position.y + 15);
 
@@ -179,16 +175,16 @@ void Level2LadderSetter() {
 	Level2Ladders[8].Hitbox.height += 6;
 	ExtraPieces2[13].setPos(Level2Ladders[8].Position.x, Level2Ladders[8].Position.y + 15);
 	ExtraPieces2[14].setPos(ExtraPieces2[13].Position.x, ExtraPieces2[13].Position.y + 3);
-	ExtraPieces2[15].setPos(ExtraPieces2[14].Position.x, ExtraPieces2[14].Position.y + 3);
+	ExtraPieces2[15].setPos(ExtraPieces2[14].Position.x, ExtraPieces2[14].Position.y + 3);*/
 }
 
 void Level2LadderDraw() {
-	for (int i = 0; i < 9; i++) {
+	/*for (int i = 0; i < 9; i++) {
 		DrawTextureRec(Level2Ladders[i].texture, Level2Ladders[i].SpriteSelector, Level2Ladders[i].Position, WHITE);
 	}
 	for (int i = 0; i < 16; i++) {
 		DrawTextureRec(ExtraPieces2[i].texture, ExtraPieces2[i].SpriteSelector, ExtraPieces2[i].Position, WHITE);
-	}
+	}*/
 }
 
 void Level2LadderCollision(Entity& entity) {
@@ -201,10 +197,9 @@ void Level2LadderCollision(Entity& entity) {
 
 void DrawLevel2Colliders() {
 	DrawLadderCollider(Level2Ladders, 9);
-	DrawRectangle(Ramp_0_Zone2.x, Ramp_0_Zone2.y, Ramp_0_Zone2.width, Ramp_0_Zone2.height, WHITE);
-	DrawRectangle(Ramp_1_Zone2.x, Ramp_1_Zone2.y, Ramp_1_Zone2.width, Ramp_1_Zone2.height, WHITE);
-	DrawRectangle(Ramp_2_Zone2.x, Ramp_2_Zone2.y, Ramp_2_Zone2.width, Ramp_2_Zone2.height, WHITE);
-	DrawRectangle(Ramp_3_Zone2.x, Ramp_3_Zone2.y, Ramp_3_Zone2.width, Ramp_3_Zone2.height, WHITE);
-	DrawRectangle(Ramp_4_Zone2.x, Ramp_4_Zone2.y, Ramp_4_Zone2.width, Ramp_4_Zone2.height, WHITE);
-	DrawRectangle(Ramp_5_Zone2.x, Ramp_5_Zone2.y, Ramp_5_Zone2.width, Ramp_5_Zone2.height, WHITE);
+	DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
+	DrawRectangle(Base_1_Zone.x, Base_1_Zone.y, Base_1_Zone.width, Base_1_Zone.height, WHITE);
+	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
+	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
+	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
 }

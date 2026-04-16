@@ -19,23 +19,35 @@ void RampSetter(Truss* Ramp, int size, bool level0, bool TiltLeft, int plane, in
 			if (TiltLeft)	adderY--;
 			else			adderY++;
 		}
-			Ramp[i].setPos(Ramp[i].TrussPos.x + adderX, adderY);
+			Ramp[i].setPos(adderX, adderY);
 			adderX += 16;
 	}
 
 }
 
-void BaseSetter(Truss* Base, int size, int InitialX ,int Ypos) {
+void BaseSetter(Truss* Base, int size, int InitialX ,int Ypos, bool isHalved) {
 	int adderX = InitialX;
+	if (isHalved) {
+		Base[0].isHalf = true;
+		Base[size-1].isHalf = true;
+	}
 	for (int i = 0; i < size; i++) {
-		Base[i].setPos(Base[i].TrussPos.x + adderX, Ypos);
-		adderX += 16;
+		Base[i].setPos(adderX, Ypos);
+		if (Base[i].isHalf) {
+			adderX += 8;
+		}
+		else {
+			adderX += 16;
+		}
 	}
 }
 
 void RampDrawer(Truss* Ramp, int size) {
 	for (int i = 0; i < size; i++) {
-		DrawTexture(Ramp[i].truss, Ramp[i].TrussPos.x, Ramp[i].TrussPos.y, WHITE);
+		if (!Ramp[i].isHalf)
+			DrawTexture(Ramp[i].truss, Ramp[i].TrussPos.x, Ramp[i].TrussPos.y, WHITE);
+		else
+			DrawTextureRec(Ramp[i].truss, Ramp[i].HalfSprite, Ramp[i].TrussPos, WHITE);
 	}
 }
 

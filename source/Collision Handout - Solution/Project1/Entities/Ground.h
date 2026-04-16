@@ -7,8 +7,9 @@ public:
 	static Texture truss;
 	Vector2 TrussPos = { 0 ,0 };
 	Rectangle TrussBox = {TrussPos.x, TrussPos.y , 16, 8};
+	Rectangle HalfSprite = { 0,0,8,16 };
 	bool hasLadderBelow = false;
-	
+	bool isHalf = false;
 	void setPos(float x, float y) {
 		TrussPos.x = x; TrussPos.y = y;
 		TrussBox.x = TrussPos.x; TrussBox.y = TrussPos.y;
@@ -40,4 +41,4 @@ void RampDrawer(Truss* Ramp, int size);
 
 void RampCollision(Truss* Ramp, int size, Entity &entity);
 
-void BaseSetter(Truss* Base, int size, int InitialX, int Ypos);
+void BaseSetter(Truss* Base, int size, int InitialX, int Ypos, bool isHalved);

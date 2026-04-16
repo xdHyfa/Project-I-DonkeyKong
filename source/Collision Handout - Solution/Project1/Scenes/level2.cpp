@@ -1,3 +1,4 @@
+
 #include "Scenes/level1.h"
 #include "Entities/Player.h"
 #include "Scenes/scenes.h"
@@ -43,7 +44,7 @@ void runLevel2() {
     Level2RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    //DrawLevel1Colliders();
+    //DrawLevel2Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -56,7 +57,9 @@ void runLevel2() {
     FireRoutine();
     BarrelRoutine();
 
-
+    if (IsKeyPressed(KEY_ONE)) {
+        current_scene = LEVEL1;
+    }
 
     /*Like onDestroy() function from unity, run before scene change.*/
 

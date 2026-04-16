@@ -46,7 +46,7 @@ void runLevel1() {
     Level1RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    DrawLevel1Colliders();
+    //DrawLevel1Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -64,6 +64,9 @@ void runLevel1() {
         Mario.die();
     }
 
+    if (IsKeyPressed(KEY_TWO)) {
+        current_scene = LEVEL2;
+    }
     /*Like onDestroy() function from unity, run before scene change.*/
 
     if (current_scene != LEVEL1) {
