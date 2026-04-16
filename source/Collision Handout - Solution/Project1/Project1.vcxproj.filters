@@ -42,6 +42,9 @@
     <ClCompile Include="Maps\Level1Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\donkeycode\src\scenes\InitialScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libraries\raylib\include\raylib.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Maps\Level1Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\donkeycode\src\scenes\InitialScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

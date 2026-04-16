@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "TitleScreen.h"
 #include "include/resource_dir.h"
-#include "Core/constants.h"
+#include "core/constants.h"
 #include "scenes.h"
 
 

@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\donkeycode\src\scenes\InitialScreen.cpp" />
     <ClCompile Include="Entities\Barrel.cpp" />
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Scenes\TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\donkeycode\src\scenes\InitialScreen.h" />
     <ClInclude Include="Core\constants.h" />
     <ClInclude Include="Entities\barrel.h" />
     <ClInclude Include="Entities\entity.h" />

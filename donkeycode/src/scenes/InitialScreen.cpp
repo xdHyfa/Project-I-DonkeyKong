@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "InitialScreen.h"
-#include "resource_dir.h"
+#include "include/resource_dir.h"
 #include "core/constants.h"
 #include "scenes.h"
 
