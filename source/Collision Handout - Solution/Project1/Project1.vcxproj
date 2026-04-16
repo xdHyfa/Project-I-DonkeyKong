@@ -152,8 +152,10 @@
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
     <ClCompile Include="Maps\Level1Map.cpp" />
+    <ClCompile Include="Maps\level2Map.cpp" />
     <ClCompile Include="Scenes\InitialScreen.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
+    <ClCompile Include="Scenes\level2.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,8 +172,10 @@
     <ClInclude Include="libraries\raylib\include\raymath.h" />
     <ClInclude Include="libraries\raylib\include\rlgl.h" />
     <ClInclude Include="Maps\Level1Map.h" />
+    <ClInclude Include="Maps\level2Map.h" />
     <ClInclude Include="Scenes\InitialScreen.h" />
     <ClInclude Include="Scenes\level1.h" />
+    <ClInclude Include="Scenes\level2.h" />
     <ClInclude Include="Scenes\scenes.h" />
     <ClInclude Include="Scenes\TitleScreen.h" />
   </ItemGroup>

@@ -1,17 +1,16 @@
+
 #include "Scenes/level1.h"
 #include "Entities/Player.h"
 #include "Scenes/scenes.h"
 #include "Entities/Fire_Spawner.h"
-#include "Entities/Barrel.h"
-#include "Maps/Level1Map.h"
+#include "Maps/Level2Map.h"
 #include "include/resource_dir.h"	
 #include "raylib.h"
 #include "Core/constants.h"
-#include "Entities/EntityCollision.hpp"
 
 
 
-void runLevel1() {
+void runLevel2() {
 
     // Like start() function from unity
 
@@ -22,31 +21,30 @@ void runLevel1() {
         //Mario Setup
         Mario.Setup();
 
-        Level1RampSetter();
-        Level1LadderSetter();
+        Level2RampSetter();
+        Level2LadderSetter();
         Scene_Init = true;
 
     }
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
-
    
     
     /*---GROUND COLLISIONS---*/
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
-    Level1RampCollisions(Mario);
-    Level1LadderCollision(Mario);
+    Level2RampCollisions(Mario);
+    Level2LadderCollision(Mario);
 
     
     
     /*---TEXTURE DRAW---*/
-    Level1LadderDraw();
-    Level1RampDraw();
+    Level2LadderDraw();
+    Level2RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    //DrawLevel1Colliders();
+    //DrawLevel2Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -59,17 +57,13 @@ void runLevel1() {
     FireRoutine();
     BarrelRoutine();
 
-    if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
-    {
-        Mario.die();
+    if (IsKeyPressed(KEY_ONE)) {
+        current_scene = LEVEL1;
     }
 
-    if (IsKeyPressed(KEY_TWO)) {
-        current_scene = LEVEL2;
-    }
     /*Like onDestroy() function from unity, run before scene change.*/
 
-    if (current_scene != LEVEL1) {
+    if (current_scene != LEVEL2) {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
