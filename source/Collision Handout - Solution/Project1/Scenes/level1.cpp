@@ -7,6 +7,7 @@
 #include "include/resource_dir.h"	
 #include "raylib.h"
 #include "Core/constants.h"
+#include "Entities/EntityCollision.hpp"
 
 
 
@@ -29,6 +30,7 @@ void runLevel1() {
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
+
    
     
     /*---GROUND COLLISIONS---*/
@@ -44,7 +46,7 @@ void runLevel1() {
     Level1RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    //DrawLevel1Colliders();
+    DrawLevel1Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -57,10 +59,10 @@ void runLevel1() {
     FireRoutine();
     BarrelRoutine();
 
-    if (IsKeyPressed(KEY_KP_2)) {
-        current_scene = LEVEL2;
+    if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
+    {
+        Mario.die();
     }
-
 
     /*Like onDestroy() function from unity, run before scene change.*/
 

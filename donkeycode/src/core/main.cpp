@@ -4,8 +4,9 @@
 #include "scenes/level1.h"
 #include "core/constants.h"
 #include "scenes/TitleScreen.h"
+#include "scenes/InitialScreen.h"
 
-Scene current_scene = TITLE;
+Scene current_scene = INTRO;
 bool Scene_Init = false;
 
 int main ()
@@ -29,14 +30,13 @@ int main ()
 
 		switch (current_scene) {
 		case INTRO:
-			
+
+			runInitialScreen();
 
 			break;
+
 		case TITLE:
 			runMainMenu();
-			
-
-			
 
 			break;
 		case LEVEL1:

@@ -42,10 +42,10 @@
     <ClCompile Include="Maps\Level1Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\level2.cpp">
+    <ClCompile Include="EntityCollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Maps\level2Map.cpp">
+    <ClCompile Include="Scenes\InitialScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,10 +95,10 @@
     <ClInclude Include="Maps\Level1Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\level2.h">
+    <ClInclude Include="EntityCollision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Maps\level2Map.h">
+    <ClInclude Include="Scenes\InitialScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
