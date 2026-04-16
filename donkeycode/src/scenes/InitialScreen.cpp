@@ -28,6 +28,9 @@ Rectangle PROJ = { 230, 110, 46, 32 };
 
 
 
+
+
+
 void runInitialScreen() {
 
     if (!Scene_Init) {

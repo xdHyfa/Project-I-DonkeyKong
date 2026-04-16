@@ -42,7 +42,7 @@
     <ClCompile Include="Maps\Level1Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\donkeycode\src\scenes\InitialScreen.cpp">
+    <ClCompile Include="Scenes\InitialScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,7 +92,7 @@
     <ClInclude Include="Maps\Level1Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\donkeycode\src\scenes\InitialScreen.h">
+    <ClInclude Include="Scenes\InitialScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
