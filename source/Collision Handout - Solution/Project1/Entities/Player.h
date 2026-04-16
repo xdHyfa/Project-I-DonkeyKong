@@ -17,9 +17,15 @@ public:
 
     const float velocity = 1.5f;
     const int jumpHeight = 6;
+
+    int deathLoopCount = 0;
     
 
-    void die() { isAlive = false; }
+    void die() { 
+        
+        isGrounded = false;
+        isJumping = false;
+        isAlive = false; }
 
     bool tryJump()
     {

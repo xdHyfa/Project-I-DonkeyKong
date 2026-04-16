@@ -34,6 +34,7 @@ public:
     }
 
     void UpdateCollider() {
+        hitbox = { Position.x, Position.y };
         FloorCollider.x = Position.x + 8;
         FloorCollider.y = Position.y + BARRELSIZE;
     }
