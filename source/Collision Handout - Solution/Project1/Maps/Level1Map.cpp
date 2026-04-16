@@ -174,7 +174,7 @@ void Level1LadderSetter() {
 	for (int i = 0; i < 9; i++) {
 		Level1Ladders[i].setSprite(1, true);
 	}
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 16; i++) {
 		ExtraPieces[i].setSprite(1, false);
 	}
 
