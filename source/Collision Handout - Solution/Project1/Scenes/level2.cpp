@@ -44,7 +44,7 @@ void runLevel2() {
     Level2RampDraw();
 
     //--Debugging tool: Map Hitboxes
-    //DrawLevel2Colliders();
+    DrawLevel2Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
