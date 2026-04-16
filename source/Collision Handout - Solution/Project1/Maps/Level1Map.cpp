@@ -41,7 +41,7 @@ Truss Ramp_6[3];
 
 //RAMP POSITIONS DEFINED HERE
 void Level1RampSetter() {
-	Truss::LoadSharedTexture();
+	Truss::LoadSharedTexture(1);
 
 	Ramp_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;
 	RampSetter(Ramp_0, 14, true, true, 7, Ramp_0_YPos);

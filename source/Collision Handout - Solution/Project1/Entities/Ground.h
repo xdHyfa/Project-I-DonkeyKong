@@ -17,8 +17,15 @@ public:
 		TrussPos.x = x;
 		TrussBox.x = TrussPos.x;
 	}
-	static void LoadSharedTexture() {
+	static void LoadSharedTexture(int Level) {
+		if (Level == 1){
 			truss = LoadTexture("sprites/TRUSS.png");
+		
+		}
+		else if (Level == 2) {
+			truss = LoadTexture("sprites/Blue truss.png");
+
+		}
 	}
 	static void UnloadSharedTexture() {
 		UnloadTexture(truss);

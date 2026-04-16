@@ -2,6 +2,7 @@
 #include "include/resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "Scenes/scenes.h"
 #include "Scenes/level1.h"
+#include "Scenes/level2.h"
 #include "Core/constants.h"
 #include "Scenes/TitleScreen.h"
 
@@ -42,6 +43,11 @@ int main()
 		case LEVEL1:
 
 			runLevel1();
+
+			break;
+		case LEVEL2:
+
+			runLevel2();
 
 			break;
 		}
