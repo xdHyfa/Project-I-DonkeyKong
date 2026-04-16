@@ -37,14 +37,14 @@ void runLevel1() {
     Level1RampCollisions(Mario);
     Level1LadderCollision(Mario);
 
-    //DrawLevel1Colliders();
+    
     
     /*---TEXTURE DRAW---*/
     Level1LadderDraw();
     Level1RampDraw();
 
-    //--Debugging tool: Ladder Hitboxes
-    //DrawLadderCollider();
+    //--Debugging tool: Map Hitboxes
+    DrawLevel1Colliders();
     
     
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
