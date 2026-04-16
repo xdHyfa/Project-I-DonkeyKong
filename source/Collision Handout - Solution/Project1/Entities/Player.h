@@ -33,6 +33,10 @@ public:
     void Movement() override;
     void Setup();
 
+    void UpdateCollider() {
+        FloorCollider.x = Position.x + 8;
+        FloorCollider.y = Position.y + 16;
+    }
     Player() {
         tag = EntityTag::PLAYER;
     }
@@ -40,3 +44,5 @@ public:
 
 extern Player Mario;
 extern Rectangle frameRec;
+
+void DrawMarioCollider();

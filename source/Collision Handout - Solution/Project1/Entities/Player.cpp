@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Core/constants.h"
 #include "Entities/entity.h"
-
+using namespace std;
 Player Mario;
 
 /*---Animation Stuff---*/
@@ -26,6 +26,20 @@ bool isTextureValid(const Texture2D& texture)
     return texture.id > 0;
 }
 
+void MarioLadderMovement() {
+    if (IsKeyDown(KEY_UP)) {
+        Mario.OnLadder = true;
+        Mario.Position.y -= 1.0f;
+        Mario.UpdateCollider();
+    }
+    else if (IsKeyDown(KEY_DOWN)) {
+        Mario.OnLadder = true;
+        Mario.Position.y += 1.0f;
+        Mario.UpdateCollider();
+    }
+    return;
+}
+
 void Player::Setup()
 {
     SpriteSize = (float)playerSize;
@@ -34,6 +48,7 @@ void Player::Setup()
     frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
     Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
 }
+
 
 void Player::Movement()
 {
@@ -51,8 +66,23 @@ void Player::Movement()
         }
         return;
     }*/
-
-
+    if (OnLadder&& CanClimb){
+        cout << "ON LADDER" <<endl;
+        MarioLadderMovement();
+        return;
+    }
+    if (CanClimb) {
+        if (IsKeyPressed(KEY_UP)) {
+            Mario.OnLadder = true;
+            Mario.Position.y -= 1.0f;
+            Mario.UpdateCollider();
+        }
+        else if (IsKeyPressed(KEY_DOWN)) {
+            Mario.OnLadder = true;
+            Mario.Position.y += 1.0f;
+            Mario.UpdateCollider();
+        }
+    }
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
@@ -146,4 +176,9 @@ void Player::Movement()
             frameRec.x = 0.0f;
         }
     }
+}
+
+void DrawMarioCollider() {
+    DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
+    DrawPixel(Mario.Position.x, Mario.Position.y, RED);
 }

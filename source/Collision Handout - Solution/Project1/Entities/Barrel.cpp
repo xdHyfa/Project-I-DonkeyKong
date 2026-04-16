@@ -2,6 +2,7 @@
 #include "Entities/Barrel.h"
 #include "Core/constants.h"
 #include "Entities/Ground.h"
+#include "Maps/Level1Map.h"
 
 Barrel barrel1;
 Barrel barrel2;
