@@ -7,6 +7,7 @@
 #include "include/resource_dir.h"	
 #include "raylib.h"
 #include "Core/constants.h"
+#include "Entities/EntityCollision.hpp"
 
 
 
@@ -29,6 +30,12 @@ void runLevel1() {
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
+
+    if (EntityCollision(Mario, barrel1))
+    {
+        
+        Mario.die();
+    }
    
     
     /*---GROUND COLLISIONS---*/

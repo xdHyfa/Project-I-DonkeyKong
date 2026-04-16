@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Core/constants.h"
 #include "Entities/entity.h"
+
+
 using namespace std;
 Player Mario;
 
@@ -52,7 +54,6 @@ void Player::Setup()
 
 void Player::Movement()
 {
-  
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
     
     /*  if (!isTextureValid(Texture))
@@ -158,6 +159,22 @@ void Player::Movement()
     ++frameDelayCounter;
     if (frameDelayCounter > frameDelay)
     {
+        /*if (!isAlive)
+        {
+            frameRec.width = 16;
+            frameRec.y = 3 * 16;
+
+            if (deathLoopCount < 2)
+            {
+                ++frameIndex %= numFrames;
+                frameRec.x = 16 * (float)frameIndex;
+                if (frameIndex == 0) ++deathLoopCount;
+            }
+            else
+            {
+                frameRec.x = 5 * 16;
+            }
+        }*/
         
         frameDelayCounter = 0;
         if (marioMoving && !isJumping)

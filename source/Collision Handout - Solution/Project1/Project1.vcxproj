@@ -150,6 +150,7 @@
     <ClCompile Include="Entities\Ladders.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
+    <ClCompile Include="EntityCollision.cpp" />
     <ClCompile Include="Maps\Level1Map.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Ladders.h" />
     <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="EntityCollision.hpp" />
     <ClInclude Include="include\resource_dir.h" />
     <ClInclude Include="libraries\raylib\include\raylib.h" />
     <ClInclude Include="libraries\raylib\include\raymath.h" />
