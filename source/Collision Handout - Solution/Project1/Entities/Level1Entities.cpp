@@ -34,11 +34,17 @@ void Level1FireRoutine(Fire& fire) {
 		}
 
 	}
-	
 	Level1LadderCollisions(fire);
-	if (fire.CanClimb && GetRandomValue(0,2) == 1) {
+	
+	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
+	else fire.ladderContactTime = 0.0f;
+
+	if (fire.ladderContactTime > 0.2f && GetRandomValue(0,2) == 1) {
 		fire.OnLadder = true;
 		cout << "ONLADDER" << endl;
+	}
+	if (fire.OnLadder) {
+
 	}
 	else {
 		Level1RampCollisions(fire);
