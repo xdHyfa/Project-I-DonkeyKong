@@ -1,7 +1,7 @@
 #include "Scenes/level1.h"
 #include "Entities/Player.h"
 #include "Scenes/scenes.h"
-#include "Entities/Fire_Spawner.h"
+#include "Entities/Level1Entities.h"
 #include "Entities/Barrel.h"
 #include "Maps/Level1Map.h"
 #include "include/resource_dir.h"	
@@ -24,6 +24,8 @@ void runLevel1() {
 
         Level1RampSetter();
         Level1LadderSetter();
+
+        SetStartTime();
         Scene_Init = true;
 
     }
@@ -37,7 +39,7 @@ void runLevel1() {
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
     Level1RampCollisions(Mario);
-    Level1LadderCollision(Mario);
+    Level1LadderCollisions(Mario);
 
     
     
@@ -56,7 +58,7 @@ void runLevel1() {
     
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
-    FireRoutine();
+    Level1EntitiesRoutine();
     BarrelRoutine();
 
     Level1CheckWinCondition(Mario);
@@ -75,13 +77,12 @@ void runLevel1() {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
-        UnloadTexture(Fire1.Texture);
-        UnloadTexture(Fire2.Texture);
         Truss::UnloadSharedTexture();
         UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
+        UnloadLevel1Entities();
 
-
+        ResetLevel1Entities(); 
         Scene_Init = false; // reset initialization boolean.
     }
 }

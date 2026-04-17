@@ -23,6 +23,7 @@ public:
     bool OnLadder = false;
     bool CanClimb = false;
 
+    float ladderContactTime = 0.0f;
     bool  getIsGrounded() const { return isGrounded; }
     void setGrounded(bool g) { isGrounded = g; }
     Rectangle getHitbox() { 
