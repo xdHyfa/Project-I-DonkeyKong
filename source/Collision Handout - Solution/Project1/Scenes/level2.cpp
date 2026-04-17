@@ -54,7 +54,7 @@ void runLevel2() {
     
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
-    FireRoutine();
+    //FireRoutine(Fire1);
     BarrelRoutine();
 
     if (IsKeyPressed(KEY_ONE)) {

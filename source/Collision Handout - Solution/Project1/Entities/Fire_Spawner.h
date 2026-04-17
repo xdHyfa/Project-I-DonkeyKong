@@ -5,6 +5,7 @@ class Fire : public Entity {
 public:
     Fire() {
         tag = EntityTag::FIRE;
+        isGrounded = true;
     }
 
     bool has_Spawned = false;
@@ -22,10 +23,13 @@ public:
     void PlayAnimation();
  
     void Movement() override;
+
+    void ChangeDirection() {
+        Facing_left = !Facing_left;
+    }
 };
 
 extern Fire Fire1;
 extern Fire Fire2;
 
-void FireRoutine();
-void SpawnFire();
+void SpawnFire(Fire &fire);

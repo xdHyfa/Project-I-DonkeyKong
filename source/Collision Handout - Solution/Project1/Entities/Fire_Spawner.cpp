@@ -2,8 +2,10 @@
 #include "Entities/Fire_Spawner.h"
 #include "Core/constants.h"
 #include "Maps/Level1Map.h"
+#include <iostream>
+using namespace std;
 
-#define FIREVELOCITY 2.0f
+#define FIREVELOCITY 1.5f
 
 
 void Fire::PlayAnimation() {
@@ -25,42 +27,35 @@ void Fire::PlayAnimation() {
 
 void Fire::Movement() {
         PlayAnimation();
-        if (Position.x > 208 || Position.x < 0) {
-            Facing_left = !Facing_left;
+        FloorCollider.x = Position.x + 8;
+        FloorCollider.y = Position.y + 16;
+        if(CanClimb && OnLadder){
+            Position.y -= 1;
+            return;
         }
+  
         if (!Facing_left) Position.x += FIREVELOCITY;
         else Position.x -= FIREVELOCITY;
         if (GetRandomValue(1, 150) == 100) {
-            Facing_left = !Facing_left;
+            ChangeDirection();
         }
-        FloorCollider.x = Position.x + 8;
-        FloorCollider.y = Position.y + 16;
+
         //Future expansion of movement tech
 
 }
 
-    /* THE ENTITIES ARE DEFINED HERE */
-    Fire Fire1;
-    Fire Fire2;
 
 
 
-void SpawnFire() {
-	if (!Fire1.has_Spawned) {
-		Fire1.Texture = LoadTexture("sprites/FIREBALL.png");
-		Fire1.SetPos(100,230);
-		Fire1.has_Spawned = true;
+
+void SpawnFire(Fire &fire) {
+	if (!fire.has_Spawned) {
+		fire.Texture = LoadTexture("sprites/FIREBALL.png");
+		fire.SetPos(100,230);
+		fire.has_Spawned = true;
 	}
 
 }
 
-void FireRoutine() {
-	if (IsKeyPressed(KEY_K) && !Fire1.has_Spawned) SpawnFire();
-	
-	if (Fire1.has_Spawned) {
-		Fire1.Movement();
-		Level1RampCollisions(Fire1);
-		DrawTextureRec(Fire1.Texture, Fire1.FireSprite, Fire1.Position, WHITE);
-	}
-}
+
 

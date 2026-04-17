@@ -148,6 +148,7 @@
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
     <ClCompile Include="Entities\Ladders.cpp" />
+    <ClCompile Include="Entities\Level1Entities.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Entities\Fire_Spawner.h" />
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Ladders.h" />
+    <ClInclude Include="Entities\Level1Entities.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="EntityCollision.hpp" />
     <ClInclude Include="include\resource_dir.h" />

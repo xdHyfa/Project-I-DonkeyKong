@@ -11,7 +11,7 @@ void Level1LadderSetter();
 
 void Level1LadderDraw();
 
-void Level1LadderCollision(Entity &entity);
+void Level1LadderCollisions(Entity &entity);
 
 void Level1RampSetter();
 
@@ -22,3 +22,5 @@ void Level1RampDraw();
 void Level1RampCollisions(Entity& entity);
 
 void DrawLevel1Colliders();
+
+int CheckEntityPlatform(Entity & entity);

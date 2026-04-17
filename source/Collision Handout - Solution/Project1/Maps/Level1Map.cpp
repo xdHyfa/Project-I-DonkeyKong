@@ -22,6 +22,8 @@ void Level1CheckWinCondition(Entity& entity) {
 	}
 }
 
+
+
 //---RAMPS---
 
 
@@ -174,6 +176,30 @@ void BarrelGroundCollisions(Barrel& barrel) {
 	}
 }
 
+//---LEVEL CHECK: 
+
+int CheckEntityPlatform(Entity& entity) {
+	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone)) {
+		return 0;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone)) {
+		return 1;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone)) {
+		return 2;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_3_Zone)) {
+		return 3;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_4_Zone)) {
+		return 4;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_5_Zone)) {
+		return 5;
+	}
+}
+
+
 //---LADDERS---
 
 //LADDER DATA FOR LEVEL 1 DEFINED HERE
@@ -247,7 +273,7 @@ void Level1LadderDraw() {
 	}
 }
 
-void Level1LadderCollision(Entity& entity) {
+void Level1LadderCollisions(Entity& entity) {
 	LadderCollisions(entity, Level1Ladders, 9);
 }
 
@@ -256,12 +282,13 @@ void Level1LadderCollision(Entity& entity) {
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel1Colliders() {
-	DrawRectangle(WinHitbox.x, WinHitbox.y, WinHitbox.width, WinHitbox.height, YELLOW);
-	DrawLadderCollider(Level1Ladders, 9);
 	DrawRectangle(Ramp_0_Zone.x, Ramp_0_Zone.y, Ramp_0_Zone.width, Ramp_0_Zone.height, WHITE);
 	DrawRectangle(Ramp_1_Zone.x, Ramp_1_Zone.y, Ramp_1_Zone.width, Ramp_1_Zone.height, WHITE);
 	DrawRectangle(Ramp_2_Zone.x, Ramp_2_Zone.y, Ramp_2_Zone.width, Ramp_2_Zone.height, WHITE);
 	DrawRectangle(Ramp_3_Zone.x, Ramp_3_Zone.y, Ramp_3_Zone.width, Ramp_3_Zone.height, WHITE);
 	DrawRectangle(Ramp_4_Zone.x, Ramp_4_Zone.y, Ramp_4_Zone.width, Ramp_4_Zone.height, WHITE);
 	DrawRectangle(Ramp_5_Zone.x, Ramp_5_Zone.y, Ramp_5_Zone.width, Ramp_5_Zone.height, WHITE);
+
+	DrawRectangle(WinHitbox.x, WinHitbox.y, WinHitbox.width, WinHitbox.height, YELLOW);
+	DrawLadderCollider(Level1Ladders, 9);
 }
