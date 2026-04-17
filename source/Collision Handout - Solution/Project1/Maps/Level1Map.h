@@ -24,3 +24,5 @@ void Level1RampCollisions(Entity& entity);
 void DrawLevel1Colliders();
 
 int CheckEntityPlatform(Entity & entity);
+
+bool CheckDownZone(Entity& entity);

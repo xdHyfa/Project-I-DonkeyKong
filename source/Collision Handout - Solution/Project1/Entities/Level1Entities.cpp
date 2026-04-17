@@ -8,11 +8,13 @@ using namespace std;
 /* THE ENTITIES ARE DEFINED HERE */
 Fire Fire1;
 Fire Fire2;
-float level1StartTime = GetTime();
+float level1StartTime = 0;
 
-
+void SetStartTime() {
+	level1StartTime = GetTime();
+}
 void Level1FireRoutine(Fire& fire) {
-	if (!fire.has_Spawned) SpawnFire(fire);
+	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230);
 
 	if (fire.has_Spawned) {
 		fire.Movement();
@@ -37,14 +39,20 @@ void Level1FireRoutine(Fire& fire) {
 	Level1LadderCollisions(fire);
 	
 	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
-	else fire.ladderContactTime = 0.0f;
+	else { 
+		fire.ladderContactTime = 0.0f; 
+		fire.CanClimbDown = false;
+	}
 
 	if (fire.ladderContactTime > 0.2f && GetRandomValue(0,2) == 1) {
 		fire.OnLadder = true;
 		cout << "ONLADDER" << endl;
+		if (CheckDownZone(fire)) {
+			fire.CanClimbDown = true;
+		}
 	}
 	if (fire.OnLadder) {
-
+	
 	}
 	else {
 		Level1RampCollisions(fire);
@@ -53,6 +61,7 @@ void Level1FireRoutine(Fire& fire) {
 }
 
 void Level1EntitiesRoutine() {
+
 	float time_buffer = GetTime();
 	if (time_buffer-level1StartTime >= 5){
 		Level1FireRoutine(Fire1);

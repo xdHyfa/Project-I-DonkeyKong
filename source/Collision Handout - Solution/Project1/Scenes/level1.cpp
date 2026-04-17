@@ -24,6 +24,8 @@ void runLevel1() {
 
         Level1RampSetter();
         Level1LadderSetter();
+
+        SetStartTime();
         Scene_Init = true;
 
     }
@@ -52,7 +54,7 @@ void runLevel1() {
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
     
     //--Debugging tool: Mario Origin Point (RED) and Mario Floor Collider (YELLOW)
-    DrawMarioCollider();
+    //DrawMarioCollider();
     
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     

@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-#define FIREVELOCITY 1.5f
+#define FIREVELOCITY 1.25f
 
 
 void Fire::PlayAnimation() {
@@ -30,7 +30,12 @@ void Fire::Movement() {
         FloorCollider.x = Position.x + 8;
         FloorCollider.y = Position.y + 16;
         if(CanClimb && OnLadder){
+            if (CanClimbDown) {
+                Position.y += 1;
+            }
+            else{
             Position.y -= 1;
+            }
             return;
         }
   
@@ -48,10 +53,10 @@ void Fire::Movement() {
 
 
 
-void SpawnFire(Fire &fire) {
+void SpawnFire(Fire &fire, int x, int y) {
 	if (!fire.has_Spawned) {
 		fire.Texture = LoadTexture("sprites/FIREBALL.png");
-		fire.SetPos(100,230);
+		fire.SetPos(x,y);
 		fire.has_Spawned = true;
 	}
 

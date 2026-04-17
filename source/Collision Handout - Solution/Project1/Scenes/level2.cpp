@@ -67,8 +67,8 @@ void runLevel2() {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
-        UnloadTexture(Fire1.Texture);
-        UnloadTexture(Fire2.Texture);
+        //UnloadTexture(Fire1.Texture);
+        //UnloadTexture(Fire2.Texture);
         Truss::UnloadSharedTexture();
         UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();

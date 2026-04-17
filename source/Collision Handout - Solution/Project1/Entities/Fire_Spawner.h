@@ -9,6 +9,7 @@ public:
     }
 
     bool has_Spawned = false;
+    bool CanClimbDown = false;
     
     Rectangle FireSprite = { 0.0f, 0.0f, 16, 16 };
     float fireTick = 0.0f;
@@ -29,7 +30,4 @@ public:
     }
 };
 
-extern Fire Fire1;
-extern Fire Fire2;
-
-void SpawnFire(Fire &fire);
+void SpawnFire(Fire &fire, int x, int y);
