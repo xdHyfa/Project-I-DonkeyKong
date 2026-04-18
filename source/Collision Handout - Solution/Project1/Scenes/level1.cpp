@@ -8,6 +8,7 @@
 #include "raylib.h"
 #include "Core/constants.h"
 #include "Entities/EntityCollision.hpp"
+#include "Entities/Barrel_Spawner.h"
 
 
 Music level1Music = { 0 };
@@ -28,6 +29,8 @@ void runLevel1() {
 
         Level1RampSetter();
         Level1LadderSetter();
+
+        barrelSpawner.Init();
 
         SetStartTime();
         Scene_Init = true;
@@ -52,11 +55,15 @@ void runLevel1() {
     Level1RampCollisions(Mario);
     Level1LadderCollisions(Mario);
 
+    barrelSpawner.Update();
+
     
     
     /*---TEXTURE DRAW---*/
     Level1LadderDraw();
     Level1RampDraw();
+
+    barrelSpawner.Draw();
 
     //--Debugging tool: Map Hitboxes
     //DrawLevel1Colliders();
@@ -70,18 +77,20 @@ void runLevel1() {
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
     Level1EntitiesRoutine();
-    BarrelRoutine();
+    //BarrelRoutine();
 
     Level1CheckWinCondition(Mario);
 
-    if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
-    {
-        if (!isDead) {
-            StopMusicStream(level1Music);
-            PlayMusicStream(deathMusic);
-            isDead = true;
+    for (Barrel& b : barrelSpawner.barrels) {
+        if (b.has_Spawned && EntityCollision(Mario, b)) {
+            if (!isDead) {
+                StopMusicStream(level1Music);
+                PlayMusicStream(deathMusic);
+                isDead = true;
+            }
+            Mario.die();
+            break; 
         }
-        Mario.die();
     }
 
     if (IsKeyPressed(KEY_TWO)) {
@@ -94,9 +103,10 @@ void runLevel1() {
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
-        UnloadTexture(barrel1.Texture);
+        //UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();
+        barrelSpawner.Shutdown();
 
         UnloadMusicStream(level1Music);
         UnloadMusicStream(deathMusic);

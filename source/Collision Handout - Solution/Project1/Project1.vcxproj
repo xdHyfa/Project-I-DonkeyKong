@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entities\Barrel.cpp" />
+    <ClCompile Include="Entities\Barrel_Spawner.cpp" />
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
     <ClCompile Include="Entities\Ladders.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="Core\constants.h" />
     <ClInclude Include="Entities\barrel.h" />
+    <ClInclude Include="Entities\Barrel_Spawner.h" />
     <ClInclude Include="Entities\entity.h" />
     <ClInclude Include="Entities\Fire_Spawner.h" />
     <ClInclude Include="Entities\Ground.h" />
