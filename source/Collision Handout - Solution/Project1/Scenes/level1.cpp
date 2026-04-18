@@ -15,6 +15,9 @@ Music level1Music = { 0 };
 Music deathMusic = { 0 };
 bool  isDead = false;
 
+float deathTimer = 0.0f;
+bool isDeathSequence = false;
+
 
 void runLevel1() {
 
@@ -40,8 +43,37 @@ void runLevel1() {
         level1Music.looping = true;
         PlayMusicStream(level1Music);
         isDead = false;
-
+        deathTimer = 0.0f;
+        isDeathSequence = false;
     }
+
+    if (isDeathSequence) {
+        deathTimer += GetFrameTime();
+        UpdateMusicStream(deathMusic);
+
+        if (deathTimer >= 5.0f) {
+            // Unload todo antes de reiniciar
+            UnloadTexture(Mario.Texture);
+            Truss::UnloadSharedTexture();
+            Ladder::UnloadSharedTexture();
+            UnloadLevel1Entities();
+            barrelSpawner.Shutdown();
+            UnloadMusicStream(level1Music);
+            UnloadMusicStream(deathMusic);
+            ResetLevel1Entities();
+            Mario.isAlive = true;  // resetear para que Setup funcione bien
+
+            Scene_Init = false;
+            isDeathSequence = false;
+        }
+
+        Level1LadderDraw();
+        Level1RampDraw();
+        barrelSpawner.Draw();
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        return;
+    }
+
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
@@ -87,9 +119,12 @@ void runLevel1() {
                 StopMusicStream(level1Music);
                 PlayMusicStream(deathMusic);
                 isDead = true;
+                isDeathSequence = true; 
+                deathTimer = 0.0f;
+                Mario.die();
+                break; 
             }
-            Mario.die();
-            break; 
+            
         }
     }
 
