@@ -21,11 +21,7 @@ public:
     int deathLoopCount = 0;
     
 
-    void die() { 
-        
-        isGrounded = false;
-        isJumping = false;
-        isAlive = false; }
+    void die();
 
     bool tryJump()
     {
