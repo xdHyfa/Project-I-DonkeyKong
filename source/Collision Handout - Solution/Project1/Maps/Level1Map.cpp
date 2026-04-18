@@ -40,7 +40,7 @@ float Ramp_6_YPos;
 //Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
 Rectangle Ramp_0_Zone = { 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20 };
 Rectangle Ramp_1_Zone = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
-Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34, SCREEN_WIDTH - 16, 22 };
+Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34, SCREEN_WIDTH - 16, 23 };
 Rectangle Ramp_3_Zone = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 33, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_4_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 35, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_5_Zone = { 0, SCREEN_HEIGHT - 20 - 36 - 34 - 32 - 34 - 35, SCREEN_WIDTH - 16, 22 };
@@ -298,7 +298,7 @@ void DrawDownZone(Rectangle* DownZone, int size) {
 	}
 }
 
-bool CheckDownZone(Entity &entity) {
+bool Level2CheckDownZone(Entity &entity) {
 	for (int i = 0; i < 9; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level1DownZone[i])) {
 			return true;

@@ -13,12 +13,12 @@ void Fire::PlayAnimation() {
     if (Facing_left) { FireSprite.width = -16.0f; }
     else { FireSprite.width = 16.0f; }
 
-    if (fireTick >= 0.05f && !Anim_blink) {
+    if (fireTick >= 0.1f && !Anim_blink) {
         FireSprite.x += 16;
         Anim_blink = true;
         fireTick = 0;
     }
-    if (fireTick >= 0.05f && Anim_blink) {
+    if (fireTick >= 0.1f && Anim_blink) {
         FireSprite.x -= 16;
         Anim_blink = false;
         fireTick = 0;
@@ -53,10 +53,15 @@ void Fire::Movement() {
 
 
 
-void SpawnFire(Fire &fire, int x, int y) {
+void SpawnFire(Fire &fire, int x, int y, int sprite) {
 	if (!fire.has_Spawned) {
-		fire.Texture = LoadTexture("sprites/FIREBALL.png");
-		fire.SetPos(x,y);
+        if (sprite == 1){
+		    fire.Texture = LoadTexture("sprites/FIREBALL.png");
+        }
+        else {
+            fire.Texture = LoadTexture("sprites/SMALLFIREBALL.png");
+        }
+        fire.SetPos(x,y);
 		fire.has_Spawned = true;
 	}
 
