@@ -40,15 +40,17 @@ void Donkey::Update()
 
         if (frameIndex >= 3)
         {
+            spawnBarrel = true; // <-- aquí, justo al terminar el último frame
             frameIndex = 0;
             isThrowing = false;
-            frameRec = { 3.0f, 2.0f, 41.0f, 32.0f }; // vuelve al idle
+            frameRec = { 3.0f, 2.0f, 41.0f, 32.0f };
         }
-
-        frameRec.x = frameOffsetsX[frameIndex];
-        frameRec.y = frameOffsetsY[frameIndex];
-        frameRec.width = frameWidths[frameIndex];
-        frameRec.height = 32.0f;
+        else
+        {
+            frameRec.x = frameOffsetsX[frameIndex];
+            frameRec.y = frameOffsetsY[frameIndex];
+            frameRec.width = frameWidths[frameIndex];
+        }
     }
 }
 

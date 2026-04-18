@@ -12,8 +12,8 @@ public:
     Texture2D barrelTexture = { 0 };  
 
     float spawnTimer = 0.0f;
-    float spawnX = 30.0f;
-    float spawnY = 30.0f;
+    float spawnX = 50.0f;
+    float spawnY = 63.0f;
 
     void Init();
     void Update();

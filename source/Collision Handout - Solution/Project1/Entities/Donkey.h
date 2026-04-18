@@ -11,7 +11,8 @@ public:
     float frameTimer = 0.0f;
     float frameInterval = 0.4f; // velocidad de la animación
     bool isThrowing = false;
-
+    bool throwReady = false; // true cuando la animación termina
+    bool spawnBarrel = false;
     void Setup();
     void Update();
     void Draw();

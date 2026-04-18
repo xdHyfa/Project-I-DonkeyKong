@@ -23,22 +23,28 @@ void BarrelSpawner::ResetBarrel(Barrel& b) {
 }
 
 void BarrelSpawner::Update() {
-    // Spawneo progresivo hasta MAX_BARRELS
-    if ((int)barrels.size() < MAX_BARRELS) {
-        spawnTimer += GetFrameTime();
-        if (spawnTimer >= BARREL_SPAWN_INTERVAL) {
-            spawnTimer = 0.0f;
+    
+    // Timer para que DK haga la animación
+    spawnTimer += GetFrameTime();
+    if (spawnTimer >= BARREL_SPAWN_INTERVAL) {
+        spawnTimer = 0.0f;
+        donkey.PlayThrowAnim();
+    }
+    
+    
+    // Spawn del barril cuando DK llega al frame 3
+    if (donkey.spawnBarrel) {
+        donkey.spawnBarrel = false;
 
+        if ((int)barrels.size() < MAX_BARRELS) {
             Barrel b;
-            b.Texture = barrelTexture;          // textura compartida, no LoadTexture aqui
+            b.Texture = barrelTexture;
             b.barrelFrameWidth = BARRELSIZE + 4;
             b.frameRec.width = b.barrelFrameWidth;
             b.SetPos(spawnX, spawnY);
             b.velocityX = BARRELVELOCITY;
             b.has_Spawned = true;
-
             barrels.push_back(b);
-            donkey.PlayThrowAnim();
         }
     }
 
