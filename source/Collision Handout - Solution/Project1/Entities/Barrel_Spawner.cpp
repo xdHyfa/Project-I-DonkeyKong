@@ -1,6 +1,7 @@
 #include "Entities/Barrel_Spawner.h"
 #include "Maps/Level1Map.h"
 #include "raylib.h"
+#include "Entities/Donkey.h"
 
 BarrelSpawner barrelSpawner;
 
@@ -10,6 +11,7 @@ void BarrelSpawner::Init() {
 }
 
 void BarrelSpawner::ResetBarrel(Barrel& b) {
+    donkey.PlayThrowAnim();
     b.SetPos(spawnX, spawnY);
     b.velocityX = BARRELVELOCITY;
     b.velocityY = 0.0f;
@@ -36,6 +38,7 @@ void BarrelSpawner::Update() {
             b.has_Spawned = true;
 
             barrels.push_back(b);
+            donkey.PlayThrowAnim();
         }
     }
 

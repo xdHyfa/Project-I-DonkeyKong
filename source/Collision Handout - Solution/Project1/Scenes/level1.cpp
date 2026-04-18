@@ -10,6 +10,7 @@
 #include "Entities/EntityCollision.hpp"
 #include "Entities/Barrel_Spawner.h"
 #include <iostream>
+#include "Entities/Donkey.h"
 using namespace std;
 
 
@@ -32,6 +33,8 @@ void runLevel1() {
         Mario.Texture = LoadTexture("sprites/MARIO.png");
         //Mario Setup
         Mario.Setup();
+        
+        donkey.Setup();
 
         Level1RampSetter();
         Level1LadderSetter();
@@ -57,6 +60,9 @@ void runLevel1() {
         UpdateMusicStream(deathMusic);
 
         Mario.Movement(); // ? añade esto para que procese la animación de muerte
+        
+        donkey.Update(); // <-- añade esto
+        donkey.Draw();   // <-- y esto
 
         if (deathTimer >= 5.0f) {
             UnloadTexture(Mario.Texture);
@@ -82,7 +88,8 @@ void runLevel1() {
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
-
+    donkey.Update();
+   
     UpdateMusicStream(level1Music);
     UpdateMusicStream(deathMusic);
     
@@ -99,7 +106,7 @@ void runLevel1() {
     /*---TEXTURE DRAW---*/
     Level1LadderDraw();
     Level1RampDraw();
-
+    donkey.Draw();
     barrelSpawner.Draw();
 
     //--Debugging tool: Map Hitboxes
@@ -162,7 +169,7 @@ void runLevel1() {
         UnloadMusicStream(level1Music);
         UnloadMusicStream(deathMusic);
         UnloadSound(jumpBarrelSound);
-
+        donkey.Unload();
         ResetLevel1Entities(); 
         Scene_Init = false; // reset initialization boolean.
     }
