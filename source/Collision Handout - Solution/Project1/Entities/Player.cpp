@@ -88,7 +88,38 @@ void Player::Setup()
 
 void Player::Movement()
 {
-    if (!isAlive) return;
+    if (!isAlive) {
+        frameRec.width = abs(frameRec.width);
+        frameRec.y = 4 * SpriteSize;
+
+        if (!deathStarted) {
+            frameRec.x = 0.0f; // primer frame fijo
+            deathStartTimer += GetFrameTime();
+            if (deathStartTimer >= 1.0f) {
+                deathStarted = true;
+                frameIndex = 1; // empieza en el segundo frame, el primero ya lo vimos
+                frameDelayCounter = 0;
+            }
+            return;
+        }
+
+        if (deathLoopCount < 2) {
+            ++frameDelayCounter;
+            if (frameDelayCounter > 6) {
+                frameDelayCounter = 0;
+                ++frameIndex;
+                if (frameIndex >= 4) {
+                    frameIndex = 0;
+                    ++deathLoopCount;
+                }
+                if (deathLoopCount < 2) {  // solo actualiza si no hemos terminado
+                    frameRec.x = SpriteSize * (float)frameIndex;
+                }
+            }
+        } else {
+            frameRec.x = 3 * SpriteSize;
+        }
+    }
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
     
     /*  if (!isTextureValid(Texture))
@@ -298,8 +329,12 @@ void Player::Unload()
 }
 
 void Player::die() {
-    
     isGrounded = false;
     isJumping = false;
     isAlive = false;
+    deathLoopCount = 0;
+    frameIndex = 0;
+    frameDelayCounter = 0;
+    deathStarted = false;
+    deathStartTimer = 0.0f;
 }

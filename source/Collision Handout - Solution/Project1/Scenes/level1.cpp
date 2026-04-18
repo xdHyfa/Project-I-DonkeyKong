@@ -51,8 +51,9 @@ void runLevel1() {
         deathTimer += GetFrameTime();
         UpdateMusicStream(deathMusic);
 
+        Mario.Movement(); // ? añade esto para que procese la animación de muerte
+
         if (deathTimer >= 5.0f) {
-            // Unload todo antes de reiniciar
             UnloadTexture(Mario.Texture);
             Truss::UnloadSharedTexture();
             Ladder::UnloadSharedTexture();
@@ -61,8 +62,7 @@ void runLevel1() {
             UnloadMusicStream(level1Music);
             UnloadMusicStream(deathMusic);
             ResetLevel1Entities();
-            Mario.isAlive = true;  // resetear para que Setup funcione bien
-
+            Mario.isAlive = true;
             Scene_Init = false;
             isDeathSequence = false;
         }
