@@ -13,12 +13,12 @@ void Fire::PlayAnimation() {
     if (Facing_left) { FireSprite.width = -16.0f; }
     else { FireSprite.width = 16.0f; }
 
-    if (fireTick >= 0.05f && !Anim_blink) {
+    if (fireTick >= 0.1f && !Anim_blink) {
         FireSprite.x += 16;
         Anim_blink = true;
         fireTick = 0;
     }
-    if (fireTick >= 0.05f && Anim_blink) {
+    if (fireTick >= 0.1f && Anim_blink) {
         FireSprite.x -= 16;
         Anim_blink = false;
         fireTick = 0;
