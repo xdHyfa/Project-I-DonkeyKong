@@ -88,7 +88,23 @@ void Player::Setup()
 
 void Player::Movement()
 {
-    if (!isAlive) return;
+    if (!isAlive) {
+        frameRec.width = abs(frameRec.width); // aseguramos que no esté flipeado
+        frameRec.y = 3 * SpriteSize; // fila 3 (0-indexed)
+
+        if (deathLoopCount < 2) {
+            ++frameDelayCounter;
+            if (frameDelayCounter > 6) {
+                frameDelayCounter = 0;
+                ++frameIndex %= 4;
+                frameRec.x = SpriteSize * (float)frameIndex;
+                if (frameIndex == 0) ++deathLoopCount;
+            }
+        } else {
+            frameRec.x = 4 * SpriteSize; // último frame estático
+        }
+        return;
+    }
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
     
     /*  if (!isTextureValid(Texture))
@@ -298,8 +314,10 @@ void Player::Unload()
 }
 
 void Player::die() {
-    
     isGrounded = false;
     isJumping = false;
     isAlive = false;
+    deathLoopCount = 0;
+    frameIndex = 0;
+    frameDelayCounter = 0;
 }
