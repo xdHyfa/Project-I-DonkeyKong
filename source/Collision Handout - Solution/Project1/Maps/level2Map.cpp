@@ -253,8 +253,8 @@ void DrawDownZone2(Rectangle* DownZone, int size) {
 	}
 }
 
-bool CheckDownZone(Entity& entity) {
-	for (int i = 0; i < 9; i++) {
+bool Level2CheckDownZone(Entity& entity) {
+	for (int i = 0; i < 14; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level2DownZone[i])) {
 			return true;
 		}
@@ -285,12 +285,12 @@ int Level2CheckEntityPlatform(Entity& entity) {
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel2Colliders() {
-	DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
+	/*DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
 	DrawRectangle(Base_1_Zone.x, Base_1_Zone.y, Base_1_Zone.width, Base_1_Zone.height, WHITE);
 	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
 	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
-	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
+	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);*/
 	
 	DrawLadderCollider(Level2Ladders, 14);
-	DrawDownZone2(Level2DownZone, 14);
-}
+	//DrawDownZone2(Level2DownZone, 14);
+} 

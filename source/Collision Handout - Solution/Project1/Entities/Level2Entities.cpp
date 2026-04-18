@@ -20,28 +20,56 @@ void Level2FireRoutine(Fire& fire) {
 		fire.Movement();
 		int FirePlatform = Level2CheckEntityPlatform(fire);
 		if (FirePlatform == 0) {
-			if (fire.Position.x > 208 || fire.Position.x < 0) {
+			if (fire.Position.x > 208) {
 				fire.ChangeDirection();
+				fire.Position.x = 208;
+			}
+			else if (fire.Position.x < 0) {
+				fire.ChangeDirection();
+				fire.Position.x = 0;
 			}
 		}
 		if (FirePlatform == 1) {
-			if (fire.Position.x > 200 || fire.Position.x < 8) {
+			if (fire.Position.x > 200) {
 				fire.ChangeDirection();
+				fire.Position.x = 200;
+			}
+			else if (fire.Position.x < 8) {
+				fire.ChangeDirection();
+				fire.Position.x = 8;
 			}
 		}
 		if (FirePlatform == 2) {
-			if (fire.Position.x > 192 || fire.Position.x < 16) {
+			if (fire.Position.x > 192) {
 				fire.ChangeDirection();
+				fire.Position.x = 192;
+			}
+			else if (fire.Position.x < 16) {
+				fire.ChangeDirection();
+				fire.Position.x = 16;
 			}
 		}
 		if (FirePlatform == 3) {
 			if (fire.Position.x > 184 || fire.Position.x < 24) {
 				fire.ChangeDirection();
 			}
+			if (fire.Position.x > 184) {
+				fire.ChangeDirection();
+				fire.Position.x = 184;
+			}
+			else if (fire.Position.x < 24) {
+				fire.ChangeDirection();
+				fire.Position.x = 24;
+			}
 		}
 		if (FirePlatform == 4) {
-			if (fire.Position.x > 176 || fire.Position.x < 32) {
+			if (fire.Position.x > 176) {
 				fire.ChangeDirection();
+				fire.Position.x = 176;
+			}
+			else if (fire.Position.x < 32) {
+				fire.ChangeDirection();
+				fire.Position.x = 32;
 			}
 		}
 
@@ -63,11 +91,19 @@ void Level2FireRoutine(Fire& fire) {
 	}
 	if (fire.OnLadder) {
 		fire.ladderCooldown = 0;
+		fire.climbTimer += GetFrameTime();
+		if (fire.climbTimer > 1.75f) {
+			fire.OnLadder = false;
+			fire.climbTimer = 0.0f;
+		}
 	}
 	else {
+		fire.climbTimer = 0.0f;
 		Level2RampCollisions(fire);
 		fire.ladderCooldown += GetFrameTime();
 	}
+
+	fire.Position.y += 2;
 
 	fire.bounceTick += GetFrameTime();
 	if (fire.bounceTick >= 0.5f) {
@@ -82,6 +118,7 @@ void Level2FireRoutine(Fire& fire) {
 		DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
 
 	}
+	fire.Position.y -= 2;
 }
 
 void Level2EntitiesRoutine() {
