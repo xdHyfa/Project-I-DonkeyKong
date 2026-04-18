@@ -23,6 +23,8 @@ void runLevel2() {
 
         Level2RampSetter();
         Level2LadderSetter();
+
+        SetStartTime2();
         Scene_Init = true;
 
     }
@@ -69,7 +71,7 @@ void runLevel2() {
         UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
-
+        ResetLevel2Entities();
 
         Scene_Init = false; // reset initialization boolean.
     }

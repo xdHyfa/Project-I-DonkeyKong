@@ -12,6 +12,7 @@ public:
     bool CanClimbDown = false;
     float ladderCooldown = 0.0f;
     float ladderContactTime = 0.0f;
+    float climbTimer = 0.0f;
 
     Rectangle FireSprite = { 0.0f, 0.0f, 16, 16 };
     float fireTick = 0.0f;

@@ -298,7 +298,7 @@ void DrawDownZone(Rectangle* DownZone, int size) {
 	}
 }
 
-bool Level2CheckDownZone(Entity &entity) {
+bool CheckDownZone(Entity &entity) {
 	for (int i = 0; i < 9; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level1DownZone[i])) {
 			return true;
