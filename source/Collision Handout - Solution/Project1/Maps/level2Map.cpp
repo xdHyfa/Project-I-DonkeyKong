@@ -146,6 +146,9 @@ Ladder ExtraLadder11[6];
 Ladder ExtraLadder12[6];
 Ladder ExtraLadder13[6];
 
+Rectangle Level2DownZone[14];
+
+
 void SetFullLadder(Ladder &ladder, Ladder* Extras, float X, float Y) {
 	ladder.setPos(X,Y);
 	Extras[0].setPos(ladder.Position.x, ladder.Position.y + 15);
@@ -211,6 +214,10 @@ void Level2LadderSetter() {
 		Level2Ladders[i].Hitbox.y += 1;
 		Level2Ladders[i].Hitbox.height += 16;
 	}
+
+	for (int i = 0; i < 14; i++) {
+		Level2DownZone[i] = { Level2Ladders[i].Hitbox.x, Level2Ladders[i].Hitbox.y - 2 , 10, 4 };
+	}
 }
 
 void Level2LadderDraw() {
@@ -236,19 +243,54 @@ void Level2LadderDraw() {
 	}
 }
 
-void Level2LadderCollision(Entity& entity) {
+void Level2LadderCollisions(Entity& entity) {
 	LadderCollisions(entity, Level2Ladders, 14);
 }
 
+void DrawDownZone2(Rectangle* DownZone, int size) {
+	for (int i = 0; i < size; i++) {
+		DrawRectangle(DownZone[i].x, DownZone[i].y, DownZone[i].width, DownZone[i].height, DARKPURPLE);
+	}
+}
 
+bool CheckDownZone(Entity& entity) {
+	for (int i = 0; i < 9; i++) {
+		if (CheckCollisionPointRec(entity.FloorCollider, Level2DownZone[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//---LEVEL CHECK: 
+
+int Level2CheckEntityPlatform(Entity& entity) {
+	if (CheckCollisionPointRec(entity.FloorCollider, Base_0_Zone)) {
+		return 0;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_1_Zone)) {
+		return 1;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_2_Zone)) {
+		return 2;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_3_Zone)) {
+		return 3;
+	}
+	else if (CheckCollisionPointRec(entity.FloorCollider, Base_4_Zone)) {
+		return 4;
+	}
+}
 
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel2Colliders() {
-	DrawLadderCollider(Level2Ladders, 14);
 	DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
 	DrawRectangle(Base_1_Zone.x, Base_1_Zone.y, Base_1_Zone.width, Base_1_Zone.height, WHITE);
 	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
 	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
 	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
+	
+	DrawLadderCollider(Level2Ladders, 14);
+	DrawDownZone2(Level2DownZone, 14);
 }

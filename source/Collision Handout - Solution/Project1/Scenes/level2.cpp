@@ -1,8 +1,8 @@
 
-#include "Scenes/level1.h"
+#include "Scenes/level2.h"
 #include "Entities/Player.h"
+#include "Entities/Level2Entities.h"
 #include "Scenes/scenes.h"
-#include "Entities/Fire_Spawner.h"
 #include "Maps/Level2Map.h"
 #include "include/resource_dir.h"	
 #include "raylib.h"
@@ -35,7 +35,7 @@ void runLevel2() {
 
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
     Level2RampCollisions(Mario);
-    Level2LadderCollision(Mario);
+    Level2LadderCollisions(Mario);
 
     
     
@@ -54,8 +54,7 @@ void runLevel2() {
     
     /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
     
-    //FireRoutine(Fire1);
-    BarrelRoutine();
+    Level2EntitiesRoutine();
 
     if (IsKeyPressed(KEY_ONE)) {
         ChangeScene();
@@ -67,10 +66,8 @@ void runLevel2() {
 
         //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
-        //UnloadTexture(Fire1.Texture);
-        //UnloadTexture(Fire2.Texture);
+        UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
-        UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
 
 

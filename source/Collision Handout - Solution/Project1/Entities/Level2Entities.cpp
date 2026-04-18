@@ -14,61 +14,85 @@ void SetStartTime2() {
 	level2StartTime = GetTime();
 }
 void Level2FireRoutine(Fire& fire) {
-	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230);
+	if (!fire.has_Spawned) SpawnFire(fire, 20, 230, 2);
 
 	if (fire.has_Spawned) {
 		fire.Movement();
-		//int FirePlatform = CheckEntityPlatform(fire);
-	/*	if (FirePlatform == 0){
-		if (fire.Position.x > 208 || fire.Position.x < 0) {
-			fire.ChangeDirection();
-			}
-		}
-		if (FirePlatform == 1 || FirePlatform == 3 || FirePlatform == 5 || FirePlatform == 7) {
-			if (fire.Position.x > 192 || fire.Position.x < 0) {
+		int FirePlatform = Level2CheckEntityPlatform(fire);
+		if (FirePlatform == 0) {
+			if (fire.Position.x > 208 || fire.Position.x < 0) {
 				fire.ChangeDirection();
 			}
 		}
-		if (FirePlatform == 2 || FirePlatform == 4 || FirePlatform == 6) {
-			if (fire.Position.x > 208 || fire.Position.x < 16) {
+		if (FirePlatform == 1) {
+			if (fire.Position.x > 200 || fire.Position.x < 8) {
 				fire.ChangeDirection();
 			}
-		}*/
+		}
+		if (FirePlatform == 2) {
+			if (fire.Position.x > 192 || fire.Position.x < 16) {
+				fire.ChangeDirection();
+			}
+		}
+		if (FirePlatform == 3) {
+			if (fire.Position.x > 184 || fire.Position.x < 24) {
+				fire.ChangeDirection();
+			}
+		}
+		if (FirePlatform == 4) {
+			if (fire.Position.x > 176 || fire.Position.x < 32) {
+				fire.ChangeDirection();
+			}
+		}
 
 	}
-	//Level2LadderCollisions(fire);
-	
+	Level2LadderCollisions(fire);
+
 	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
-	else { 
-		fire.ladderContactTime = 0.0f; 
+	else {
+		fire.ladderContactTime = 0.0f;
 		fire.CanClimbDown = false;
 	}
 
-	if (fire.ladderContactTime > 0.2f && GetRandomValue(0,2) == 1) {
+	if ((fire.ladderContactTime > 0.1f && (GetRandomValue(0, 2) == 1)) && fire.ladderCooldown > 1.5f) {
 		fire.OnLadder = true;
 		cout << "ONLADDER" << endl;
-		/*if (CheckDownZone(fire)) {
+		if (Level2CheckDownZone(fire)) {
 			fire.CanClimbDown = true;
-		}*/
+		}
 	}
 	if (fire.OnLadder) {
-	
+		fire.ladderCooldown = 0;
 	}
 	else {
-		//Level1RampCollisions(fire);
+		Level2RampCollisions(fire);
+		fire.ladderCooldown += GetFrameTime();
 	}
-	DrawTextureRec(fire.Texture, fire.FireSprite, fire.Position, WHITE);
+
+	fire.bounceTick += GetFrameTime();
+	if (fire.bounceTick >= 0.5f) {
+		DrawTextureRec(fire.Texture, fire.FireSprite, fire.Position, WHITE);
+		if (fire.bounceTick >= 0.65f) {
+			fire.bounceTick = 0;
+		}
+	}
+	else {
+		Vector2 BouncePos = { fire.Position.x, fire.Position.y - 2 };
+
+		DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
+
+	}
 }
 
 void Level2EntitiesRoutine() {
 
 	float time_buffer = GetTime();
-	//if (time_buffer-level1StartTime >= 5){
-	//	Level1FireRoutine(Fire1);
-	//}
-	//if(time_buffer-level1StartTime >= 15){
-	//	Level1FireRoutine(Fire2);
-	//}
+	if (time_buffer-level2StartTime >= 5){
+		Level2FireRoutine(Fire3);
+	}
+	if(time_buffer-level2StartTime >= 15){
+		Level2FireRoutine(Fire4);
+	}
 
 }
 

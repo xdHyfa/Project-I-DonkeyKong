@@ -53,10 +53,15 @@ void Fire::Movement() {
 
 
 
-void SpawnFire(Fire &fire, int x, int y) {
+void SpawnFire(Fire &fire, int x, int y, int sprite) {
 	if (!fire.has_Spawned) {
-		fire.Texture = LoadTexture("sprites/FIREBALL.png");
-		fire.SetPos(x,y);
+        if (sprite == 1){
+		    fire.Texture = LoadTexture("sprites/FIREBALL.png");
+        }
+        else {
+            fire.Texture = LoadTexture("sprites/SMALLFIREBALL.png");
+        }
+        fire.SetPos(x,y);
 		fire.has_Spawned = true;
 	}
 

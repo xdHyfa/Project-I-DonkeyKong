@@ -33,4 +33,4 @@ public:
     }
 };
 
-void SpawnFire(Fire &fire, int x, int y);
+void SpawnFire(Fire &fire, int x, int y, int sprite);

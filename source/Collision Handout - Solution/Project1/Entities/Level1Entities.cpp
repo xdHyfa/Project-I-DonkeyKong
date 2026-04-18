@@ -14,7 +14,7 @@ void SetStartTime() {
 	level1StartTime = GetTime();
 }
 void Level1FireRoutine(Fire& fire) {
-	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230);
+	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230, 1);
 
 	if (fire.has_Spawned) {
 		fire.Movement();
@@ -80,7 +80,7 @@ void Level1EntitiesRoutine() {
 	if (time_buffer-level1StartTime >= 5){
 		Level1FireRoutine(Fire1);
 	}
-	if(time_buffer-level1StartTime >= 15){
+	if(time_buffer-level1StartTime >= 12){
 		Level1FireRoutine(Fire2);
 	}
 
