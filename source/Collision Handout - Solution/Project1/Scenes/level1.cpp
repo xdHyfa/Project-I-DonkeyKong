@@ -9,11 +9,14 @@
 #include "Core/constants.h"
 #include "Entities/EntityCollision.hpp"
 #include "Entities/Barrel_Spawner.h"
+#include <iostream>
+using namespace std;
 
 
 Music level1Music = { 0 };
 Music deathMusic = { 0 };
 bool  isDead = false;
+Sound jumpBarrelSound = { 0 };
 
 float deathTimer = 0.0f;
 bool isDeathSequence = false;
@@ -45,6 +48,8 @@ void runLevel1() {
         isDead = false;
         deathTimer = 0.0f;
         isDeathSequence = false;
+        jumpBarrelSound = LoadSound("Audio/Bonus.wav");
+
     }
 
     if (isDeathSequence) {
@@ -114,17 +119,28 @@ void runLevel1() {
     Level1CheckWinCondition(Mario);
 
     for (Barrel& b : barrelSpawner.barrels) {
-        if (b.has_Spawned && EntityCollision(Mario, b)) {
-            if (!isDead) {
-                StopMusicStream(level1Music);
-                PlayMusicStream(deathMusic);
-                isDead = true;
-                isDeathSequence = true; 
-                deathTimer = 0.0f;
-                Mario.die();
-                break; 
-            }
-            
+        if (!b.has_Spawned || !Mario.isAlive) continue;
+
+        // Proximidad horizontal
+        float diffX = abs(Mario.Position.x - b.Position.x);
+        float diffY = Mario.Position.y - b.Position.y;
+
+        cout << "diffX: " << diffX << " diffY: " << diffY << endl;
+
+        if (EntityCollision(Mario, b)) // colision real = muerte
+        {
+            StopMusicStream(level1Music);
+            PlayMusicStream(deathMusic);
+            isDead = true;
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Mario.die();
+            break;
+        }
+        else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping)
+        {
+            // Mario cerca horizontalmente, por encima, y saltando
+            PlaySound(jumpBarrelSound);
         }
     }
 
@@ -145,6 +161,7 @@ void runLevel1() {
 
         UnloadMusicStream(level1Music);
         UnloadMusicStream(deathMusic);
+        UnloadSound(jumpBarrelSound);
 
         ResetLevel1Entities(); 
         Scene_Init = false; // reset initialization boolean.
