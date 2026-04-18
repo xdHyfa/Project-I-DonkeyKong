@@ -38,6 +38,7 @@ public:
     }
     void Movement() override;
     void Setup();
+    void Unload();
 
     void UpdateCollider() {
         FloorCollider.x = Position.x + 8;

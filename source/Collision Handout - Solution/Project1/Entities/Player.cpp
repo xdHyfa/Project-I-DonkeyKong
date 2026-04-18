@@ -20,6 +20,10 @@ unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
 
 
+/*---Audio Level---*/
+Sound jumpSound = { 0 };
+
+
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
 
@@ -49,6 +53,7 @@ void Player::Setup()
     marioFrameHeight = (float)Mario.SpriteSize;
     frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
     Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
+    jumpSound = LoadSound("Audio/Game-Startup.wav"); 
 }
 
 
@@ -103,6 +108,7 @@ void Player::Movement()
     {
         if (Mario.tryJump())
         {
+            PlaySound(jumpSound);
             lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
             isJumping = true;
             marioVelocity.y = -(float)Mario.jumpHeight;
@@ -199,4 +205,9 @@ void Player::Movement()
 void DrawMarioCollider() {
     DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
     DrawPixel(Mario.Position.x, Mario.Position.y, RED);
+}
+
+void Player::Unload()
+{
+    UnloadSound(jumpSound);
 }
