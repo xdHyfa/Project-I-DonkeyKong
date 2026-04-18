@@ -60,7 +60,8 @@ void BarrelSpawner::Update() {
 void BarrelSpawner::Draw() {
     for (Barrel& b : barrels) {
         if (b.has_Spawned) {
-            DrawTextureRec(b.Texture, b.frameRec, b.Position, WHITE);
+            Vector2 drawPos = { b.Position.x, b.Position.y + 1 };
+            DrawTextureRec(b.Texture, b.frameRec, drawPos, WHITE);
         }
     }
 }

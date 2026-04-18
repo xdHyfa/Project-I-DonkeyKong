@@ -16,7 +16,7 @@ public:
     float velocityX = BARRELVELOCITY;   
     float velocityY = 0.0f;
 
-    Rectangle frameRec = { 0.0f, 0.0f, BARRELSIZE+3, BARRELSIZE+ 2};
+    Rectangle frameRec = { 0.0f, 0.0f, BARRELSIZE+3, BARRELSIZE+ 3};
     float     frameDelay = 1.0f;
     unsigned  frameDelayCounter = 0;
     unsigned  frameIndex = 0;
@@ -62,8 +62,15 @@ public:
         ++frameDelayCounter;
         if (frameDelayCounter > frameDelay) {
             frameDelayCounter = 0;
-            ++frameIndex;
-            frameIndex %= numFrames;
+
+            if (velocityX > 0) {
+                
+                frameIndex = (frameIndex + 3) % 4;
+            } else {
+                
+                frameIndex = (frameIndex + 1) % 4;
+            }
+
             frameRec.x = barrelFrameWidth * (float)frameIndex;
         }
     }

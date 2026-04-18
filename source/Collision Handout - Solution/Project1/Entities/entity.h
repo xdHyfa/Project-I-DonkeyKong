@@ -17,7 +17,7 @@ public:
     Vector2 Position = { 0.0f, 0.0f };
     Vector2 FloorCollider = { 0.0f, 0.0f };
 
-    Rectangle hitbox = { Position.x,Position.y,12,12 };
+    Rectangle hitbox = { Position.x,Position.y,16,16 };
 
     float SpriteSize = 16.0f;
     bool OnLadder = false;
