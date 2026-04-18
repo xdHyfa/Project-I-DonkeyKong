@@ -39,6 +39,21 @@ void MarioLadderMovement() {
         Mario.Position.y += 1.0f;
         Mario.UpdateCollider();
     }
+
+    frameRec.y = 1 * Mario.SpriteSize;
+    frameRec.width = marioFrameWidth;
+    ++frameDelayCounter;
+    if (frameDelayCounter > 4)
+    {
+        frameDelayCounter = 0;
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+        {
+            ++frameIndex;
+            frameIndex %= 2;  
+            frameRec.x = marioFrameWidth * (float)frameIndex;
+        }
+    }
+
     return;
 }
 
@@ -180,16 +195,19 @@ void Player::Movement()
         frameDelayCounter = 0;
         if (marioMoving && !isJumping)
         {
+            frameRec.y = 0.0f; 
             ++frameIndex;
             frameIndex %= numFrames;
             frameRec.x = marioFrameWidth * (float)frameIndex;
         }
         else if (isJumping)
         {
+            frameRec.y = 0.0f;  
             frameRec.x = 3 * SpriteSize;
         }
         else
         {
+            frameRec.y = 0.0f;  
             frameIndex = 0;
             frameRec.x = 0.0f;
         }
