@@ -18,6 +18,7 @@ float     marioFrameHeight = 0.0f;
 float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
+unsigned finishFrameDelayCounter = 0;
 
 
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
@@ -193,7 +194,28 @@ void Player::Movement()
         }*/
         
         frameDelayCounter = 0;
-        if (marioMoving && !isJumping)
+        if (Mario.justClimbedLadder)
+        {
+            frameRec.y = 1 * SpriteSize;
+            frameRec.width = marioFrameWidth;
+            frameRec.x = marioFrameWidth * (float)(4 + Mario.climbFinishFrame);
+            ++finishFrameDelayCounter;
+            if (finishFrameDelayCounter > 2)
+            {
+                finishFrameDelayCounter = 0;
+                if (Mario.climbFinishFrame >= 2)
+                {
+                    Mario.justClimbedLadder = false;
+                    Mario.climbFinishFrame = 0;
+                    frameRec.y = 0.0f;
+                }
+                else
+                {
+                    ++Mario.climbFinishFrame;
+                }
+            }
+        }
+        else if (marioMoving && !isJumping)
         {
             frameRec.y = 0.0f; 
             ++frameIndex;
