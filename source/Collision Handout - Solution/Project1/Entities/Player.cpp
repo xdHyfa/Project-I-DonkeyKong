@@ -21,6 +21,13 @@ unsigned  frameIndex = 0;
 unsigned finishFrameDelayCounter = 0;
 
 
+/*---Audio Level---*/
+Sound jumpSound = { 0 };
+Music walkMusic = { 0 };        //music en vez de Sound para que se repita
+Sound deathSound = { 0 };
+Music climbMusic = { 0 };
+
+
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
 
@@ -65,6 +72,17 @@ void Player::Setup()
     marioFrameHeight = (float)Mario.SpriteSize;
     frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
     Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
+    jumpSound = LoadSound("Audio/Game-Startup.wav"); 
+    walkMusic = LoadMusicStream("Audio/WalkingDef2.wav");
+    walkMusic.looping = true;
+    climbMusic = LoadMusicStream("Audio/WalkingDef3.wav");
+    climbMusic.looping = true;
+    deathSound = LoadSound("Audio/Dead.wav");
+
+
+
+    //Walking Def 3 Para subir y bajar escaleras
+    //Walkinf Def 2 para caminar normal
 }
 
 
@@ -87,6 +105,17 @@ void Player::Movement()
     if (OnLadder&& CanClimb){
         cout << "ON LADDER" <<endl;
         MarioLadderMovement();
+
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+        {
+            if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
+            UpdateMusicStream(climbMusic);
+        }
+        else
+        {
+            StopMusicStream(climbMusic);
+        }
+
         return;
     }
     if (CanClimb) {
@@ -94,6 +123,8 @@ void Player::Movement()
             Mario.OnLadder = true;
             Mario.Position.y -= 1.0f;
             Mario.UpdateCollider();
+
+
         }
         else if (IsKeyPressed(KEY_DOWN)) {
             Mario.OnLadder = true;
@@ -107,11 +138,27 @@ void Player::Movement()
     {
         marioVelocity.x = (float)Mario.velocity;
         if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+        
+        if (Mario.getIsGrounded())
+        {
+            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
+            UpdateMusicStream(walkMusic);
+        }
     }
     else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         marioVelocity.x = -(float)Mario.velocity;
         if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+       
+        if (Mario.getIsGrounded())
+        {
+            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
+            UpdateMusicStream(walkMusic);
+        }
+    }
+    else
+    {
+        StopMusicStream(walkMusic); // para cuando sueltas la tecla
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
@@ -119,6 +166,7 @@ void Player::Movement()
     {
         if (Mario.tryJump())
         {
+            PlaySound(jumpSound);
             lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
             isJumping = true;
             marioVelocity.y = -(float)Mario.jumpHeight;
@@ -239,4 +287,19 @@ void Player::Movement()
 void DrawMarioCollider() {
     DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
     DrawPixel(Mario.Position.x, Mario.Position.y, RED);
+}
+
+void Player::Unload()
+{
+    UnloadSound(jumpSound);
+    UnloadMusicStream(walkMusic);
+    UnloadSound(deathSound);
+    UnloadMusicStream(climbMusic);
+}
+
+void Player::die() {
+    
+    isGrounded = false;
+    isJumping = false;
+    isAlive = false;
 }

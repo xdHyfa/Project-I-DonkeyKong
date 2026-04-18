@@ -6,14 +6,19 @@
 #include "Core/constants.h"
 #include "Scenes/TitleScreen.h"
 #include "Scenes/InitialScreen.h"
+#include "Entities/Player.h"
 
 
 
 int main()
 {
+
+	
+	
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
+	InitAudioDevice(); // <-- Añade esto después de InitWindow
 	Camera2D camera = { 0 };
 	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
 	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
@@ -59,6 +64,8 @@ int main()
 		EndDrawing();
 	}
 
+	Mario.Unload();
+	CloseAudioDevice(); // <-- Y esto antes de CloseWindow
 	CloseWindow();
 	return 0;
 }

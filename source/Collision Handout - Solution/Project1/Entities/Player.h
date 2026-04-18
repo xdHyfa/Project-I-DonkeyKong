@@ -24,11 +24,7 @@ public:
     int deathLoopCount = 0;
     
 
-    void die() { 
-        
-        isGrounded = false;
-        isJumping = false;
-        isAlive = false; }
+    void die();
 
     bool tryJump()
     {
@@ -41,6 +37,7 @@ public:
     }
     void Movement() override;
     void Setup();
+    void Unload();
 
     void UpdateCollider() {
         FloorCollider.x = Position.x + 8;
