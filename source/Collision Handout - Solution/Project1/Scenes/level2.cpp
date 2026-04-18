@@ -28,7 +28,7 @@ void runLevel2() {
         SetStartTime2();
         Scene_Init = true;
 
-        level2Music = LoadMusicStream("Audio/Stage-2-Springboard.wav");      //MUSICA
+        level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");      //MUSICA
         deathMusic2 = LoadMusicStream("Audio/Dead.wav");
         level2Music.looping = true;
         PlayMusicStream(level2Music);

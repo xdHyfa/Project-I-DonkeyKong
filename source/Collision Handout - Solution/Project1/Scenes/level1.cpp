@@ -38,7 +38,7 @@ void runLevel1() {
         SetStartTime();
         Scene_Init = true;
 
-        level1Music = LoadMusicStream("Audio/Stage-1-Bricks.wav");      //MUSICA
+        level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");      //MUSICA
         deathMusic = LoadMusicStream("Audio/Dead.wav");
         level1Music.looping = true;
         PlayMusicStream(level1Music);
