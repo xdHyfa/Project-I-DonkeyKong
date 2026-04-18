@@ -107,18 +107,14 @@ void Player::Movement()
             ++frameDelayCounter;
             if (frameDelayCounter > 6) {
                 frameDelayCounter = 0;
-                ++frameIndex;
-                if (frameIndex >= 4) {
-                    frameIndex = 0;
-                    ++deathLoopCount;
-                }
-                if (deathLoopCount < 2) {  // solo actualiza si no hemos terminado
-                    frameRec.x = SpriteSize * (float)frameIndex;
-                }
+                frameRec.x = SpriteSize * (float)frameIndex;
+                ++frameIndex %= 4;
+                if (frameIndex == 0) ++deathLoopCount;
             }
         } else {
-            frameRec.x = 3 * SpriteSize;
+            frameRec.x = 4 * SpriteSize;
         }
+        return;
     }
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
     
