@@ -10,6 +10,10 @@
 #include "Entities/EntityCollision.hpp"
 
 
+Music level1Music = { 0 };
+Music deathMusic = { 0 };
+bool  isDead = false;
+
 
 void runLevel1() {
 
@@ -28,12 +32,19 @@ void runLevel1() {
         SetStartTime();
         Scene_Init = true;
 
+        level1Music = LoadMusicStream("Audio/Stage-1-Bricks.wav");      //MUSICA
+        deathMusic = LoadMusicStream("Audio/Dead.wav");
+        level1Music.looping = true;
+        PlayMusicStream(level1Music);
+        isDead = false;
+
     }
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
 
-   
+    UpdateMusicStream(level1Music);
+    UpdateMusicStream(deathMusic);
     
     /*---GROUND COLLISIONS---*/
 
@@ -65,6 +76,11 @@ void runLevel1() {
 
     if (barrel1.has_Spawned && EntityCollision(Mario, barrel1))
     {
+        if (!isDead) {
+            StopMusicStream(level1Music);
+            PlayMusicStream(deathMusic);
+            isDead = true;
+        }
         Mario.die();
     }
 
@@ -81,6 +97,9 @@ void runLevel1() {
         UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();
+
+        UnloadMusicStream(level1Music);
+        UnloadMusicStream(deathMusic);
 
         ResetLevel1Entities(); 
         Scene_Init = false; // reset initialization boolean.

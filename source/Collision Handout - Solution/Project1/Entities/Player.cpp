@@ -258,7 +258,7 @@ void Player::Unload()
 }
 
 void Player::die() {
-    PlaySound(deathSound);
+    
     isGrounded = false;
     isJumping = false;
     isAlive = false;

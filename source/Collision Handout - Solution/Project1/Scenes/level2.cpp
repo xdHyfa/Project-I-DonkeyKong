@@ -1,4 +1,3 @@
-
 #include "Scenes/level1.h"
 #include "Entities/Player.h"
 #include "Scenes/scenes.h"
@@ -8,7 +7,9 @@
 #include "raylib.h"
 #include "Core/constants.h"
 
-
+Music level2Music = { 0 };
+Music deathMusic2 = { 0 };
+bool  isDead2 = false;
 
 void runLevel2() {
 
@@ -25,11 +26,19 @@ void runLevel2() {
         Level2LadderSetter();
         Scene_Init = true;
 
+        level2Music = LoadMusicStream("Audio/Stage-2-Springboard.wav");      //MUSICA
+        deathMusic2 = LoadMusicStream("Audio/Dead.wav");
+        level2Music.looping = true;
+        PlayMusicStream(level2Music);
+        isDead2 = false;
+
     }
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
-   
+
+    UpdateMusicStream(level2Music);
+    UpdateMusicStream(deathMusic2);
     
     /*---GROUND COLLISIONS---*/
 
@@ -72,6 +81,9 @@ void runLevel2() {
         Truss::UnloadSharedTexture();
         UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
+
+        UnloadMusicStream(level2Music);
+        UnloadMusicStream(deathMusic2);
 
 
         Scene_Init = false; // reset initialization boolean.
