@@ -16,6 +16,9 @@ public:
     bool justClimbedLadder = false;
     int climbFinishFrame = 0;
 
+    bool deathStarted = false;
+    float deathStartTimer = 0.0f;
+
     const Rectangle boxCollider = { 0.0f, 0.0f, SpriteSize, SpriteSize };
 
     const float velocity = 1.5f;
