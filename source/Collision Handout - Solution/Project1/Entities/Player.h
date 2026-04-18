@@ -13,6 +13,9 @@ public:
     bool isJumping = false;
     bool isFalling = false;
 
+    bool justClimbedLadder = false;
+    int climbFinishFrame = 0;
+
     const Rectangle boxCollider = { 0.0f, 0.0f, SpriteSize, SpriteSize };
 
     const float velocity = 1.5f;

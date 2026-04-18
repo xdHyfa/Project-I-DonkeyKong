@@ -2,6 +2,7 @@
 #include "Entities/Ground.h"
 #include "Entities/Ladders.h"
 #include "Entities/entity.h"
+#include "Entities/Player.h" 
 #include "Core/constants.h"
 #include <iostream>
 using namespace std;
@@ -28,13 +29,16 @@ void DrawLadderCollider(Ladder* Map_Ladders, int size) {
 
 
 void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size) {
-	for (int i = 0; i < size; i++){
-		if (Map_Ladders[i].CheckEntityOnLadder(entity)) {
-			entity.CanClimb = true;
-			cout << "Can Climb" << endl;
-			return;
-		}
-	}
-	entity.OnLadder = false;
-	entity.CanClimb = false;
+    for (int i = 0; i < size; i++) {
+        if (Map_Ladders[i].CheckEntityOnLadder(entity)) {
+            entity.CanClimb = true;
+            return;
+        }
+    }
+    if (entity.OnLadder && entity.tag == EntityTag::PLAYER) {
+        Mario.justClimbedLadder = true;
+        Mario.climbFinishFrame = 0;
+    }
+    entity.OnLadder = false;
+    entity.CanClimb = false;
 }
