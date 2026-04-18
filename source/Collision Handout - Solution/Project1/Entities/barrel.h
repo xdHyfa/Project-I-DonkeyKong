@@ -5,7 +5,7 @@
 #pragma once
 #define NORMAL 0
 #define RANDOM 1
-#define BARRELSIZE 13
+#define BARRELSIZE 14
 #define BARRELVELOCITY 2.2f
 #define BARREL_GRAVITY 0.3f
 
@@ -16,12 +16,12 @@ public:
     float velocityX = BARRELVELOCITY;   
     float velocityY = 0.0f;
 
-    Rectangle frameRec = { 0.0f, 0.0f, BARRELSIZE+2, BARRELSIZE+2 };
+    Rectangle frameRec = { 0.0f, 0.0f, BARRELSIZE+3, BARRELSIZE+ 2};
     float     frameDelay = 1.0f;
     unsigned  frameDelayCounter = 0;
     unsigned  frameIndex = 0;
     float     barrelFrameWidth = 0.0f;
-    unsigned  numFrames = 2;
+    unsigned  numFrames = 4;
 
     bool justFlipped = false;
 

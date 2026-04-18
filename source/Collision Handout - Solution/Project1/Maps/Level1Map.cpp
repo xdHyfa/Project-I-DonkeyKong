@@ -136,43 +136,54 @@ void BarrelGroundCollisions(Barrel& barrel) {
 	Vector2& pos = barrel.Position;
 	Vector2& col = barrel.FloorCollider;
 	bool onGround = false;
+	bool onRamp0 = false;
 
-	auto checkTrussArray = [&](Truss* Ramp, int size, float leftEdge, float rightEdge) {
+	auto checkTrussArray = [&](Truss* Ramp, int size, bool isBottom) {
 		if (onGround) return;
 		for (int i = 0; i < size; i++) {
-			float trussLeft = Ramp[i].TrussPos.x;
-			float trussRight = Ramp[i].TrussPos.x + 16;
+			float trussLeft    = Ramp[i].TrussPos.x;
+			float trussRight   = Ramp[i].TrussPos.x + 16;
 			float trussSurface = Ramp[i].TrussPos.y + 8;
 
-			bool inRangeX = (col.x >= trussLeft && col.x < trussRight);
+			bool inRangeX   = (col.x >= trussLeft && col.x < trussRight);
 			bool hitSurface = (col.y >= trussSurface && col.y <= trussSurface + barrel.velocityY + 2);
 
 			if (inRangeX && hitSurface) {
 				pos.y = trussSurface - BARRELSIZE;
 				barrel.velocityY = 0.0f;
 				onGround = true;
+				if (isBottom) onRamp0 = true;
 				barrel.justFlipped = false;
 				return;
 			}
 		}
 		};
 
-	checkTrussArray(Ramp_0, 14, 0, SCREEN_WIDTH);
-	checkTrussArray(Ramp_1, 13, 0, SCREEN_WIDTH - 16);
-	checkTrussArray(Ramp_2, 13, 16, SCREEN_WIDTH);
-	checkTrussArray(Ramp_3, 13, 0, SCREEN_WIDTH - 16);
-	checkTrussArray(Ramp_4, 13, 16, SCREEN_WIDTH);
-	checkTrussArray(Ramp_5, 13, 0, SCREEN_WIDTH - 16);
+	checkTrussArray(Ramp_0, 14, true);   // plataforma del suelo
+	checkTrussArray(Ramp_1, 13, false);
+	checkTrussArray(Ramp_2, 13, false);
+	checkTrussArray(Ramp_3, 13, false);
+	checkTrussArray(Ramp_4, 13, false);
+	checkTrussArray(Ramp_5, 13, false);
 
 	if (!onGround) return;
 
-	if (pos.x + BARRELSIZE >= SCREEN_WIDTH) {
-		pos.x = SCREEN_WIDTH - BARRELSIZE;
-		barrel.FlipDirection();
+	// Solo en Ramp_0: si llega al borde, lo marcamos para reciclar
+	if (onRamp0) {
+		if (pos.x + BARRELSIZE >= SCREEN_WIDTH || pos.x <= 0) {
+			barrel.has_Spawned = false; // el spawner lo reciclará
+		}
 	}
-	else if (pos.x <= 0) {
-		pos.x = 0;
-		barrel.FlipDirection();
+	// En el resto de plataformas: rebote normal en bordes
+	else {
+		if (pos.x + BARRELSIZE >= SCREEN_WIDTH) {
+			pos.x = SCREEN_WIDTH - BARRELSIZE;
+			barrel.FlipDirection();
+		}
+		else if (pos.x <= 0) {
+			pos.x = 0;
+			barrel.FlipDirection();
+		}
 	}
 }
 
