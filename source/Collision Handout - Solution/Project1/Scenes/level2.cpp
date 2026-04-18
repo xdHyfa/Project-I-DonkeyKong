@@ -7,7 +7,9 @@
 #include "raylib.h"
 #include "Core/constants.h"
 
-
+Music level2Music = { 0 };
+Music deathMusic2 = { 0 };
+bool  isDead2 = false;
 
 void runLevel2() {
 
@@ -26,11 +28,20 @@ void runLevel2() {
         SetStartTime2();
         Scene_Init = true;
 
+        level2Music = LoadMusicStream("Audio/Stage-2-Springboard.wav");      //MUSICA
+        deathMusic2 = LoadMusicStream("Audio/Dead.wav");
+        level2Music.looping = true;
+        PlayMusicStream(level2Music);
+        isDead2 = false;
+
+
+
     }
     /* UPDATE STARTS HERE */
 
     Mario.Movement();
-   
+    UpdateMusicStream(level2Music);
+    UpdateMusicStream(deathMusic2);
     
     /*---GROUND COLLISIONS---*/
 
@@ -71,6 +82,9 @@ void runLevel2() {
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
         ResetLevel2Entities();
+
+        UnloadMusicStream(level2Music);
+        UnloadMusicStream(deathMusic2);
 
         Scene_Init = false; // reset initialization boolean.
     }
