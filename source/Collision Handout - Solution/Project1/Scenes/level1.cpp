@@ -141,7 +141,7 @@ void runLevel1() {
         float diffX = abs(Mario.Position.x - b.Position.x);
         float diffY = Mario.Position.y - b.Position.y;
 
-        cout << "diffX: " << diffX << " diffY: " << diffY << endl;
+        
 
         if (EntityCollision(Mario, b)) // colision real = muerte
         {

@@ -6,10 +6,11 @@
 #include "Core/constants.h"
 #include "raylib.h"
 #include <iostream>
+#include "Entities/Lady.h"
 using namespace std;
 
 // ---- FASES ----
-enum CutscenePhase { PHASE_CLIMB, PHASE_WALK, PHASE_ROAR, PHASE_END };
+enum CutscenePhase { PHASE_CLIMB, PHASE_JUMP, PHASE_JUMP_PEAK,  PHASE_WALK, PHASE_ROAR, PHASE_END };
 CutscenePhase cutPhase = PHASE_CLIMB;
 
 // ---- DK ----
@@ -21,17 +22,23 @@ Rectangle climbFrames[4] = {
     {  3.0f, 78.0f, 38.0f, 36.0f },
     { 44.0f, 82.0f, 43.0f, 32.0f },
     { 90.0f, 78.0f, 38.0f, 36.0f },
-    {131.0f, 72.0f, 43.0f, 32.0f }
+    {131.0f, 82.0f, 43.0f, 32.0f }
 };
 // Frame caminando a la izquierda
 Rectangle walkFrame = { 1.0f, 2.0f, 39.0f, 31.0f };
 // Frame boca abierta (idle DK) - usa el que tienes
 Rectangle roarFrame = { 3.0f, 2.0f, 38.0f, 32.0f }; // ajusta si tienes uno específico
 
+
+
+Vector2 ladyFixedPos = { 0.0f, 0.0f };
+bool    ladyVisible = false;
+
+
 int   cutFrameIndex = 0;
 float cutFrameTimer = 0.0f;
 float cutFrameInterval = 0.15f;
-
+int visibleStairsLeft = 0;
 // ---- ESCALERAS ----
 Texture2D cutStairsTexture = { 0 };
 Rectangle stairFull = { 3.0f, 16.0f, 10.0f, 15.0f }; // escalera completa
@@ -68,9 +75,8 @@ void CutsceneInit() {
     cutDKTexture = LoadTexture("Sprites/donko 2-0.png");
     cutStairsTexture = LoadTexture("Sprites/Stairs.png");
     cutTrussTexture = LoadTexture("Sprites/TRUSS.png");
-    cout << "DK texture id: " << cutDKTexture.id << endl;
-    cout << "DK pos: " << cutDKPos.x << ", " << cutDKPos.y << endl;
-    
+    lady.Setup();
+    ladyVisible = false;
 
     // Y de cada rampa (mismo orden que Level1Map)
     rampYPositions[0] = SCREEN_HEIGHT - 16.0f - 1;
@@ -80,15 +86,15 @@ void CutsceneInit() {
     rampYPositions[4] = SCREEN_HEIGHT - 16.0f - 130;
     rampYPositions[5] = SCREEN_HEIGHT - 16.0f - 169;
 
-    stairStartY = rampYPositions[0];
+    stairStartY = rampYPositions[0] + 4.0f;
 
     // DK empieza abajo del todo
-    cutDKPos = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)SCREEN_HEIGHT - 80.0f };
+    cutDKPos = { (float)SCREEN_WIDTH / 2 - 19.0f+ 13.0f, (float)SCREEN_HEIGHT - 46.0f };
 
     // X escaleras: alineadas con Level1Ladders[8]
     // Level1Ladders[8] está en Ramp_6[2], calculamos X aproximada
-    stairX1 = SCREEN_WIDTH / 2.0f - 10.0f;
-    stairX2 = stairX1 + 20.0f;
+    stairX2 = SCREEN_WIDTH / 3.0f + 4 * 16.0f - 10.0f; // borde derecho de Ramp_6
+    stairX1 = stairX2 - 20.0f;
 
     cutPhase = PHASE_CLIMB;
     cutFrameIndex = 0;
@@ -96,18 +102,35 @@ void CutsceneInit() {
     cutTimer = 0.0f;
     visibleStairs = totalStairSections;
     tiltedRamps = 0;
+    visibleStairsLeft = totalStairSections;
 }
 
 void DrawCutsceneStairs() {
+    float ramp6Y = SCREEN_HEIGHT - 16.0f - 200;
+    int sectionCount = 0;
+
     for (int i = 0; i < totalStairSections; i++) {
         float y = stairStartY - (float)(i + 1) * 15.0f;
+        if (y < ramp6Y) break;
+        sectionCount++;
+    }
 
-        // derecha siempre visible
-        DrawTextureRec(cutStairsTexture, stairFull, { stairX2, y }, WHITE);
+    for (int i = 0; i < sectionCount; i++) {
+        float y = stairStartY - (float)(i + 1) * 15.0f;
+        bool isTop = (i >= sectionCount - 2);
 
-        // izquierda desaparece de abajo a arriba
-        if (i >= totalStairSections - visibleStairs)
+        // derecha
+        if (i >= sectionCount - visibleStairs) {
+            DrawTextureRec(cutStairsTexture, stairFull, { stairX2, y }, WHITE);
+        }
+        else if (isTop) {
+            DrawTextureRec(cutStairsTexture, stairFull, { stairX2, y }, WHITE);
+        }
+
+        // izquierda: faltan las 2 de arriba desde el inicio
+        if (i >= sectionCount - visibleStairsLeft && i < sectionCount - 2) {
             DrawTextureRec(cutStairsTexture, stairFull, { stairX1, y }, WHITE);
+        }
     }
 }
 
@@ -144,6 +167,9 @@ void DrawCutscenePlatforms() {
 
 void runCutscene() {
 
+    if (ladyVisible) {
+        DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
+    }
     if (!Scene_Init) {
         CutsceneInit();
         Scene_Init = true;
@@ -156,6 +182,7 @@ void runCutscene() {
     DrawCutscenePlatforms();
 
     // ---- DIBUJAR ESCALERAS ----
+    cout << "visibleStairs: " << visibleStairs << endl;
     DrawCutsceneStairs();
 
     // ---- FASE 1: SUBIR ----
@@ -167,22 +194,89 @@ void runCutscene() {
         }
 
         // Mover DK hacia arriba
-        cutDKPos.y -= 0.5f; // velocidad de subida, ajusta
+        cutDKPos.y -= 1.4f; // velocidad de subida, ajusta
 
         // Escaleras desaparecen según sube
         float climbProgress = (stairStartY - cutDKPos.y) / stairStartY;
         visibleStairs = totalStairSections - (int)(climbProgress * totalStairSections);
+        visibleStairsLeft = visibleStairs;
         if (visibleStairs < 0) visibleStairs = 0;
+        if (visibleStairsLeft < 0) visibleStairsLeft = 0;
 
-        // DK llega arriba: cambia a PHASE_WALK
         if (cutDKPos.y <= rampYPositions[5] - 31.0f) {
-            cutPhase = PHASE_WALK;
+            visibleStairs = 0;
+            visibleStairsLeft = 0;
+            cutDKPos.y = rampYPositions[5] - 31.0f;
+            cutPhase = PHASE_JUMP;
             cutTimer = 0.0f;
-            cutDKPos.x = stairX2; // empieza desde la escalera central
         }
 
         DrawTextureRec(cutDKTexture, climbFrames[cutFrameIndex], cutDKPos, WHITE);
     }
+
+
+
+    else if (cutPhase == PHASE_JUMP) {
+        if (cutTimer < 0.5f) {
+            DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
+            return;
+        }
+
+        float jumpProgress = cutTimer - 0.5f;
+        float peakTime = 0.6f;  // más largo
+        float jumpHeightPx = 25.0f; // más alto
+        float baseY = rampYPositions[5] - 31.0f;
+
+        if (jumpProgress < peakTime) {
+            cutDKPos.y = baseY - (jumpProgress / peakTime) * jumpHeightPx;
+        }
+        else {
+            float fallProgress = (jumpProgress - peakTime) / peakTime;
+            cutDKPos.y = (baseY - jumpHeightPx) + fallProgress * jumpHeightPx;
+
+            // cuando llega al pico cambia a PHASE_JUMP_PEAK
+            if (jumpProgress >= peakTime && cutPhase == PHASE_JUMP) {
+                cutPhase = PHASE_JUMP_PEAK;
+                cutTimer = 0.0f;
+                DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
+                return; // <-- para aquí
+            }
+        }
+
+        if (cutDKPos.y >= baseY) {
+            cutDKPos.y = baseY;
+            cutPhase = PHASE_WALK;
+            cutTimer = 0.0f;
+        }
+
+        DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
+    }
+
+    else if (cutPhase == PHASE_JUMP_PEAK) {
+        float jumpHeightPx = 25.0f;
+        float baseY = rampYPositions[5] - 31.0f;
+        cutDKPos.y = baseY - jumpHeightPx;
+
+        ladyFixedPos = { cutDKPos.x - 14.0f, cutDKPos.y + 3.0f};
+        ladyVisible = true;
+
+        DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
+        DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
+
+        if (cutTimer >= 0.2f) {
+            // caída suave
+            float fallProgress = (cutTimer - 2.0f) / 0.3f;
+            cutDKPos.y = (baseY - jumpHeightPx) + fallProgress * jumpHeightPx;
+
+            if (cutDKPos.y >= baseY) {
+                cutDKPos.y = baseY;
+                cutPhase = PHASE_WALK;
+                cutTimer = 0.0f;
+            }
+        }
+    }
+
+
 
     // ---- FASE 2: CAMINAR A LA IZQUIERDA ----
     else if (cutPhase == PHASE_WALK) {
@@ -226,6 +320,7 @@ void runCutscene() {
             UnloadTexture(cutDKTexture);
             UnloadTexture(cutStairsTexture);
             UnloadTexture(cutTrussTexture);
+            lady.Unload();
             Scene_Init = false;
             ChangeScene();
         }
