@@ -17,7 +17,7 @@ using namespace std;
 
 
 Music level1Music = { 0 };
-Music deathMusic = { 0 };
+Sound deathSound2 = { 0 };
 bool  isDead = false;
 Sound jumpBarrelSound = { 0 };
 
@@ -48,7 +48,7 @@ void runLevel1() {
         Scene_Init = true;
 
         level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");      //MUSICA
-        deathMusic = LoadMusicStream("Audio/Dead.wav");
+        deathSound2 = LoadSound("Audio/Dead.wav");
         level1Music.looping = true;
         PlayMusicStream(level1Music);
         isDead = false;
@@ -60,7 +60,7 @@ void runLevel1() {
 
     if (isDeathSequence) {
         deathTimer += GetFrameTime();
-        UpdateMusicStream(deathMusic);
+       
 
         Mario.Movement(); // ? añade esto para que procese la animación de muerte
         
@@ -77,7 +77,7 @@ void runLevel1() {
             UnloadLevel1Entities();
             barrelSpawner.Shutdown();
             UnloadMusicStream(level1Music);
-            UnloadMusicStream(deathMusic);
+            UnloadSound(deathSound2);
             ResetLevel1Entities();
             Mario.isAlive = true;
             Scene_Init = false;
@@ -99,7 +99,7 @@ void runLevel1() {
   
    
     UpdateMusicStream(level1Music);
-    UpdateMusicStream(deathMusic);
+    
     
     /*---GROUND COLLISIONS---*/
 
@@ -146,7 +146,7 @@ void runLevel1() {
         if (EntityCollision(Mario, b)) // colision real = muerte
         {
             StopMusicStream(level1Music);
-            PlayMusicStream(deathMusic);
+            PlaySound(deathSound2);
             isDead = true;
             isDeathSequence = true;
             deathTimer = 0.0f;
@@ -176,7 +176,7 @@ void runLevel1() {
         barrelSpawner.Shutdown();
 
         UnloadMusicStream(level1Music);
-        UnloadMusicStream(deathMusic);
+        UnloadSound(deathSound2);
         UnloadSound(jumpBarrelSound);
         donkey.Unload();
         lady.Unload();
