@@ -24,3 +24,15 @@ void DrawLevel2Colliders();
 int Level2CheckEntityPlatform(Entity& entity);
 
 bool Level2CheckDownZone(Entity& entity);
+
+void Level2ButtonSetter();
+
+void Level2CheckButtons(Entity& entity);
+
+void Level2ButtonsDraw();
+
+void UnloadButtonTexture();
+
+void ResetButtons();
+
+void CheckWinCondition();
