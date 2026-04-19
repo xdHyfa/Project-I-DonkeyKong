@@ -1,5 +1,7 @@
 #include "Entities/Donkey.h"
+#include "Entities/Barrel.h"
 #include "raylib.h"
+#include "Core/constants.h"
 
 Donkey donkey;
 
@@ -19,6 +21,8 @@ void Donkey::Setup()
     isThrowing = false;
     frameIndex = 0;
     frameTimer = 0.0f;
+    barrelTexture = LoadTexture("sprites/commonbarrel.png");
+
 }
 
 void Donkey::PlayThrowAnim()
@@ -71,9 +75,24 @@ void Donkey::Update()
 void Donkey::Draw()
 {
     DrawTextureRec(Texture, frameRec, Position, WHITE);
+    Rectangle barrelFrame = { 107.0f, 0.0f, 10.0f, 14.0f }; // ajusta w y h si hace falta
+
+    DrawTextureRec(barrelTexture, barrelFrame, { Position.x - 20.0f, Position.y + 4.0f }, WHITE); // abajo izq
+    DrawTextureRec(barrelTexture, barrelFrame, { Position.x - 11.0f,  Position.y + 4.0f }, WHITE); // abajo der
+    DrawTextureRec(barrelTexture, barrelFrame, { Position.x - 20.0f, Position.y + 18.0f }, WHITE); // arriba izq
+    DrawTextureRec(barrelTexture, barrelFrame, { Position.x - 11.0f,  Position.y + 18.0f }, WHITE); // arriba der
+    if (isThrowing && frameIndex == 1)
+    {
+        Rectangle barrelOverlay = { 3.0f, 3.0f, 18.0f, 10.0f }; // ajusta w y h
+        Vector2 barrelPos = { Position.x + 10.0f, Position.y + 5.0f }; // ajusta posición
+        DrawTextureRec(barrelTexture, barrelOverlay, barrelPos, WHITE);
+    }
+
+    DrawTextureRec(Texture, frameRec, Position, WHITE);
 }
 
 void Donkey::Unload()
 {
     UnloadTexture(Texture);
+    UnloadTexture(barrelTexture);
 }
