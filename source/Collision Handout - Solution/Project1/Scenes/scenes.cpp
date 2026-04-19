@@ -10,8 +10,13 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == TITLE) {
+		current_scene = HOWHIGH;;
+		return;
+	}
+	if (current_scene == HOWHIGH) {
 		current_scene = LEVEL1;
 		return;
+	
 	}
 	if (current_scene == LEVEL1) {
 		current_scene = LEVEL2;
@@ -29,6 +34,9 @@ Scene GetCurrentScene() {
 	}
 	if (current_scene == TITLE) {
 		return TITLE;
+	}
+	if (current_scene == HOWHIGH) { 
+		return HOWHIGH; 
 	}
 	if (current_scene == LEVEL1) {
 		return LEVEL1;

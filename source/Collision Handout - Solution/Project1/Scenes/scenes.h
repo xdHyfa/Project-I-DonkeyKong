@@ -1,6 +1,6 @@
 #pragma once
 
-typedef enum Scene { INTRO, TITLE, LEVEL1, LEVEL2 } Scene;
+typedef enum Scene { INTRO, TITLE, HOWHIGH, LEVEL1, LEVEL2 } Scene;
 extern bool Scene_Init;
 
 void ChangeScene();

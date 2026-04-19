@@ -7,14 +7,12 @@
 #include "Scenes/TitleScreen.h"
 #include "Scenes/InitialScreen.h"
 #include "Entities/Player.h"
-
+#include "Scenes/HowHigh.h"
 
 
 int main()
 {
-
-	
-	
+		
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
@@ -42,12 +40,23 @@ int main()
 
 
 		case TITLE:
+
+
 			runMainMenu();
 
 
+			break;
+
+
+		case HOWHIGH:
+
+
+			runHowHigh();
 
 
 			break;
+
+
 		case LEVEL1:
 
 			runLevel1();

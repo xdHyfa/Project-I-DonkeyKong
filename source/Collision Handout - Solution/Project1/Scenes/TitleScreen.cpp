@@ -43,7 +43,7 @@ void runMainMenu() {
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         ChangeScene();
-
+        return;
     }
     DrawTextureRec(DonkoTitleBlue, rectitle, {22.0f, 64.0f}, WHITE);
     DrawTextureRec(DonkoTitleRed, rectitle, { 22.0f, 64.0f }, WHITE);
