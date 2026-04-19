@@ -24,15 +24,6 @@ void BarrelSpawner::ResetBarrel(Barrel& b) {
 
 void BarrelSpawner::Update() {
     
-    // Timer para que DK haga la animación
-    spawnTimer += GetFrameTime();
-    if (spawnTimer >= BARREL_SPAWN_INTERVAL) {
-        spawnTimer = 0.0f;
-        donkey.PlayThrowAnim();
-    }
-    
-    
-    // Spawn del barril cuando DK llega al frame 3
     if (donkey.spawnBarrel) {
         donkey.spawnBarrel = false;
 

@@ -10,6 +10,11 @@ public:
     unsigned int frameIndex = 0;
     float frameTimer = 0.0f;
     float frameInterval = 0.4f; // velocidad de la animación
+
+    bool isIdle = true;
+    float idleTimer = 0.0f;
+    float idleInterval = 1.0f;  // tiempo en reposo entre lanzamientos
+
     bool isThrowing = false;
     bool throwReady = false; // true cuando la animación termina
     bool spawnBarrel = false;
