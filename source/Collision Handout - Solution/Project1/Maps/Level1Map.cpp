@@ -16,9 +16,19 @@ using namespace std;
 
 Rectangle WinHitbox = { SCREEN_WIDTH/2,40, SCREEN_WIDTH / 8 , 10 };
 
+bool winTriggered = false;
+float winDelay = 0.0f;
+
 void Level1CheckWinCondition(Entity& entity) {
 	if (entity.tag == EntityTag::PLAYER && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
-		ChangeScene();
+		if (!winTriggered) {
+			StopMusicStream(level1Music);
+			PlaySound(stageClearedSound);
+			winTriggered = true;
+		}
+		if (winTriggered && !IsSoundPlaying(stageClearedSound)) {
+			ChangeScene(); // no resetees winTriggered aquí
+		}
 	}
 }
 

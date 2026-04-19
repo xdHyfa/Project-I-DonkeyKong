@@ -26,3 +26,9 @@ void DrawLevel1Colliders();
 int CheckEntityPlatform(Entity & entity);
 
 bool CheckDownZone(Entity& entity);
+
+extern Sound stageClearedSound;
+
+extern bool winTriggered;
+
+extern Music level1Music;

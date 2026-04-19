@@ -15,39 +15,28 @@
 
 using namespace std;
 
-
 Music level1Music = { 0 };
 Sound deathSound2 = { 0 };
 bool  isDead = false;
 Sound jumpBarrelSound = { 0 };
-
+Sound stageClearedSound = { 0 };
 float deathTimer = 0.0f;
-bool isDeathSequence = false;
-
+bool  isDeathSequence = false;
 
 void runLevel1() {
 
-    // Like start() function from unity
-
     if (!Scene_Init) {
-        // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
-        //Mario Setup
         Mario.Setup();
-        
         donkey.Setup();
         lady.Setup();
-
         Level1RampSetter();
         Level1LadderSetter();
-
         barrelSpawner.Init();
-
         SetStartTime();
         Scene_Init = true;
-
-        level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");      //MUSICA
+        level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");
         deathSound2 = LoadSound("Audio/Dead.wav");
         level1Music.looping = true;
         PlayMusicStream(level1Music);
@@ -55,20 +44,18 @@ void runLevel1() {
         deathTimer = 0.0f;
         isDeathSequence = false;
         jumpBarrelSound = LoadSound("Audio/Bonus.wav");
-
+        stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
+        winTriggered = false;
     }
 
     if (isDeathSequence) {
         deathTimer += GetFrameTime();
-       
 
-        Mario.Movement(); // ? añade esto para que procese la animación de muerte
-        
-        donkey.Update();  // TODO ESTO ES PARA QUE NO DESAPAREZCAN DK Y LADY TRAS MUERTE DE MARIO
-        donkey.Draw();  
-
-        lady.Update();  
-        lady.Draw();    
+        Mario.Movement();
+        donkey.Update();
+        donkey.Draw();
+        lady.Update();
+        lady.Draw();
 
         if (deathTimer >= 5.0f) {
             UnloadTexture(Mario.Texture);
@@ -93,94 +80,62 @@ void runLevel1() {
 
     /* UPDATE STARTS HERE */
 
-    Mario.Movement();
-    donkey.Update();
-    lady.Update();
-  
-   
-    UpdateMusicStream(level1Music);
-    
-    
-    /*---GROUND COLLISIONS---*/
+    Level1CheckWinCondition(Mario);
 
-    //Mario's Ground Collisions divided by Y levels (One for each ramp)
-    Level1RampCollisions(Mario);
-    Level1LadderCollisions(Mario);
+    if (!winTriggered) {
+        Mario.Movement();
+        donkey.Update();
+        lady.Update();
+        UpdateMusicStream(level1Music);
+        Level1RampCollisions(Mario);
+        Level1LadderCollisions(Mario);
+        barrelSpawner.Update();
+        Level1EntitiesRoutine();
 
-    barrelSpawner.Update();
+        for (Barrel& b : barrelSpawner.barrels) {
+            if (!b.has_Spawned || !Mario.isAlive) continue;
 
-    
-    
-    /*---TEXTURE DRAW---*/
+            float diffX = abs(Mario.Position.x - b.Position.x);
+            float diffY = Mario.Position.y - b.Position.y;
+
+            if (EntityCollision(Mario, b)) {
+                StopMusicStream(level1Music);
+                PlaySound(deathSound2);
+                isDead = true;
+                isDeathSequence = true;
+                deathTimer = 0.0f;
+                Mario.die();
+                break;
+            }
+            else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
+                PlaySound(jumpBarrelSound);
+            }
+        }
+
+        if (IsKeyPressed(KEY_TWO)) ChangeScene();
+    }
+
+    // siempre dibuja
     Level1LadderDraw();
     Level1RampDraw();
     donkey.Draw();
     lady.Draw();
     barrelSpawner.Draw();
-
-    //--Debugging tool: Map Hitboxes
-    //DrawLevel1Colliders();
-    
-    
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-    
-    //--Debugging tool: Mario Origin Point (RED) and Mario Floor Collider (YELLOW)
-    //DrawMarioCollider();
-    
-    /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
-    
-    Level1EntitiesRoutine();
-    //BarrelRoutine();
-
-    Level1CheckWinCondition(Mario);
-
-    for (Barrel& b : barrelSpawner.barrels) {
-        if (!b.has_Spawned || !Mario.isAlive) continue;
-
-        // Proximidad horizontal
-        float diffX = abs(Mario.Position.x - b.Position.x);
-        float diffY = Mario.Position.y - b.Position.y;
-
-        
-
-        if (EntityCollision(Mario, b)) // colision real = muerte
-        {
-            StopMusicStream(level1Music);
-            PlaySound(deathSound2);
-            isDead = true;
-            isDeathSequence = true;
-            deathTimer = 0.0f;
-            Mario.die();
-            break;
-        }
-        else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping)
-        {
-            // Mario cerca horizontalmente, por encima, y saltando
-            PlaySound(jumpBarrelSound);
-        }
-    }
-
-    if (IsKeyPressed(KEY_TWO)) {
-        ChangeScene();
-    }
-    /*Like onDestroy() function from unity, run before scene change.*/
 
     if (GetCurrentScene() != LEVEL1) {
-
-        //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
-        //UnloadTexture(barrel1.Texture);
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();
         barrelSpawner.Shutdown();
-
         UnloadMusicStream(level1Music);
         UnloadSound(deathSound2);
         UnloadSound(jumpBarrelSound);
         donkey.Unload();
         lady.Unload();
-        ResetLevel1Entities(); 
-        Scene_Init = false; // reset initialization boolean.
+        UnloadSound(stageClearedSound);
+        ResetLevel1Entities();
+        Scene_Init = false;
     }
 }
