@@ -10,7 +10,11 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == TITLE) {
-		current_scene = HOWHIGH;;
+		current_scene = CUTSCENE;;
+		return;
+	}
+	if (current_scene == CUTSCENE) {
+		current_scene = HOWHIGH;
 		return;
 	}
 	if (current_scene == HOWHIGH) {
@@ -34,6 +38,9 @@ Scene GetCurrentScene() {
 	}
 	if (current_scene == TITLE) {
 		return TITLE;
+	}
+	if (current_scene == CUTSCENE) {
+		return CUTSCENE;
 	}
 	if (current_scene == HOWHIGH) { 
 		return HOWHIGH; 

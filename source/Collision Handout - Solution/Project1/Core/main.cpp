@@ -8,7 +8,7 @@
 #include "Scenes/InitialScreen.h"
 #include "Entities/Player.h"
 #include "Scenes/HowHigh.h"
-
+#include "Scenes/Cutscene.h"
 
 int main()
 {
@@ -43,6 +43,14 @@ int main()
 
 
 			runMainMenu();
+
+
+			break;
+
+		case CUTSCENE:
+
+
+			runCutscene();
 
 
 			break;
