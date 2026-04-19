@@ -35,6 +35,16 @@ Vector2 ladyFixedPos = { 0.0f, 0.0f };
 bool    ladyVisible = false;
 
 
+Sound introSound = { 0 };
+Sound stompSound = { 0 };
+Sound cutSound = { 0 };
+
+float walkBobY = 0.0f;  // posición Y del salto
+float walkBobTimer = 0.0f;
+bool  wasDown = false;  // detecta cuando toca el suelo
+
+
+
 int   cutFrameIndex = 0;
 float cutFrameTimer = 0.0f;
 float cutFrameInterval = 0.15f;
@@ -78,6 +88,11 @@ void CutsceneInit() {
     lady.Setup();
     ladyVisible = false;
 
+    introSound = LoadSound("Audio/Stage-Introduction-1.wav");
+    stompSound = LoadSound("Audio/Stomp.wav");
+    cutSound = LoadSound("Audio/Cutscene.wav");
+    PlaySound(introSound);
+
     // Y de cada rampa (mismo orden que Level1Map)
     rampYPositions[0] = SCREEN_HEIGHT - 16.0f - 1;
     rampYPositions[1] = SCREEN_HEIGHT - 16.0f - 43;
@@ -102,6 +117,8 @@ void CutsceneInit() {
     cutTimer = 0.0f;
     visibleStairs = totalStairSections;
     tiltedRamps = 0;
+    walkBobTimer = 0.0f;
+    wasDown = false;
     visibleStairsLeft = totalStairSections;
 }
 
@@ -135,44 +152,46 @@ void DrawCutsceneStairs() {
 }
 
 void DrawCutscenePlatforms() {
-    // Ramp 0 - 14 truss, empieza en x=0
-    for (int i = 0; i < 14; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { i * 16.0f, rampYPositions[0] }, WHITE);
+    auto drawRamp = [&](int rampIndex, int size, bool tiltLeft, int plane, float startY, float startX) {
+        float adderY = startY;
+        float adderX = startX;
+        bool tilted = (rampIndex >= 6 - tiltedRamps);
+        for (int i = 0; i < size; i++) {
+            if (i >= plane) {
+                if (!tilted) {
+                    // recta: sin tilt
+                }
+                else {
+                    // caída: aplica tilt
+                    if (tiltLeft) adderY--;
+                    else          adderY++;
+                }
+            }
+            DrawTextureRec(cutTrussTexture, trussFlat, { adderX, adderY }, WHITE);
+            adderX += 16.0f;
+        }
+    };
 
-    // Ramp 1 - 13 truss, empieza en x=0
-    for (int i = 0; i < 13; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { i * 16.0f, rampYPositions[1] }, WHITE);
+    drawRamp(0, 14, true, 7, rampYPositions[0], 0.0f);
+    drawRamp(1, 13, false, 0, rampYPositions[1], 0.0f);
+    drawRamp(2, 13, true, 0, rampYPositions[2], 16.0f);
+    drawRamp(3, 13, false, 0, rampYPositions[3], 0.0f);
+    drawRamp(4, 13, true, 0, rampYPositions[4], 16.0f);
+    drawRamp(5, 13, false, 9, rampYPositions[5], 0.0f);
 
-    // Ramp 2 - 13 truss, empieza en x=16
-    for (int i = 0; i < 13; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { 16.0f + i * 16.0f, rampYPositions[2] }, WHITE);
-
-    // Ramp 3 - 13 truss, empieza en x=0
-    for (int i = 0; i < 13; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { i * 16.0f, rampYPositions[3] }, WHITE);
-
-    // Ramp 4 - 13 truss, empieza en x=16
-    for (int i = 0; i < 13; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { 16.0f + i * 16.0f, rampYPositions[4] }, WHITE);
-
-    // Ramp 5 - 13 truss, empieza en x=0
-    for (int i = 0; i < 13; i++)
-        DrawTextureRec(cutTrussTexture, trussFlat, { i * 16.0f, rampYPositions[5] }, WHITE);
-
-    // Ramp 6 - 3 truss en el centro
     float ramp6Y = SCREEN_HEIGHT - 16.0f - 200;
     for (int i = 0; i < 3; i++)
         DrawTextureRec(cutTrussTexture, trussFlat, { SCREEN_WIDTH / 3.0f + (i + 1) * 16.0f, ramp6Y }, WHITE);
 }
-
 void runCutscene() {
 
-    if (ladyVisible) {
-        DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
-    }
+    
     if (!Scene_Init) {
         CutsceneInit();
         Scene_Init = true;
+    }
+    if (ladyVisible) {
+        DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
     }
 
     cutFrameTimer += GetFrameTime();
@@ -182,8 +201,20 @@ void runCutscene() {
     DrawCutscenePlatforms();
 
     // ---- DIBUJAR ESCALERAS ----
-    cout << "visibleStairs: " << visibleStairs << endl;
+    
     DrawCutsceneStairs();
+
+    Rectangle stairRec = { 3.0f, 16.0f, 10.0f, 15.0f };
+
+    DrawTextureRec(cutStairsTexture, stairRec, { 64.0f, 56.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 64.0f, 41.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 64.0f, 26.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 64.0f, 14.0f }, WHITE);
+
+    DrawTextureRec(cutStairsTexture, stairRec, { 80.0f, 56.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 80.0f, 41.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 80.0f, 26.0f }, WHITE);
+    DrawTextureRec(cutStairsTexture, stairRec, { 80.0f, 14.0f }, WHITE);
 
     // ---- FASE 1: SUBIR ----
     if (cutPhase == PHASE_CLIMB) {
@@ -204,6 +235,7 @@ void runCutscene() {
         if (visibleStairsLeft < 0) visibleStairsLeft = 0;
 
         if (cutDKPos.y <= rampYPositions[5] - 31.0f) {
+            StopSound(introSound);
             visibleStairs = 0;
             visibleStairsLeft = 0;
             cutDKPos.y = rampYPositions[5] - 31.0f;
@@ -217,55 +249,48 @@ void runCutscene() {
 
 
     else if (cutPhase == PHASE_JUMP) {
-        if (cutTimer < 0.5f) {
+        float peakTime = 0.6f;
+        float jumpHeightPx = 25.0f;
+        float baseY = rampYPositions[5] - 31.0f;
+
+        // pausa antes de saltar
+        if (cutTimer < 0.3f) {
+            
             DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
             return;
         }
 
-        float jumpProgress = cutTimer - 0.5f;
-        float peakTime = 0.6f;  // más largo
-        float jumpHeightPx = 25.0f; // más alto
-        float baseY = rampYPositions[5] - 31.0f;
+        float jumpProgress = cutTimer - 0.3f; // empieza a contar desde 0.3
 
         if (jumpProgress < peakTime) {
+            // sube
             cutDKPos.y = baseY - (jumpProgress / peakTime) * jumpHeightPx;
+            DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
         }
         else {
-            float fallProgress = (jumpProgress - peakTime) / peakTime;
-            cutDKPos.y = (baseY - jumpHeightPx) + fallProgress * jumpHeightPx;
-
-            // cuando llega al pico cambia a PHASE_JUMP_PEAK
-            if (jumpProgress >= peakTime && cutPhase == PHASE_JUMP) {
-                cutPhase = PHASE_JUMP_PEAK;
-                cutTimer = 0.0f;
-                DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
-                return; // <-- para aquí
-            }
-        }
-
-        if (cutDKPos.y >= baseY) {
-            cutDKPos.y = baseY;
-            cutPhase = PHASE_WALK;
+            // llegó al pico
+            cutPhase = PHASE_JUMP_PEAK;
             cutTimer = 0.0f;
+            cutDKPos.y = baseY - jumpHeightPx;
+            DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
         }
-
-        DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
     }
 
     else if (cutPhase == PHASE_JUMP_PEAK) {
+        cout << "JUMP_PEAK timer: " << cutTimer << " ladyVisible: " << ladyVisible << endl;
         float jumpHeightPx = 25.0f;
         float baseY = rampYPositions[5] - 31.0f;
         cutDKPos.y = baseY - jumpHeightPx;
 
-        ladyFixedPos = { cutDKPos.x - 14.0f, cutDKPos.y + 3.0f};
+        ladyFixedPos = { cutDKPos.x - 14.0f, cutDKPos.y + 3.0f };
         ladyVisible = true;
 
         DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
         DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
 
-        if (cutTimer >= 0.2f) {
-            // caída suave
-            float fallProgress = (cutTimer - 2.0f) / 0.3f;
+        // espera 1 segundo y luego cae
+        if (cutTimer >= 1.0f) {
+            float fallProgress = (cutTimer - 1.0f) / 0.3f;
             cutDKPos.y = (baseY - jumpHeightPx) + fallProgress * jumpHeightPx;
 
             if (cutDKPos.y >= baseY) {
@@ -278,22 +303,36 @@ void runCutscene() {
 
 
 
-    // ---- FASE 2: CAMINAR A LA IZQUIERDA ----
     else if (cutPhase == PHASE_WALK) {
-        // DK se mueve a la izquierda dando saltos
-        if (cutFrameTimer >= cutFrameInterval) {
-            cutFrameTimer = 0.0f;
-            cutDKPos.x -= 2.0f; // velocidad de caminar, ajusta
+        float baseY = rampYPositions[5] - 31.0f;
+        float bobHeight = 8.0f;
+        float bobCycle = 0.7f;
+        float totalDistance = stairX2 - donkey.Position.x;
+        float stepDistance = totalDistance / 6.0f;
+
+        walkBobTimer += GetFrameTime();
+        float t = fmod(walkBobTimer, bobCycle) / bobCycle;
+
+        // X se mueve continuamente
+        cutDKPos.x -= (stepDistance / bobCycle) * GetFrameTime();
+
+        if (t < 0.5f) {
+            cutDKPos.y = baseY;
+            if (!wasDown) {
+                wasDown = true;
+                PlaySound(stompSound);
+                if (tiltedRamps < 6) tiltedRamps++;
+            }
+        }
+        else {
+            wasDown = false;
+            float jumpT = (t - 0.5f) / 0.5f;
+            cutDKPos.y = baseY - sin(jumpT * 3.14f) * bobHeight;
         }
 
-        // Plataformas se inclinan según camina
-        if (cutTimer >= tiltInterval) {
-            cutTimer = 0.0f;
-            if (tiltedRamps < 6) tiltedRamps++;
-        }
-
-        // DK llega a su posición final (donde tira barriles)
         if (cutDKPos.x <= donkey.Position.x) {
+            cutDKPos.x = donkey.Position.x;
+            cutDKPos.y = baseY;
             cutPhase = PHASE_ROAR;
             cutTimer = 0.0f;
         }
@@ -303,6 +342,10 @@ void runCutscene() {
 
     // ---- FASE 3: ROAR ----
     else if (cutPhase == PHASE_ROAR) {
+        
+        if (!IsSoundPlaying(cutSound) && !IsSoundPlaying(introSound))
+            PlaySound(cutSound);
+        
         // Alterna entre roarFrame y idle cada 0.3s durante 2s
         bool showRoar = ((int)(cutTimer / 0.3f)) % 2 == 0;
         Rectangle& frame = showRoar ? roarFrame : walkFrame;
@@ -316,13 +359,20 @@ void runCutscene() {
 
     // ---- FASE 4: PASAR A HOWHIGH ----
     else if (cutPhase == PHASE_END) {
+        DrawTextureRec(cutDKTexture, roarFrame, cutDKPos, WHITE); // sigue dibujando
+        if (ladyVisible)
+            DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
+
         if (cutTimer >= 0.5f) {
             UnloadTexture(cutDKTexture);
             UnloadTexture(cutStairsTexture);
             UnloadTexture(cutTrussTexture);
+            UnloadSound(introSound);
+            UnloadSound(stompSound);
+            UnloadSound(cutSound);
             lady.Unload();
             Scene_Init = false;
             ChangeScene();
         }
-    }
+}
 }
