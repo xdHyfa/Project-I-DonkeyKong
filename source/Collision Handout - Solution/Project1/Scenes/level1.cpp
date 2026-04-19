@@ -11,6 +11,8 @@
 #include "Entities/Barrel_Spawner.h"
 #include <iostream>
 #include "Entities/Donkey.h"
+#include "Entities/Lady.h"
+
 using namespace std;
 
 
@@ -35,6 +37,7 @@ void runLevel1() {
         Mario.Setup();
         
         donkey.Setup();
+        lady.Setup();
 
         Level1RampSetter();
         Level1LadderSetter();
@@ -61,8 +64,11 @@ void runLevel1() {
 
         Mario.Movement(); // ? añade esto para que procese la animación de muerte
         
-        donkey.Update(); // <-- añade esto
-        donkey.Draw();   // <-- y esto
+        donkey.Update();  // TODO ESTO ES PARA QUE NO DESAPAREZCAN DK Y LADY TRAS MUERTE DE MARIO
+        donkey.Draw();  
+
+        lady.Update();  
+        lady.Draw();    
 
         if (deathTimer >= 5.0f) {
             UnloadTexture(Mario.Texture);
@@ -89,6 +95,8 @@ void runLevel1() {
 
     Mario.Movement();
     donkey.Update();
+    lady.Update();
+  
    
     UpdateMusicStream(level1Music);
     UpdateMusicStream(deathMusic);
@@ -107,6 +115,7 @@ void runLevel1() {
     Level1LadderDraw();
     Level1RampDraw();
     donkey.Draw();
+    lady.Draw();
     barrelSpawner.Draw();
 
     //--Debugging tool: Map Hitboxes
@@ -170,6 +179,7 @@ void runLevel1() {
         UnloadMusicStream(deathMusic);
         UnloadSound(jumpBarrelSound);
         donkey.Unload();
+        lady.Unload();
         ResetLevel1Entities(); 
         Scene_Init = false; // reset initialization boolean.
     }

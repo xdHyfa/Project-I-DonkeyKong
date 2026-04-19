@@ -150,6 +150,7 @@
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
     <ClCompile Include="Entities\Ladders.cpp" />
+    <ClCompile Include="Entities\Lady.cpp" />
     <ClCompile Include="Entities\Level1Entities.cpp" />
     <ClCompile Include="Entities\Level2Entities.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Entities\Fire_Spawner.h" />
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Ladders.h" />
+    <ClInclude Include="Entities\Lady.h" />
     <ClInclude Include="Entities\Level1Entities.h" />
     <ClInclude Include="Entities\Level2Entities.h" />
     <ClInclude Include="Entities\Player.h" />
