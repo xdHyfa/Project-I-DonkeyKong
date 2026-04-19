@@ -339,6 +339,8 @@ void Level2CheckButtons(Entity& entity) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level2Buttons[i].buttonHitbox) && !Level2Buttons[i].Pressed) {
 			Level2Buttons[i].Pressed = true;
 			cout << "BUTTON PRESSED" << endl;
+
+			//PLAY SOUND HERE
 		}
 
 		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown < Button_Fall_Cooldown) {
