@@ -24,6 +24,7 @@ void runLevel2() {
 
         Level2RampSetter();
         Level2LadderSetter();
+        Level2ButtonSetter();
 
         SetStartTime2();
         Scene_Init = true;
@@ -38,6 +39,7 @@ void runLevel2() {
 
     }
     /* UPDATE STARTS HERE */
+    
 
     Mario.Movement();
     UpdateMusicStream(level2Music);
@@ -48,13 +50,14 @@ void runLevel2() {
     //Mario's Ground Collisions divided by Y levels (One for each ramp)
     Level2RampCollisions(Mario);
     Level2LadderCollisions(Mario);
+    Level2CheckButtons(Mario);
 
     
     
     /*---TEXTURE DRAW---*/
     Level2LadderDraw();
     Level2RampDraw();
-
+    Level2ButtonsDraw();
     //--Debugging tool: Map Hitboxes
     //DrawLevel2Colliders();
     
@@ -72,6 +75,7 @@ void runLevel2() {
         ChangeScene();
     }
 
+    CheckWinCondition();
     /*Like onDestroy() function from unity, run before scene change.*/
 
     if (GetCurrentScene() != LEVEL2) {
@@ -81,8 +85,9 @@ void runLevel2() {
         UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
+        UnloadButtonTexture();
         ResetLevel2Entities();
-
+        ResetButtons();
         UnloadMusicStream(level2Music);
         UnloadMusicStream(deathMusic2);
 

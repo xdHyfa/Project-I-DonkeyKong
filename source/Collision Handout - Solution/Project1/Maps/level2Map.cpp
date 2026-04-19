@@ -1,5 +1,6 @@
 #include "raylib.h"
-#include "Maps/Level1Map.h"
+#include "Scenes/scenes.h"
+#include "Maps/Level2Map.h"
 #include "Entities/Ladders.h"
 #include "Entities/Ground.h"
 #include "Core/constants.h"
@@ -10,10 +11,17 @@ using namespace std;
 
 #define TrussHeight 16.0f
 
+#define Button_Fall_Cooldown 0.5f
+
+
+
 //---RAMPS---
 
 
 //RAMP DATA FOR LEVEL 1 DEFINED HERE
+bool IgnoreCollisions = false;
+float fallTimer = 0;
+
 int Base_0_YPos;
 int Base_1_YPos;
 int Base_2_YPos;
@@ -37,7 +45,6 @@ Truss Base_3[12];
 Truss Base_4[10];
 Truss Base_5[8];
 
-Texture button;
 
 
 //RAMP POSITIONS DEFINED HERE
@@ -77,7 +84,6 @@ void Level2RampSetter() {
 	Base_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 245 + 40;
 	BaseSetter(Base_5, 8, 56, Base_5_YPos, true);
 
-	button = LoadTexture("sprites/Button stage 3.png");
 }
 
 void Level2RampDraw() {
@@ -87,14 +93,8 @@ void Level2RampDraw() {
 	RampDrawer(Base_3, 12);
 	RampDrawer(Base_4, 10);
 	RampDrawer(Base_5, 8);
-	DrawTexture(button, 59, Base_1[0].TrussPos.y, WHITE);
-	DrawTexture(button, 163, Base_1[0].TrussPos.y, WHITE);
-	DrawTexture(button, 59, Base_2[0].TrussPos.y, WHITE);
-	DrawTexture(button, 163, Base_2[0].TrussPos.y, WHITE);
-	DrawTexture(button, 59, Base_3[0].TrussPos.y, WHITE);
-	DrawTexture(button, 163, Base_3[0].TrussPos.y, WHITE);
-	DrawTexture(button, 59, Base_4[0].TrussPos.y, WHITE);
-	DrawTexture(button, 163, Base_4[0].TrussPos.y, WHITE);
+	
+	
 
 	/*Rectangle test = { 0,0,16,16 };
 	Vector2 test2 = { 0,0 };
@@ -105,6 +105,18 @@ void Level2RampDraw() {
 }
 void Level2RampCollisions(Entity& entity) {
 
+	if (IgnoreCollisions) {
+		Mario.isFalling = true;
+		fallTimer += GetFrameTime();
+
+		if (fallTimer >= 0.5f) {
+			IgnoreCollisions = false;
+			fallTimer = 0;
+		}
+		else{
+			return;
+		}
+	}
 	if (CheckCollisionPointRec(entity.FloorCollider, Base_0_Zone)) {
 		RampCollision(Base_0, 14, entity);
 	}
@@ -204,7 +216,7 @@ void Level2LadderSetter() {
 
 	SetFullLadder(Level2Ladders[10], ExtraLadder10, Base_4[0].TrussPos.x, Base_4[0].TrussPos.y + Base_4[0].TrussBox.height * 2);
 
-	SetFullLadder(Level2Ladders[11], ExtraLadder11, Base_4[2].TrussPos.x, Base_4[2].TrussPos.y + Base_4[2].TrussBox.height * 2);
+	SetFullLadder(Level2Ladders[11], ExtraLadder11, Base_4[2].TrussPos.x + 3, Base_4[2].TrussPos.y + Base_4[2].TrussBox.height * 2);
 
 	SetFullLadder(Level2Ladders[12], ExtraLadder12, Base_4[7].TrussPos.x+8, Base_4[7].TrussPos.y + Base_4[7].TrussBox.height * 2);
 
@@ -282,15 +294,112 @@ int Level2CheckEntityPlatform(Entity& entity) {
 	}
 }
 
+//---LEVEL 2 BUTTONS
+class Button {
+public:
+	Vector2 Position = { 0,0 };
+	Texture texture;
+	Rectangle buttonHitbox = { 0,0,8,10 };
+	bool Pressed = false;
+	float Cooldown = 0.0f;
+
+	void SetPos(int x, int y) {
+		Position.x = x; Position.y = y;
+		buttonHitbox.x = x; buttonHitbox.y = y + 6;
+	}
+
+	void DrawButton() {
+		if (!Pressed) {
+			DrawTexture(texture, Position.x, Position.y, WHITE);
+		}
+		else {
+			DrawRectangle(buttonHitbox.x, buttonHitbox.y, buttonHitbox.width, buttonHitbox.height, BLACK);
+		}
+	}
+};
+
+Button Level2Buttons[8];
+
+void Level2ButtonSetter() {
+	for (int i = 0; i < 8; i++) {
+		Level2Buttons[i].texture = LoadTexture("sprites/Button stage 3.png");
+	}
+	Level2Buttons[0].SetPos(59, Base_1[0].TrussPos.y);
+	Level2Buttons[1].SetPos(163, Base_1[0].TrussPos.y);
+	Level2Buttons[2].SetPos(59, Base_2[0].TrussPos.y);
+	Level2Buttons[3].SetPos(163, Base_2[0].TrussPos.y);
+	Level2Buttons[4].SetPos(59, Base_3[0].TrussPos.y);
+	Level2Buttons[5].SetPos(163, Base_3[0].TrussPos.y);
+	Level2Buttons[6].SetPos(59, Base_4[0].TrussPos.y);
+	Level2Buttons[7].SetPos(163, Base_4[0].TrussPos.y);
+}
+
+void Level2CheckButtons(Entity& entity) {
+	for (int i = 0; i < 8; i++) {
+		if (CheckCollisionPointRec(entity.FloorCollider, Level2Buttons[i].buttonHitbox) && !Level2Buttons[i].Pressed) {
+			Level2Buttons[i].Pressed = true;
+			cout << "BUTTON PRESSED" << endl;
+
+			//PLAY SOUND HERE
+		}
+
+		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown < Button_Fall_Cooldown) {
+			Level2Buttons[i].Cooldown += GetFrameTime();
+		}
+		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown > Button_Fall_Cooldown) {
+			if (CheckCollisionPointRec(entity.FloorCollider, Level2Buttons[i].buttonHitbox)) {
+				IgnoreCollisions = true;
+			}
+			
+		}
+	}
+}
+
+void Level2ButtonsDraw() {
+	for (int i = 0; i < 8; i++) {
+		Level2Buttons[i].DrawButton();
+	}
+}
+
+void UnloadButtonTexture() {
+	for (int i = 0; i < 8; i++) {
+		UnloadTexture(Level2Buttons[i].texture);
+	}
+}
+
+void DrawButtonColliders() {
+	for (int i = 0; i < 8; i++) {
+		DrawRectangle(Level2Buttons[i].buttonHitbox.x, Level2Buttons[i].buttonHitbox.y, Level2Buttons[i].buttonHitbox.width, Level2Buttons[i].buttonHitbox.height, GRAY);
+	}
+}
+
+void ResetButtons() {
+	for (int i = 0; i < 8; i++) {
+		Level2Buttons[i].Pressed = false;
+		Level2Buttons[i].Cooldown = 0.0f;
+	}
+}
+
+void CheckWinCondition() {
+	for (int i = 0; i < 8; i++) {
+		if (!Level2Buttons[i].Pressed) return;
+	}
+
+	//CALL HERE "HAPPY ENDING" ANIMATION CODE
+	ChangeScene();
+}
+
+
 //---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel2Colliders() {
-	/*DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
+	DrawRectangle(Base_0_Zone.x, Base_0_Zone.y, Base_0_Zone.width, Base_0_Zone.height, WHITE);
 	DrawRectangle(Base_1_Zone.x, Base_1_Zone.y, Base_1_Zone.width, Base_1_Zone.height, WHITE);
 	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
 	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
-	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);*/
+	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
 	
 	DrawLadderCollider(Level2Ladders, 14);
-	//DrawDownZone2(Level2DownZone, 14);
+	DrawDownZone2(Level2DownZone, 14);
+	DrawButtonColliders();
 } 

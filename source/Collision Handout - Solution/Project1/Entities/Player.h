@@ -31,7 +31,7 @@ public:
 
     bool tryJump()
     {
-        if (isGrounded)
+        if (isGrounded && !isFalling)
         {
             isGrounded = false;
             return true;
