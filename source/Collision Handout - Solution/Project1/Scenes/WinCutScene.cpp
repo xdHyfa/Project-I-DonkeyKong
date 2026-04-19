@@ -1,0 +1,214 @@
+#include "Scenes/WinCutscene.h"
+#include "Scenes/scenes.h"
+#include "Entities/Donkey.h"
+#include "Entities/Lady.h"
+#include "Entities/Player.h"
+#include "Maps/Level1Map.h"
+#include "include/resource_dir.h"
+#include "Core/constants.h"
+#include "raylib.h"
+#include <cmath>
+#include <iostream>
+using namespace std;
+
+enum WinPhase { WIN_HEART,WIN_WALK, WIN_CLIMB, WIN_KIDNAP, WIN_END };
+WinPhase winPhase = WIN_HEART;
+
+// ---- TEXTURAS ----
+Texture2D heartTexture = { 0 };
+Texture2D winDKTexture = { 0 };
+
+// ---- CORAZON ----
+Rectangle heartFull = { 0.0f, 2.0f, 14.0f, 12.0f };
+Rectangle heartBroken = { 16.0f, 2.0f, 15.0f, 12.0f };
+Vector2   heartPos = { 0.0f, 0.0f };
+bool      showBroken = false;
+
+// ---- DK FRAMES SIN LADY ----
+Rectangle emptyFrames[4] = {
+    {  93.0f, 37.0f, 33.0f, 36.0f },
+    { 129.0f, 37.0f, 33.0f, 36.0f },
+    { 165.0f, 37.0f, 33.0f, 36.0f },
+    { 206.0f, 41.0f, 43.0f, 32.0f }
+};
+
+// ---- DK FRAMES CON LADY ----
+Rectangle winClimbFrames[4] = {
+    {  3.0f, 78.0f, 38.0f, 36.0f },
+    { 44.0f, 82.0f, 43.0f, 32.0f },
+    { 90.0f, 78.0f, 38.0f, 36.0f },
+    {131.0f, 82.0f, 43.0f, 32.0f }
+};
+
+// ---- DK POSICION Y ANIMACION ----
+Vector2 winDKPos = { 0.0f, 0.0f };
+int     winFrameIdx = 0;
+float   winFrameTimer = 0.0f;
+float   winFrameInterval = 0.15f;
+bool    hasLady = false;
+
+// ---- ESCALERAS ----
+Texture2D winStairsTexture = { 0 };
+Rectangle winStairRec = { 3.0f, 16.0f, 10.0f, 15.0f };
+
+// ---- POSICIONES ----
+float winRamp5Y = 0.0f;
+float winRamp6Y = 0.0f;
+float ladyWinY = 0.0f;
+
+// ---- TIMERS ----
+float winTimer = 0.0f;
+
+void WinCutsceneInit() {
+    SearchAndSetResourceDir("resources");
+    heartTexture = LoadTexture("sprites/HEARTS.png");
+    winDKTexture = LoadTexture("Sprites/donko 2-0.png");
+    winStairsTexture = LoadTexture("sprites/Stairs.png");
+    lady.Setup();
+
+    winRamp5Y = SCREEN_HEIGHT - 16.0f - 169;
+    winRamp6Y = SCREEN_HEIGHT - 16.0f - 200;
+
+    // DK empieza en su posición normal
+    winDKPos = donkey.Position;
+
+    // Lady en su posición normal
+    ladyWinY = lady.Position.y;
+
+    // Corazón entre Mario y Lady
+    heartPos = { (Mario.Position.x + lady.Position.x) / 2.0f, lady.Position.y - 10.0f };
+
+    winPhase = WIN_HEART;
+    winFrameIdx = 0;
+    winFrameTimer = 0.0f;
+    winTimer = 0.0f;
+    hasLady = false;
+    showBroken = false;
+}
+
+void DrawWinStairs() {
+    // Escaleras decorativas igual que en Donkey::Draw()
+    DrawTextureRec(winStairsTexture, winStairRec, { 64.0f, 56.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 64.0f, 41.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 64.0f, 26.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 64.0f, 14.0f }, WHITE);
+
+    DrawTextureRec(winStairsTexture, winStairRec, { 80.0f, 56.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 80.0f, 41.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 80.0f, 26.0f }, WHITE);
+    DrawTextureRec(winStairsTexture, winStairRec, { 80.0f, 14.0f }, WHITE);
+}
+
+void runWinCutscene() {
+
+    if (!Scene_Init) {
+        WinCutsceneInit();
+        Scene_Init = true;
+    }
+
+    winTimer += GetFrameTime();
+    winFrameTimer += GetFrameTime();
+
+    // ---- DIBUJAR ESCALERAS ----
+    DrawWinStairs();
+
+    // ---- DIBUJAR MARIO ----
+    DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+
+    // ---- DIBUJAR LADY ----
+    if (!hasLady)
+        DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, lady.Position, WHITE);
+
+    // ---- FASE 1: CORAZON ----
+    if (winPhase == WIN_HEART) {
+        Rectangle& hRec = showBroken ? heartBroken : heartFull;
+        DrawTextureRec(heartTexture, hRec, heartPos, WHITE);
+
+        // DK quieto
+        DrawTextureRec(winDKTexture, { 3.0f, 2.0f, 38.0f, 32.0f }, winDKPos, WHITE);
+
+        if (winTimer >= 2.0f) {
+            winPhase = WIN_WALK;
+            winTimer = 0.0f;
+        }
+    }
+
+    else if (winPhase == WIN_WALK) {
+        // corazon visible
+        DrawTextureRec(heartTexture, heartFull, heartPos, WHITE);
+
+        // DK camina a la derecha hacia las escaleras
+        if (winFrameTimer >= winFrameInterval) {
+            winFrameTimer = 0.0f;
+            winFrameIdx = (winFrameIdx + 1) % 4;
+            winDKPos.x += 2.0f;
+        }
+
+        // cuando llega a las escaleras empieza a subir
+        if (winDKPos.x >= 64.0f) {
+            winPhase = WIN_CLIMB;
+            winTimer = 0.0f;
+        }
+
+        DrawTextureRec(winDKTexture, emptyFrames[winFrameIdx], winDKPos, WHITE);
+    }
+
+    // ---- FASE 2: DK SUBE ----
+    else if (winPhase == WIN_CLIMB) {
+        // animar frames sin lady
+        if (winFrameTimer >= winFrameInterval) {
+            winFrameTimer = 0.0f;
+            winFrameIdx = (winFrameIdx + 1) % 4;
+        }
+
+        // DK sube
+        winDKPos.y -= 1.0f;
+
+        // corazon sigue visible
+        DrawTextureRec(heartTexture, heartFull, heartPos, WHITE);
+
+        // DK llega al nivel de Lady
+        if (winDKPos.y <= winRamp6Y - 32.0f) {
+            winPhase = WIN_KIDNAP;
+            winTimer = 0.0f;
+            hasLady = true;
+            showBroken = true; // corazon roto
+        }
+
+        DrawTextureRec(winDKTexture, emptyFrames[winFrameIdx], winDKPos, WHITE);
+    }
+
+    // ---- FASE 3: SECUESTRO ----
+    else if (winPhase == WIN_KIDNAP) {
+        // corazon roto
+        DrawTextureRec(heartTexture, heartBroken, heartPos, WHITE);
+
+        // DK con Lady
+        if (winFrameTimer >= winFrameInterval) {
+            winFrameTimer = 0.0f;
+            winFrameIdx = (winFrameIdx + 1) % 4;
+        }
+
+        DrawTextureRec(winDKTexture, winClimbFrames[winFrameIdx], winDKPos, WHITE);
+
+        if (winTimer >= 2.0f) {
+            winPhase = WIN_END;
+            winTimer = 0.0f;
+        }
+    }
+
+    // ---- FASE 4: FIN ----
+    else if (winPhase == WIN_END) {
+        DrawTextureRec(heartTexture, heartBroken, heartPos, WHITE);
+        DrawTextureRec(winDKTexture, winClimbFrames[0], winDKPos, WHITE);
+
+        if (winTimer >= 1.0f) {
+            UnloadTexture(heartTexture);
+            UnloadTexture(winDKTexture);
+            UnloadTexture(winStairsTexture);
+            lady.Unload();
+            Scene_Init = false;
+            ChangeScene();
+        }
+    }
+}

@@ -38,4 +38,6 @@ void runHowHigh() {
     // Dibuja DK en el centro
     Rectangle dkRec = { 85.0f, 2.0f, 46.0f, 32.0f }; // mismo que en TitleScreen
     DrawTexture(howHighDonko, 75, 170, WHITE);
+
+    DrawTextureRec(howHighDonko, dkRec, { (SCREEN_WIDTH - 46.0f) / 2, 58.0f }, WHITE);
 }

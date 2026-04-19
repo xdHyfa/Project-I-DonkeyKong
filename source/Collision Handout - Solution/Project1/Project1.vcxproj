@@ -165,6 +165,7 @@
     <ClCompile Include="Scenes\level2.cpp" />
     <ClCompile Include="Scenes\scenes.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
+    <ClCompile Include="Scenes\WinCutScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\constants.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Scenes\level2.h" />
     <ClInclude Include="Scenes\scenes.h" />
     <ClInclude Include="Scenes\TitleScreen.h" />
+    <ClInclude Include="Scenes\WinCutScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Sprites\Blue barrel.png" />

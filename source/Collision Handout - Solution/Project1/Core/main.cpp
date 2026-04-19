@@ -9,6 +9,7 @@
 #include "Entities/Player.h"
 #include "Scenes/HowHigh.h"
 #include "Scenes/Cutscene.h"
+#include "Scenes/WinCutscene.h"
 
 int main()
 {
@@ -70,6 +71,15 @@ int main()
 			runLevel1();
 
 			break;
+
+		case WINCUTSCENE:
+			runWinCutscene();
+			break;
+
+		case HOWHIGH2:
+			runHowHigh(); 
+			break;
+
 		case LEVEL2:
 
 			runLevel2();

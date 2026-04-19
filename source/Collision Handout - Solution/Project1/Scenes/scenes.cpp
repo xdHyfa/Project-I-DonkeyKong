@@ -23,6 +23,14 @@ void ChangeScene() {
 	
 	}
 	if (current_scene == LEVEL1) {
+		current_scene = WINCUTSCENE;
+		return;
+	}
+	if (current_scene == WINCUTSCENE) {
+		current_scene = HOWHIGH2;
+		return;
+	}
+	if (current_scene == HOWHIGH2) {
 		current_scene = LEVEL2;
 		return;
 	}
@@ -47,6 +55,12 @@ Scene GetCurrentScene() {
 	}
 	if (current_scene == LEVEL1) {
 		return LEVEL1;
+	}
+	if (current_scene == WINCUTSCENE) {
+		return WINCUTSCENE;
+	}
+	if (current_scene == HOWHIGH2) {
+		return HOWHIGH2;
 	}
 	if (current_scene == LEVEL2) {
 		return LEVEL2;
