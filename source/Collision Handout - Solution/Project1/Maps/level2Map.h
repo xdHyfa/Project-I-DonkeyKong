@@ -36,3 +36,5 @@ void UnloadButtonTexture();
 void ResetButtons();
 
 void CheckWinCondition();
+
+extern int Base_5_YPos;
