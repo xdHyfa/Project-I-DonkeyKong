@@ -9,6 +9,12 @@
 #include <iostream>
 using namespace std;
 
+// Win animation — definidos en level2.cpp
+enum WinPhase2 { W2_NONE, W2_FREEZE, W2_FALL, W2_HIT, W2_TELEPORT };
+extern WinPhase2 winPhase2;
+extern float     winPhaseTimer;
+extern Music     level2Music;
+
 #define TrussHeight 16.0f
 
 #define Button_Fall_Cooldown 0.5f
@@ -32,10 +38,10 @@ int Base_6_YPos;
 
 //ACTIVE AREA HITBOX FOR EACH RAMP
 //Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
-Rectangle Base_0_Zone = { 0, SCREEN_HEIGHT - 22 -1, SCREEN_WIDTH, 22 };
+Rectangle Base_0_Zone = { 0, SCREEN_HEIGHT - 22 - 1, SCREEN_WIDTH, 22 };
 Rectangle Base_1_Zone = { 8, SCREEN_HEIGHT - 22 - 49 + 8, SCREEN_WIDTH - 16, 22 };
 Rectangle Base_2_Zone = { 16, SCREEN_HEIGHT - 22 - 98 + 16, SCREEN_WIDTH - 32, 22 };
-Rectangle Base_3_Zone = { 24, SCREEN_HEIGHT - 22 -147 + 24, SCREEN_WIDTH - 48, 22 };
+Rectangle Base_3_Zone = { 24, SCREEN_HEIGHT - 22 - 147 + 24, SCREEN_WIDTH - 48, 22 };
 Rectangle Base_4_Zone = { 32, SCREEN_HEIGHT - 22 - 196 + 32, SCREEN_WIDTH - 64, 22 };
 
 Truss Base_0[14];
@@ -52,35 +58,35 @@ void Level2RampSetter() {
 	Truss::LoadSharedTexture(2);
 
 	Base_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;
-	BaseSetter(Base_0,14 ,0, Base_0_YPos, false);
-	
+	BaseSetter(Base_0, 14, 0, Base_0_YPos, false);
 
-	Base_1_YPos = (SCREEN_HEIGHT - TrussHeight) - 49+8;
+
+	Base_1_YPos = (SCREEN_HEIGHT - TrussHeight) - 49 + 8;
 	BaseSetter(Base_1, 14, 8, Base_1_YPos, true);
 	Base_1[0].hasLadderBelow = true;
 	Base_1[6].hasLadderBelow = true;
 	Base_1[13].hasLadderBelow = true;
 
-	Base_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 98+16;
+	Base_2_YPos = (SCREEN_HEIGHT - TrussHeight) - 98 + 16;
 	BaseSetter(Base_2, 12, 16, Base_2_YPos, false);
 	Base_2[0].hasLadderBelow = true;
 	Base_2[3].hasLadderBelow = true;
 	Base_2[8].hasLadderBelow = true;
 	Base_2[11].hasLadderBelow = true;
 
-	Base_3_YPos = (SCREEN_HEIGHT - TrussHeight) - 147+24;
+	Base_3_YPos = (SCREEN_HEIGHT - TrussHeight) - 147 + 24;
 	BaseSetter(Base_3, 12, 24, Base_3_YPos, true);
 	Base_3[0].hasLadderBelow = true;
 	Base_3[5].hasLadderBelow = true;
 	Base_3[11].hasLadderBelow = true;
 
-	Base_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 196+32;
+	Base_4_YPos = (SCREEN_HEIGHT - TrussHeight) - 196 + 32;
 	BaseSetter(Base_4, 10, 32, Base_4_YPos, false);
 	Base_4[0].hasLadderBelow = true;
 	Base_4[2].hasLadderBelow = true;
 	Base_4[7].hasLadderBelow = true;
 	Base_4[9].hasLadderBelow = true;
-	
+
 	Base_5_YPos = (SCREEN_HEIGHT - TrussHeight) - 245 + 40;
 	BaseSetter(Base_5, 8, 56, Base_5_YPos, true);
 
@@ -93,8 +99,8 @@ void Level2RampDraw() {
 	RampDrawer(Base_3, 12);
 	RampDrawer(Base_4, 10);
 	RampDrawer(Base_5, 8);
-	
-	
+
+
 
 	/*Rectangle test = { 0,0,16,16 };
 	Vector2 test2 = { 0,0 };
@@ -113,7 +119,7 @@ void Level2RampCollisions(Entity& entity) {
 			IgnoreCollisions = false;
 			fallTimer = 0;
 		}
-		else{
+		else {
 			return;
 		}
 	}
@@ -161,8 +167,8 @@ Ladder ExtraLadder13[6];
 Rectangle Level2DownZone[14];
 
 
-void SetFullLadder(Ladder &ladder, Ladder* Extras, float X, float Y) {
-	ladder.setPos(X,Y);
+void SetFullLadder(Ladder& ladder, Ladder* Extras, float X, float Y) {
+	ladder.setPos(X, Y);
 	Extras[0].setPos(ladder.Position.x, ladder.Position.y + 15);
 	for (int i = 1; i < 6; i++) {
 		Extras[i].setPos(ladder.Position.x, Extras[i - 1].Position.y + 3);
@@ -218,7 +224,7 @@ void Level2LadderSetter() {
 
 	SetFullLadder(Level2Ladders[11], ExtraLadder11, Base_4[2].TrussPos.x + 3, Base_4[2].TrussPos.y + Base_4[2].TrussBox.height * 2);
 
-	SetFullLadder(Level2Ladders[12], ExtraLadder12, Base_4[7].TrussPos.x+8, Base_4[7].TrussPos.y + Base_4[7].TrussBox.height * 2);
+	SetFullLadder(Level2Ladders[12], ExtraLadder12, Base_4[7].TrussPos.x + 8, Base_4[7].TrussPos.y + Base_4[7].TrussBox.height * 2);
 
 	SetFullLadder(Level2Ladders[13], ExtraLadder13, Base_4[9].TrussPos.x + 6, Base_4[9].TrussPos.y + Base_4[9].TrussBox.height * 2);
 
@@ -251,7 +257,7 @@ void Level2LadderDraw() {
 		DrawTextureRec(ExtraLadder11[i].texture, ExtraLadder11[i].SpriteSelector, ExtraLadder11[i].Position, WHITE);
 		DrawTextureRec(ExtraLadder12[i].texture, ExtraLadder12[i].SpriteSelector, ExtraLadder12[i].Position, WHITE);
 		DrawTextureRec(ExtraLadder13[i].texture, ExtraLadder13[i].SpriteSelector, ExtraLadder13[i].Position, WHITE);
-		
+
 	}
 }
 
@@ -350,7 +356,7 @@ void Level2CheckButtons(Entity& entity) {
 			if (CheckCollisionPointRec(entity.FloorCollider, Level2Buttons[i].buttonHitbox)) {
 				IgnoreCollisions = true;
 			}
-			
+
 		}
 	}
 }
@@ -385,8 +391,12 @@ void CheckWinCondition() {
 		if (!Level2Buttons[i].Pressed) return;
 	}
 
-	//CALL HERE "HAPPY ENDING" ANIMATION CODE
-	ChangeScene();
+	// Activa la animacion de victoria solo una vez
+	if (winPhase2 == W2_NONE) {
+		winPhase2 = W2_FREEZE;
+		winPhaseTimer = 0.0f;
+		StopMusicStream(level2Music);
+	}
 }
 
 
@@ -398,8 +408,8 @@ void DrawLevel2Colliders() {
 	DrawRectangle(Base_2_Zone.x, Base_2_Zone.y, Base_2_Zone.width, Base_2_Zone.height, WHITE);
 	DrawRectangle(Base_3_Zone.x, Base_3_Zone.y, Base_3_Zone.width, Base_3_Zone.height, WHITE);
 	DrawRectangle(Base_4_Zone.x, Base_4_Zone.y, Base_4_Zone.width, Base_4_Zone.height, WHITE);
-	
+
 	DrawLadderCollider(Level2Ladders, 14);
 	DrawDownZone2(Level2DownZone, 14);
 	DrawButtonColliders();
-} 
+}
