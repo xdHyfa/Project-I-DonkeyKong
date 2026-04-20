@@ -94,4 +94,5 @@ void UnloadLevel1Entities() {
 void ResetLevel1Entities() {
 	Fire1.has_Spawned = false;
 	Fire2.has_Spawned = false;
+
 }

@@ -5,4 +5,7 @@ extern bool Scene_Init;
 
 void ChangeScene();
 
+void ChangeScene(bool NoLives);
+
+
 Scene GetCurrentScene();

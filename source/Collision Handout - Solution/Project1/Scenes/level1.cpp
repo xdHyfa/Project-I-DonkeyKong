@@ -12,6 +12,7 @@
 #include <iostream>
 #include "Entities/Donkey.h"
 #include "Entities/Lady.h"
+#include "Core/UI.h"
 
 using namespace std;
 
@@ -69,6 +70,9 @@ void runLevel1() {
             Mario.isAlive = true;
             Scene_Init = false;
             isDeathSequence = false;
+            CheckLives();
+            ResetBonus();
+            return;
         }
 
         Level1LadderDraw();
@@ -80,7 +84,7 @@ void runLevel1() {
 
     /* UPDATE STARTS HERE */
 
-    Level1CheckWinCondition(Mario);
+
 
     if (!winTriggered) {
         Mario.Movement();
@@ -91,6 +95,7 @@ void runLevel1() {
         Level1LadderCollisions(Mario);
         barrelSpawner.Update();
         Level1EntitiesRoutine();
+        UpdateBonus();
 
         for (Barrel& b : barrelSpawner.barrels) {
             if (!b.has_Spawned || !Mario.isAlive) continue;
@@ -105,6 +110,7 @@ void runLevel1() {
                 isDeathSequence = true;
                 deathTimer = 0.0f;
                 Mario.die();
+                RemoveLife();
                 break;
             }
             else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
@@ -123,6 +129,9 @@ void runLevel1() {
     barrelSpawner.Draw();
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
 
+   
+    Level1CheckWinCondition(Mario);
+
     if (GetCurrentScene() != LEVEL1) {
         UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
@@ -136,6 +145,8 @@ void runLevel1() {
         lady.Unload();
         UnloadSound(stageClearedSound);
         ResetLevel1Entities();
+        AddBonus();
+        AddLevel();
         Scene_Init = false;
     }
 }
