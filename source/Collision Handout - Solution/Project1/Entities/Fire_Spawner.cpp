@@ -27,6 +27,7 @@ void Fire::PlayAnimation() {
 
 void Fire::Movement() {
         PlayAnimation();
+        hitbox = { Position.x, Position.y };
         FloorCollider.x = Position.x + 8;
         FloorCollider.y = Position.y + 16;
         if(CanClimb && OnLadder){
