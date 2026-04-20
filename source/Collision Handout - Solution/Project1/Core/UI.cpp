@@ -1,5 +1,7 @@
 #include "Scenes/scenes.h"
 #include "raylib.h"
+#include <iostream>
+using namespace std;
 
 class ui {
 public:
@@ -10,6 +12,7 @@ public:
 
 	bool FontLoaded = false;
 	bool BonusLoaded = false;
+	float PointsCooldown = 0.0f;
 };
 
 Font UI_Font;
@@ -27,7 +30,16 @@ Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9};
 ui UI;
 
 void AddPoints(int points) {
-	UI.score += points;
+	if(UI.PointsCooldown >= 1.0f){
+		cout << "Adding points " << endl;
+		UI.score += points;
+		UI.PointsCooldown = 0;
+	}
+}
+
+void SetCooldown() {
+	if (UI.PointsCooldown > 4.0f) return;
+	UI.PointsCooldown += GetFrameTime();
 }
 
 void AddLevel() {

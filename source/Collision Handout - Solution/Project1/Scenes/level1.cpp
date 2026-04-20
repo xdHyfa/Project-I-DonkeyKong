@@ -118,6 +118,7 @@ void runLevel1() {
 
             if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
                 PlaySound(jumpBarrelSound);
+                AddPoints(100);
             }
         }
 
@@ -127,6 +128,7 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Mario.die();
+            RemoveLife();
             ResetLevel1Entities();
         }
 
@@ -140,7 +142,7 @@ void runLevel1() {
     lady.Draw();
     barrelSpawner.Draw();
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-
+    SetCooldown();
    
     Level1CheckWinCondition(Mario);
 

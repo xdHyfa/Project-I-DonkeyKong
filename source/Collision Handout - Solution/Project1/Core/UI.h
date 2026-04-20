@@ -17,3 +17,5 @@ void UpdateBonus();
 void AddBonus();
 
 void ResetBonus();
+
+void SetCooldown();
