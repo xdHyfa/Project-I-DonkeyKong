@@ -63,12 +63,14 @@ void runLevel1() {
             Ladder::UnloadSharedTexture();
             UnloadLevel1Entities();
             barrelSpawner.Shutdown();
+            barrelSpawner.Reset();
             UnloadMusicStream(level1Music);
             UnloadSound(deathSound2);
             ResetLevel1Entities();
             Mario.isAlive = true;
             Scene_Init = false;
             isDeathSequence = false;
+            barrelSpawner.Init();
         }
 
         Level1LadderDraw();
@@ -139,6 +141,7 @@ void runLevel1() {
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();
         barrelSpawner.Shutdown();
+        barrelSpawner.Reset();
         UnloadMusicStream(level1Music);
         UnloadSound(deathSound2);
         UnloadSound(jumpBarrelSound);
@@ -147,5 +150,6 @@ void runLevel1() {
         UnloadSound(stageClearedSound);
         ResetLevel1Entities();
         Scene_Init = false;
+        barrelSpawner.Init();
     }
 }
