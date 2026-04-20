@@ -98,13 +98,14 @@ void runLevel1() {
             float diffX = abs(Mario.Position.x - b.Position.x);
             float diffY = Mario.Position.y - b.Position.y;
 
-            if (EntityCollision(Mario, b)) {
+            if (EntityCollision(Mario, b) || Fire1.has_Spawned && EntityCollision(Mario, Fire1) || Fire2.has_Spawned && EntityCollision(Mario, Fire2)) {
                 StopMusicStream(level1Music);
                 PlaySound(deathSound2);
                 isDead = true;
                 isDeathSequence = true;
                 deathTimer = 0.0f;
                 Mario.die();
+                ResetLevel1Entities();
                 break;
             }
             else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
