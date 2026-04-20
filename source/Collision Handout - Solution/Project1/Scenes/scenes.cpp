@@ -39,6 +39,9 @@ void ChangeScene() {
 		return;
 	}
 }
+void ChangeScene(bool NoLives) {
+	current_scene = TITLE;
+}
 
 Scene GetCurrentScene() {
 	if (current_scene == INTRO) {

@@ -10,6 +10,7 @@
 #include "Scenes/HowHigh.h"
 #include "Scenes/Cutscene.h"
 #include "Scenes/WinCutscene.h"
+#include "Core/UI.h"
 
 int main()
 {
@@ -34,7 +35,6 @@ int main()
 
 		switch (GetCurrentScene()) {
 		case INTRO:
-
 			runInitialScreen();
 			break;
 
@@ -52,7 +52,7 @@ int main()
 
 
 			runCutscene();
-
+			PrintUI();
 
 			break;
 
@@ -61,27 +61,33 @@ int main()
 
 
 			runHowHigh();
-
+			PrintUI();
 
 			break;
 
 
 		case LEVEL1:
 
+			PrintUI();
+			PrintBonus();
 			runLevel1();
 
 			break;
 
 		case WINCUTSCENE:
+			PrintUI();
 			runWinCutscene();
 			break;
 
 		case HOWHIGH2:
+			PrintUI();
 			runHowHigh(); 
 			break;
 
 		case LEVEL2:
 
+			PrintUI();
+			PrintBonus();
 			runLevel2();
 
 			break;
