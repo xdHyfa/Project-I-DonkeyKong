@@ -47,6 +47,7 @@ void runLevel1() {
         jumpBarrelSound = LoadSound("Audio/Bonus.wav");
         stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
         winTriggered = false;
+        donkey.Position = { 21.0f, 47.0f };
     }
 
     if (isDeathSequence) {
