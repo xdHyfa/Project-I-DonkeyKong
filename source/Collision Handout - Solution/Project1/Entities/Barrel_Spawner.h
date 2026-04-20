@@ -20,6 +20,8 @@ public:
     void Draw();
     void Shutdown();
 
+    void Reset();
+
 private:
     void ResetBarrel(Barrel& b);
 };

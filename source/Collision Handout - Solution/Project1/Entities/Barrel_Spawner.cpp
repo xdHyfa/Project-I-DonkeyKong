@@ -6,6 +6,7 @@
 BarrelSpawner barrelSpawner;
 
 void BarrelSpawner::Init() {
+    barrels.clear();
     barrels.reserve(MAX_BARRELS);
     barrelTexture = LoadTexture("sprites/commonbarrel.png");  // carga una sola vez
 }
@@ -69,4 +70,9 @@ void BarrelSpawner::Draw() {
 void BarrelSpawner::Shutdown() {
     UnloadTexture(barrelTexture);  // solo una textura que descargar
     barrels.clear();
+}
+
+void BarrelSpawner::Reset() {
+    barrels.clear();
+    spawnTimer = 0.0f;
 }

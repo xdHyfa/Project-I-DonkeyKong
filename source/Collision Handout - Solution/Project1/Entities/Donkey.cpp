@@ -24,7 +24,7 @@ void Donkey::Setup()
     barrelTexture = LoadTexture("sprites/commonbarrel.png");
     stairsTexture = LoadTexture("sprites/Stairs.png");
     oilTexture = LoadTexture("sprites/oil.png");
-
+    Reset();
 }
 
 void Donkey::PlayThrowAnim()
@@ -122,4 +122,15 @@ void Donkey::Unload()
     UnloadTexture(Texture);
     UnloadTexture(oilTexture);
     UnloadTexture(barrelTexture);
+}
+
+void Donkey::Reset() {
+    frameIndex = 0;
+    frameTimer = 0.0f;
+    isIdle = true;
+    idleTimer = 0.0f;
+    isThrowing = false;
+    throwReady = false;
+    spawnBarrel = false;
+    frameRec = { 3.0f, 2.0f, 38.0f, 32.0f };
 }
