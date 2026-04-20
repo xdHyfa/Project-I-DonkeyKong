@@ -26,6 +26,8 @@ public:
     void Draw();
     void Unload();
     void PlayThrowAnim();
+
+    void Reset();
 };
 
 extern Donkey donkey;

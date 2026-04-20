@@ -64,6 +64,7 @@ void runLevel1() {
             Ladder::UnloadSharedTexture();
             UnloadLevel1Entities();
             barrelSpawner.Shutdown();
+            barrelSpawner.Reset();
             UnloadMusicStream(level1Music);
             UnloadSound(deathSound2);
             ResetLevel1Entities();
@@ -72,7 +73,8 @@ void runLevel1() {
             isDeathSequence = false;
             CheckLives();
             ResetBonus();
-            return;
+            barrelSpawner.Init();
+             return;
         }
 
         Level1LadderDraw();
@@ -106,16 +108,26 @@ void runLevel1() {
             if (EntityCollision(Mario, b)) {
                 StopMusicStream(level1Music);
                 PlaySound(deathSound2);
-                isDead = true;
                 isDeathSequence = true;
                 deathTimer = 0.0f;
                 Mario.die();
                 RemoveLife();
+                ResetLevel1Entities();
                 break;
             }
-            else if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
+
+            if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
                 PlaySound(jumpBarrelSound);
             }
+        }
+
+        if (Mario.isAlive && (Fire1.has_Spawned && EntityCollision(Mario, Fire1) || Fire2.has_Spawned && EntityCollision(Mario, Fire2))) {
+            StopMusicStream(level1Music);
+            PlaySound(deathSound2);
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Mario.die();
+            ResetLevel1Entities();
         }
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
@@ -138,6 +150,7 @@ void runLevel1() {
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();
         barrelSpawner.Shutdown();
+        barrelSpawner.Reset();
         UnloadMusicStream(level1Music);
         UnloadSound(deathSound2);
         UnloadSound(jumpBarrelSound);
@@ -148,5 +161,6 @@ void runLevel1() {
         AddBonus();
         AddLevel();
         Scene_Init = false;
+        barrelSpawner.Init();
     }
 }
