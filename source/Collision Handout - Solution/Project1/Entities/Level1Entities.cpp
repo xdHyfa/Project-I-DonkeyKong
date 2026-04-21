@@ -17,6 +17,7 @@ void Level1FireRoutine(Fire& fire) {
 	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230, 1);
 
 	if (fire.has_Spawned) {
+		fire.UpdateSpawnFx();
 		fire.Movement();
 		int FirePlatform = CheckEntityPlatform(fire);
 		if (FirePlatform == 0){
@@ -62,15 +63,15 @@ void Level1FireRoutine(Fire& fire) {
 	fire.bounceTick += GetFrameTime();
 	if (fire.bounceTick >= 0.5f){
 		DrawTextureRec(fire.Texture, fire.FireSprite, fire.Position, WHITE);
+		fire.DrawSpawnFx();
 		if (fire.bounceTick >= 0.65f){
 			fire.bounceTick = 0;
 		}
 	}
 	else {
 		Vector2 BouncePos = { fire.Position.x, fire.Position.y - 2 };
-
 		DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
-	
+		fire.DrawSpawnFx();	
 	}
 }
 

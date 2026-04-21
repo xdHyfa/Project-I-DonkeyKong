@@ -7,6 +7,33 @@ using namespace std;
 
 #define FIREVELOCITY 1.25f
 
+void Fire::UpdateSpawnFx() {
+    if (!spawnFxPlaying) return;
+
+    spawnFxTick += GetFrameTime();
+    if (spawnFxTick >= 0.25f) {
+        spawnFxTick = 0.0f;
+        spawnFxFrame++;
+
+        if (spawnFxFrame >= 4) {
+            spawnFxFrame = 0;
+            spawnFxCycle++;
+        }
+        if (spawnFxCycle >= 2) {
+            spawnFxPlaying = false;
+            UnloadTexture(SpawnTexture);
+        }
+            
+    }
+    SpawnFxSprite.x = spawnFxFrame * 16.0f;
+}
+
+void Fire::DrawSpawnFx() {
+    if (!spawnFxPlaying) return;
+    DrawTextureRec(SpawnTexture, SpawnFxSprite, spawnFxPos, WHITE);
+}
+
+
 
 void Fire::PlayAnimation() {
     fireTick += GetFrameTime();
@@ -58,6 +85,7 @@ void SpawnFire(Fire &fire, int x, int y, int sprite) {
 	if (!fire.has_Spawned) {
         if (sprite == 1){
 		    fire.Texture = LoadTexture("sprites/FIREBALL.png");
+
         }
         else {
             fire.Texture = LoadTexture("sprites/SMALLFIREBALL.png");
@@ -65,6 +93,14 @@ void SpawnFire(Fire &fire, int x, int y, int sprite) {
         fire.SetPos(x,y);
 		fire.has_Spawned = true;
 	}
+
+    fire.SpawnTexture = LoadTexture("sprites/fire.png"); // tu nombre de archivo
+    fire.spawnFxPlaying = true;
+    fire.spawnFxTick = 0.0f;
+    fire.spawnFxFrame = 0;
+    fire.spawnFxCycle = 0;
+    fire.spawnFxPos = { (float)x + 3, (float)y - 15 };
+
 
 }
 
