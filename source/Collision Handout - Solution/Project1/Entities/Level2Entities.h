@@ -12,3 +12,9 @@ void ResetLevel2Entities();
 extern Fire Fire3;
 
 extern Fire Fire4;
+
+extern Fire Fire5;
+
+extern Fire Fire6;
+
+extern Fire Fire7;
