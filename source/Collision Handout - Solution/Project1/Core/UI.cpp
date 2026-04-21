@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+void UpdateDrawScorePopup();
+
 class ui {
 public:
 	int score = 0;
@@ -56,6 +58,7 @@ void PrintUI() {
 	DrawTextEx(UI_Font,"HIGH SCORE", HiScorePos, 10, 0.5f, RED);
 	DrawTextEx(UI_Font, TextFormat("%06d", UI.HiScore), HiScoreNumPos, 10, 0.5f, WHITE);
 	DrawTextEx(UI_Font, TextFormat("L=%02d", UI.Level), LevelPos, 7.5, 0.5f, BLUE);
+	UpdateDrawScorePopup();
 }
 
 void RemoveLife() {
@@ -120,4 +123,21 @@ void AddBonus() {
 	ResetBonus();
 }
 
+bool popupActive = false;
+float popupTimer = 0.0f;
+Vector2 popupPos = { 0, 0 };
 
+void ShowScorePopup(Vector2 pos) {
+	popupActive = true;
+	popupTimer = 0.0f;
+	popupPos = { pos.x, pos.y - 12 };
+}
+
+void UpdateDrawScorePopup() {
+	if (!popupActive) return;
+	popupTimer += GetFrameTime();
+	DrawTextEx(UI_Font, "100", popupPos, 10, 0.5f, WHITE);
+	if (popupTimer >= 1.0f) {
+		popupActive = false;
+	}
+}
