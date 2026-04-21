@@ -19,3 +19,6 @@ void AddBonus();
 void ResetBonus();
 
 void SetCooldown();
+
+void ShowScorePopup(Vector2 pos);
+void UpdateDrawScorePopup();

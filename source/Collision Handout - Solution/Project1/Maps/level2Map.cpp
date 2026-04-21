@@ -7,6 +7,7 @@
 #include "Entities/entity.h"
 #include "Entities/Player.h"
 #include <iostream>
+#include "Core/UI.h"
 using namespace std;
 
 #define TrussHeight 16.0f
@@ -342,6 +343,7 @@ void Level2CheckButtons(Entity& entity) {
 			cout << "BUTTON PRESSED" << endl;
 
 			PlaySound(buttonSound); //PLAY SOUND HERE
+			ShowScorePopup(Mario.Position);
 		}
 
 		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown < Button_Fall_Cooldown) {
