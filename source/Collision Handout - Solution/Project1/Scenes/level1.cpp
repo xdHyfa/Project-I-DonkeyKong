@@ -164,12 +164,12 @@ void runLevel1() {
     SetCooldown();
    
     Level1CheckWinCondition(Mario);
-
+    
     if (GetCurrentScene() != LEVEL1) {
-        UnloadTexture(Mario.Texture);
+        /*UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
-        UnloadLevel1Entities();
+        UnloadLevel1Entities();*/
         barrelSpawner.Shutdown();
         barrelSpawner.Reset();
         UnloadMusicStream(level1Music);

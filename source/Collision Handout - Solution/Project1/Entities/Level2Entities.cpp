@@ -8,14 +8,35 @@ using namespace std;
 /* THE ENTITIES ARE DEFINED HERE */
 Fire Fire3;
 Fire Fire4;
+Fire Fire5;
+Fire Fire6;
+Fire Fire7;
+
 float level2StartTime = 0;
+
+enum Levels {
+	Base1 = 231,
+	Base2 = 191,
+	Base3 = 150,
+	Base4 = 109,
+	Base5 = 68
+};
 
 void SetStartTime2() {
 	level2StartTime = GetTime();
 }
 void Level2FireRoutine(Fire& fire) {
-	if (!fire.has_Spawned) SpawnFire(fire, 20, 230, 2);
+	
 
+	if (!fire.has_Spawned) {
+		int RandomLevel = GetRandomValue(1, 5);
+		if (RandomLevel == 1) RandomLevel = Base1;
+		else if (RandomLevel == 2) RandomLevel = Base2;
+		else if (RandomLevel == 3) RandomLevel = Base3;
+		else if (RandomLevel == 4) RandomLevel = Base4;
+		else if (RandomLevel == 5) RandomLevel = Base5;
+		SpawnFire(fire, 20, RandomLevel, 2);
+	}	
 	if (fire.has_Spawned) {
 		fire.Movement();
 		int FirePlatform = Level2CheckEntityPlatform(fire);

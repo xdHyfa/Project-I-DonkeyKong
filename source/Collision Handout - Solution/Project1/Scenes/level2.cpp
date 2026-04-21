@@ -177,7 +177,9 @@ void runLevel2() {
     Level2LadderCollisions(Mario);
     Level2CheckButtons(Mario);
 
-    if (Mario.isAlive && (Fire3.has_Spawned && EntityCollision(Mario, Fire3) || Fire4.has_Spawned && EntityCollision(Mario, Fire4))) {
+    /*---ENTITY COLLISIONS---*/
+    if (Mario.isAlive && (Fire3.has_Spawned && EntityCollision(Mario, Fire3) || Fire4.has_Spawned && EntityCollision(Mario, Fire4) || Fire5.has_Spawned && EntityCollision(Mario, Fire5) || Fire6.has_Spawned && EntityCollision(Mario, Fire6) || Fire7.has_Spawned && EntityCollision(Mario, Fire7)))
+    {
         StopMusicStream(level2Music);
         PlaySound(deathSound3);
         isDeathSequence2 = true;
@@ -185,6 +187,16 @@ void runLevel2() {
         Mario.die();
         RemoveLife();
         ResetLevel2Entities();
+    }
+    if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
+        StopMusicStream(level2Music);
+        PlaySound(deathSound3);
+        isDeathSequence2 = true;
+        deathTimer2 = 0.0f;
+        Mario.die();
+        RemoveLife();
+        ResetLevel1Entities();
+        Mario.marioVelocity.y = 0;
     }
 
     Level2LadderDraw();
@@ -207,11 +219,12 @@ void runLevel2() {
     CheckWinCondition();
 
     if (GetCurrentScene() != LEVEL2) {
-        UnloadTexture(Mario.Texture);
+        /*UnloadTexture(Mario.Texture);
         UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
-        UnloadButtonTexture();
+        UnloadButtonTexture();*/
+
         ResetLevel2Entities();
         ResetButtons();
         UnloadMusicStream(level2Music);
