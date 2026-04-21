@@ -23,6 +23,7 @@ Sound jumpBarrelSound = { 0 };
 Sound stageClearedSound = { 0 };
 float deathTimer = 0.0f;
 bool  isDeathSequence = false;
+bool Hitboxes_On = false;
 
 void runLevel1() {
 
@@ -97,6 +98,11 @@ void runLevel1() {
         Level1RampCollisions(Mario);
         Level1LadderCollisions(Mario);
         barrelSpawner.Update();
+        Level1LadderDraw();
+        Level1RampDraw();
+        donkey.Draw();
+        lady.Draw();
+        barrelSpawner.Draw();
         Level1EntitiesRoutine();
         UpdateBonus();
 
@@ -135,6 +141,7 @@ void runLevel1() {
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
+    else{
 
     // siempre dibuja
     Level1LadderDraw();
@@ -142,6 +149,15 @@ void runLevel1() {
     donkey.Draw();
     lady.Draw();
     barrelSpawner.Draw();
+    }
+    if (IsKeyPressed(KEY_H)) {
+        Hitboxes_On = !Hitboxes_On;
+    }
+
+    if (Hitboxes_On) {
+        DrawLevel1Colliders();
+    }
+
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
     SetCooldown();
    

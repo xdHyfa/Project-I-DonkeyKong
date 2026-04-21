@@ -72,4 +72,6 @@ void DrawLadderCollider(Ladder* Map_Ladders, int size);
 
 void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size);
 
+void LadderCollisions(Entity& entity, Ladder* Map_Ladders, Ladder* Map_Ladders2, int size1, int size2);
+
 
