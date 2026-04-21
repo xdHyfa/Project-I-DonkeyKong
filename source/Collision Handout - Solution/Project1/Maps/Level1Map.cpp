@@ -14,7 +14,7 @@ using namespace std;
 
 //---WIN CONDITION HITBOX:
 
-Rectangle WinHitbox = { SCREEN_WIDTH/2,40, SCREEN_WIDTH / 8 , 10 };
+Rectangle WinHitbox = { SCREEN_WIDTH / 2,40, SCREEN_WIDTH / 8 , 10 };
 
 bool winTriggered = false;
 float winDelay = 0.0f;
@@ -26,9 +26,8 @@ void Level1CheckWinCondition(Entity& entity) {
 			PlaySound(stageClearedSound);
 			winTriggered = true;
 		}
-		if (winTriggered && !IsSoundPlaying(stageClearedSound)) {
-			ChangeScene(); // no resetees winTriggered aquí
-		}
+		// Ya NO llamamos ChangeScene() aquí.
+		// Level1 detecta winTriggered y lo gestiona en su propio loop.
 	}
 }
 
@@ -47,7 +46,6 @@ float Ramp_5_YPos;
 float Ramp_6_YPos;
 
 //ACTIVE AREA HITBOX FOR EACH RAMP
-//Els numeros sueltos els vaig fer manualment a ull comparant amb el joc original 
 Rectangle Ramp_0_Zone = { 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20 };
 Rectangle Ramp_1_Zone = { 0, SCREEN_HEIGHT - 20 - 36, SCREEN_WIDTH - 16, 22 };
 Rectangle Ramp_2_Zone = { 16, SCREEN_HEIGHT - 20 - 36 - 34, SCREEN_WIDTH - 16, 23 };
@@ -114,9 +112,6 @@ void Level1RampDraw() {
 	RampDrawer(Ramp_6, 3);
 }
 void Level1RampCollisions(Entity& entity) {
-
-	//DrawColliders();
-
 	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone)) {
 		RampCollision(Ramp_0, 14, entity);
 	}
@@ -151,11 +146,11 @@ void BarrelGroundCollisions(Barrel& barrel) {
 	auto checkTrussArray = [&](Truss* Ramp, int size, bool isBottom) {
 		if (onGround) return;
 		for (int i = 0; i < size; i++) {
-			float trussLeft    = Ramp[i].TrussPos.x;
-			float trussRight   = Ramp[i].TrussPos.x + 16;
+			float trussLeft = Ramp[i].TrussPos.x;
+			float trussRight = Ramp[i].TrussPos.x + 16;
 			float trussSurface = Ramp[i].TrussPos.y + 8;
 
-			bool inRangeX   = (col.x >= trussLeft && col.x < trussRight);
+			bool inRangeX = (col.x >= trussLeft && col.x < trussRight);
 			bool hitSurface = (col.y >= trussSurface && col.y <= trussSurface + barrel.velocityY + 2);
 
 			if (inRangeX && hitSurface) {
@@ -169,7 +164,7 @@ void BarrelGroundCollisions(Barrel& barrel) {
 		}
 		};
 
-	checkTrussArray(Ramp_0, 14, true);   // plataforma del suelo
+	checkTrussArray(Ramp_0, 14, true);
 	checkTrussArray(Ramp_1, 13, false);
 	checkTrussArray(Ramp_2, 13, false);
 	checkTrussArray(Ramp_3, 13, false);
@@ -178,13 +173,11 @@ void BarrelGroundCollisions(Barrel& barrel) {
 
 	if (!onGround) return;
 
-	// Solo en Ramp_0: si llega al borde, lo marcamos para reciclar
 	if (onRamp0) {
 		if (pos.x + BARRELSIZE >= SCREEN_WIDTH || pos.x <= 0) {
-			barrel.has_Spawned = false; // el spawner lo reciclará
+			barrel.has_Spawned = false;
 		}
 	}
-	// En el resto de plataformas: rebote normal en bordes
 	else {
 		if (pos.x + BARRELSIZE >= SCREEN_WIDTH) {
 			pos.x = SCREEN_WIDTH - BARRELSIZE;
@@ -200,30 +193,18 @@ void BarrelGroundCollisions(Barrel& barrel) {
 //---LEVEL CHECK: 
 
 int CheckEntityPlatform(Entity& entity) {
-	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone)) {
-		return 0;
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone)) {
-		return 1;
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone)) {
-		return 2;
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_3_Zone)) {
-		return 3;
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_4_Zone)) {
-		return 4;
-	}
-	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_5_Zone)) {
-		return 5;
-	}
+	if (CheckCollisionPointRec(entity.FloorCollider, Ramp_0_Zone)) return 0;
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_1_Zone)) return 1;
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_2_Zone)) return 2;
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_3_Zone)) return 3;
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_4_Zone)) return 4;
+	else if (CheckCollisionPointRec(entity.FloorCollider, Ramp_5_Zone)) return 5;
+	return -1;
 }
 
 
 //---LADDERS---
 
-//LADDER DATA FOR LEVEL 1 DEFINED HERE
 Ladder Level1Ladders[9];
 Ladder ExtraPieces[16];
 
@@ -233,7 +214,6 @@ Ladder ExtraBroken[12];
 Rectangle Level1DownZone[9];
 Rectangle BrokenDownZone[4];
 
-//LADDER POSITION/SPRITES FOR LEVEL 1 DEFINED HERE
 void Level1LadderSetter() {
 	Ladder::LoadSharedTexture();
 	for (int i = 0; i < 9; i++) {
@@ -314,7 +294,7 @@ void Level1LadderSetter() {
 	BrokenLadders[3].setPos(Ramp_5[5].TrussPos.x + 6, Ramp_5[5].TrussPos.y + Ramp_5[4].TrussBox.height * 2);
 	ExtraBroken[9].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 3);
 	ExtraBroken[10].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 6);
-	ExtraBroken[11	].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 23);
+	ExtraBroken[11].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 23);
 
 	for (int i = 0; i < 4; i++) {
 		BrokenLadders[i].Hitbox.height += 26;
@@ -329,8 +309,6 @@ void Level1LadderSetter() {
 	for (int i = 0; i < 4; i++) {
 		BrokenDownZone[i] = { BrokenLadders[i].Hitbox.x, BrokenLadders[i].Hitbox.y - 2, 10, 4 };
 	}
-
-
 }
 
 void Level1LadderDraw() {
@@ -353,17 +331,13 @@ void BrokenLadderCollisions(Entity& entity) {
 }
 
 void Level1LadderCollisions(Entity& entity) {
-	if (entity.tag == EntityTag::PLAYER){
-	LadderCollisions(entity, Level1Ladders, 9);
+	if (entity.tag == EntityTag::PLAYER) {
+		LadderCollisions(entity, Level1Ladders, 9);
 	}
 	else {
 		LadderCollisions(entity, Level1Ladders, BrokenLadders, 8, 4);
-	
 	}
 }
-
-
-
 
 void DrawDownZone(Rectangle* DownZone, int size) {
 	for (int i = 0; i < size; i++) {
@@ -371,7 +345,7 @@ void DrawDownZone(Rectangle* DownZone, int size) {
 	}
 }
 
-bool CheckDownZone(Entity &entity) {
+bool CheckDownZone(Entity& entity) {
 	for (int i = 0; i < 9; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level1DownZone[i])) {
 			return true;
@@ -379,8 +353,6 @@ bool CheckDownZone(Entity &entity) {
 	}
 	return false;
 }
-
-//---DEBUGGING TOOLS: DRAW COLLIDER AREAS---
 
 void DrawLevel1Colliders() {
 	DrawRectangle(Ramp_0_Zone.x, Ramp_0_Zone.y, Ramp_0_Zone.width, Ramp_0_Zone.height, WHITE);

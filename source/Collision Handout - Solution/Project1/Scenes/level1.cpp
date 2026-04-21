@@ -76,7 +76,7 @@ void runLevel1() {
             CheckLives();
             ResetBonus();
             barrelSpawner.Init();
-             return;
+            return;
         }
 
         Level1LadderDraw();
@@ -87,8 +87,6 @@ void runLevel1() {
     }
 
     /* UPDATE STARTS HERE */
-
-
 
     if (!winTriggered) {
         Mario.Movement();
@@ -141,16 +139,44 @@ void runLevel1() {
         }
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
+
+        // Comprueba la condición de victoria cada frame
+        Level1CheckWinCondition(Mario);
     }
     else {
+        // winTriggered = true: el stage cleared está sonando.
+        // Seguimos dibujando todo exactamente igual que el último frame de juego.
+        // NO movemos a Mario, NO actualizamos barriles — solo dibujamos.
+        Level1LadderDraw();
+        Level1RampDraw();
+        donkey.Draw();
+        lady.Draw();
+        barrelSpawner.Draw();
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
 
-    // siempre dibuja
-    Level1LadderDraw();
-    Level1RampDraw();
-    donkey.Draw();
-    lady.Draw();
-    barrelSpawner.Draw();
+        // Cuando el sonido de stage cleared termina, cambiamos de escena
+        // SIN hacer unload — la WinCutscene hereda todo el estado.
+        if (!IsSoundPlaying(stageClearedSound)) {
+            // Limpiamos solo lo que Level1 posee exclusivamente
+            barrelSpawner.Shutdown();
+            barrelSpawner.Reset();
+            UnloadSound(deathSound2);
+            UnloadSound(jumpBarrelSound);
+            UnloadSound(stageClearedSound);
+            ResetLevel1Entities();
+            AddBonus();
+            AddLevel();
+            barrelSpawner.Init();
+
+            // donkey, lady, Mario.Texture, Truss, Ladder NO se descargan aquí.
+            // La WinCutscene los usa directamente y los descarga ella al final.
+
+            // Marcamos Scene_Init = false SOLO para la escena siguiente,
+            // pero lo hacemos a través de ChangeScene() que ya lo pone a false.
+            ChangeScene(); // current_scene ? WINCUTSCENE, Scene_Init = false
+        }
     }
+
     if (IsKeyPressed(KEY_H)) {
         Hitboxes_On = !Hitboxes_On;
     }
@@ -159,29 +185,9 @@ void runLevel1() {
         DrawLevel1Colliders();
     }
 
-    DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-    UpdateDrawScorePopup();
-    SetCooldown();
-   
-    Level1CheckWinCondition(Mario);
-    
-    if (GetCurrentScene() != LEVEL1) {
-        /*UnloadTexture(Mario.Texture);
-        Truss::UnloadSharedTexture();
-        Ladder::UnloadSharedTexture();
-        UnloadLevel1Entities();*/
-        barrelSpawner.Shutdown();
-        barrelSpawner.Reset();
-        UnloadMusicStream(level1Music);
-        UnloadSound(deathSound2);
-        UnloadSound(jumpBarrelSound);
-        donkey.Unload();
-        lady.Unload();
-        UnloadSound(stageClearedSound);
-        ResetLevel1Entities();
-        AddBonus();
-        AddLevel();
-        Scene_Init = false;
-        barrelSpawner.Init();
+    if (!winTriggered) {
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        UpdateDrawScorePopup();
+        SetCooldown();
     }
 }
