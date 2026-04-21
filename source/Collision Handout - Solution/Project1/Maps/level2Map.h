@@ -38,3 +38,5 @@ void ResetButtons();
 void CheckWinCondition();
 
 extern int Base_5_YPos;
+
+extern Sound buttonSound;

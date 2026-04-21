@@ -35,7 +35,7 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == LEVEL2) {
-		current_scene = LEVEL1;
+		current_scene = HOWHIGH;
 		return;
 	}
 }

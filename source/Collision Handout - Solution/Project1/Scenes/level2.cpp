@@ -20,7 +20,7 @@ bool  isDead2 = false;
 float deathTimer2 = 0.0f;
 bool  isDeathSequence2 = false;
 
-// DK animación level2
+// DK animaciÃ³n level2
 Rectangle dk2Frames[3] = {
     {  1.0f, 2.0f, 40.0f, 32.0f }, // frame 1 - idle
     { 85.0f, 2.0f, 46.0f, 32.0f }, // frame 2
@@ -29,38 +29,32 @@ Rectangle dk2Frames[3] = {
 int   dk2FrameIdx = 0;
 float dk2FrameTimer = 0.0f;
 float dk2FrameInterval = 0.3f;
-bool  dk2Forward = true; // true = 1->2->3, false = 3->2->1
+bool  dk2Forward = true;
 float dk2PauseTimer = 0.0f;
-float dk2PauseDuration = 1.0f; // segundos de pausa entre ciclos
+float dk2PauseDuration = 1.0f;
 bool  dk2IsPaused = false;
 
-
 Rectangle ladyFrames[6] = {
-    {  1.0f, 1.0f, 14.0f, 22.0f }, 
-    { 17.0f, 1.0f, 15.0f, 22.0f }, 
-    {  1.0f, 1.0f, 14.0f, 22.0f }, 
-    { 17.0f, 1.0f, 15.0f, 22.0f }, 
-    {  1.0f, 1.0f, 14.0f, 22.0f }, 
-    { 17.0f, 1.0f, 15.0f, 22.0f }, 
+    {  1.0f, 1.0f, 14.0f, 22.0f },
+    { 17.0f, 1.0f, 15.0f, 22.0f },
+    {  1.0f, 1.0f, 14.0f, 22.0f },
+    { 17.0f, 1.0f, 15.0f, 22.0f },
+    {  1.0f, 1.0f, 14.0f, 22.0f },
+    { 17.0f, 1.0f, 15.0f, 22.0f },
 };
 int   ladyFrameIdx = 0;
 float ladyFrameTimer = 0.0f;
-float ladyFrameInterval = 0.08f; // cambio rápido entre frames
+float ladyFrameInterval = 0.08f;
 float ladyPauseTimer = 0.0f;
-float ladyPauseDuration = 3.0f;  // pausa larga después del ciclo
+float ladyPauseDuration = 3.0f;
 bool  ladyIsPaused = false;
 
 void runLevel2() {
 
-    // Like start() function from unity
-
     if (!Scene_Init) {
-        // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
-        //Mario Setup
         Mario.Setup();
-
         donkey.Setup();
         lady.Setup();
 
@@ -68,10 +62,7 @@ void runLevel2() {
         dk2FrameTimer = 0.0f;
         dk2Forward = true;
 
-        // Posiciona Lady encima de Base_5
         lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f, (float)Base_5_YPos - 22.0f };
-
-        // Posiciona DK justo debajo de Lady
         donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos - 32.0f };
 
         Level2RampSetter();
@@ -81,32 +72,21 @@ void runLevel2() {
         SetStartTime2();
         Scene_Init = true;
 
-        level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");      //MUSICA
+        level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");
         deathMusic2 = LoadMusicStream("Audio/Dead.wav");
         deathSound3 = LoadSound("Audio/Dead.wav");
         level2Music.looping = true;
         PlayMusicStream(level2Music);
         isDead2 = false;
-
-
-
     }
+
     /* UPDATE STARTS HERE */
+
     if (isDeathSequence2) {
         deathTimer2 += GetFrameTime();
-        
-        Mario.Movement();
-        donkey.Update();
-        lady.Update();
-        
-            Level2LadderDraw();
-        Level2RampDraw();
-        Level2ButtonsDraw();
-        DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
-        DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
-        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-        
-            if (deathTimer2 >= 5.0f) {
+
+        // PRIMERO unload check, ANTES de dibujar nada
+        if (deathTimer2 >= 5.0f) {
             UnloadTexture(Mario.Texture);
             Truss::UnloadSharedTexture();
             Ladder::UnloadSharedTexture();
@@ -125,16 +105,25 @@ void runLevel2() {
             deathTimer2 = 0.0f;
             CheckLives();
             return;
-            
         }
-         return;
-        
+
+        // Solo dibuja si NO se hizo unload
+        Mario.Movement();
+        donkey.Update();
+        lady.Update();
+        Level2LadderDraw();
+        Level2RampDraw();
+        Level2ButtonsDraw();
+        DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
+        DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        return;
     }
 
     Mario.Movement();
     UpdateMusicStream(level2Music);
     UpdateMusicStream(deathMusic2);
-    
+
     dk2FrameTimer += GetFrameTime();
 
     if (dk2IsPaused) {
@@ -145,13 +134,13 @@ void runLevel2() {
         }
     }
     else if (dk2FrameTimer >= dk2FrameInterval) {
-        dk2FrameTimer = 0.0f; // <-- también corrige el bug de 3.0f aquí
+        dk2FrameTimer = 0.0f;
         if (dk2Forward) {
             dk2FrameIdx++;
             if (dk2FrameIdx >= 3) {
                 dk2FrameIdx = 1;
                 dk2Forward = false;
-                dk2IsPaused = true; // pausa al llegar al final
+                dk2IsPaused = true;
             }
         }
         else {
@@ -159,7 +148,7 @@ void runLevel2() {
             if (dk2FrameIdx <= 0) {
                 dk2FrameIdx = 0;
                 dk2Forward = true;
-                dk2IsPaused = true; // pausa al volver al inicio
+                dk2IsPaused = true;
             }
         }
     }
@@ -169,7 +158,7 @@ void runLevel2() {
         if (ladyPauseTimer >= ladyPauseDuration) {
             ladyPauseTimer = 0.0f;
             ladyIsPaused = false;
-            ladyFrameIdx = 0; // vuelve al frame 1 al salir de pausa
+            ladyFrameIdx = 0;
         }
     }
     else {
@@ -179,20 +168,18 @@ void runLevel2() {
             ladyFrameIdx++;
             if (ladyFrameIdx >= 6) {
                 ladyFrameIdx = 0;
-                ladyIsPaused = true; // pausa tras completar el ciclo
+                ladyIsPaused = true;
             }
         }
     }
 
-    /*---GROUND COLLISIONS---*/
-
-    //Mario's Ground Collisions divided by Y levels (One for each ramp)
     Level2RampCollisions(Mario);
     Level2LadderCollisions(Mario);
     Level2CheckButtons(Mario);
 
     /*---ENTITY COLLISIONS---*/
-    if (Mario.isAlive && (Fire3.has_Spawned && EntityCollision(Mario, Fire3) || Fire4.has_Spawned && EntityCollision(Mario, Fire4) || Fire5.has_Spawned && EntityCollision(Mario, Fire5) || Fire6.has_Spawned && EntityCollision(Mario, Fire6) || Fire7.has_Spawned && EntityCollision(Mario, Fire7))) {
+    if (Mario.isAlive && (Fire3.has_Spawned && EntityCollision(Mario, Fire3) || Fire4.has_Spawned && EntityCollision(Mario, Fire4) || Fire5.has_Spawned && EntityCollision(Mario, Fire5) || Fire6.has_Spawned && EntityCollision(Mario, Fire6) || Fire7.has_Spawned && EntityCollision(Mario, Fire7))) 
+    {
         StopMusicStream(level2Music);
         PlaySound(deathSound3);
         isDeathSequence2 = true;
@@ -212,8 +199,6 @@ void runLevel2() {
         Mario.marioVelocity.y = 0;
     }
 
-    
-    /*---TEXTURE DRAW---*/
     Level2LadderDraw();
     Level2RampDraw();
     Level2ButtonsDraw();
@@ -221,22 +206,10 @@ void runLevel2() {
     lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f,  (float)Base_5_YPos - 14.0f };
     donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 17.0f };
 
-
     DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
     DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
-    //--Debugging tool: Map Hitboxes
-    //DrawLevel2Colliders();
-    
-
-
-
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-    
-    //--Debugging tool: Mario Origin Point (RED) and Mario Floor Collider (YELLOW)
-    //DrawMarioCollider();
-    
-    /*---ENTITY SPAWN & MOVEMENT ROUTINES---*/
-    
+
     Level2EntitiesRoutine();
 
     if (IsKeyPressed(KEY_ONE)) {
@@ -244,11 +217,8 @@ void runLevel2() {
     }
 
     CheckWinCondition();
-    /*Like onDestroy() function from unity, run before scene change.*/
 
     if (GetCurrentScene() != LEVEL2) {
-
-        //TO DO: UNLOAD STUFF.
         UnloadTexture(Mario.Texture);
         UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
@@ -261,7 +231,7 @@ void runLevel2() {
         UnloadSound(deathSound3);
         donkey.Unload();
         lady.Unload();
-
-        Scene_Init = false; // reset initialization boolean.
+        Scene_Init = false;
+        return;
     }
 }

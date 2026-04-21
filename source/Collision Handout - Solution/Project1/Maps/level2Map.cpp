@@ -45,10 +45,11 @@ Truss Base_3[12];
 Truss Base_4[10];
 Truss Base_5[8];
 
-
+Sound buttonSound = { 0 };
 
 //RAMP POSITIONS DEFINED HERE
 void Level2RampSetter() {
+	buttonSound = LoadSound("Audio/Bonus.wav");
 	Truss::LoadSharedTexture(2);
 
 	Base_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1;
@@ -340,7 +341,7 @@ void Level2CheckButtons(Entity& entity) {
 			Level2Buttons[i].Pressed = true;
 			cout << "BUTTON PRESSED" << endl;
 
-			//PLAY SOUND HERE
+			PlaySound(buttonSound); //PLAY SOUND HERE
 		}
 
 		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown < Button_Fall_Cooldown) {
@@ -362,6 +363,7 @@ void Level2ButtonsDraw() {
 }
 
 void UnloadButtonTexture() {
+	UnloadSound(buttonSound);
 	for (int i = 0; i < 8; i++) {
 		UnloadTexture(Level2Buttons[i].texture);
 	}
