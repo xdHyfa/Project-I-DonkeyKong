@@ -51,7 +51,13 @@ void BarrelSpawner::Update() {
             ResetBarrel(b);
             continue;
         }
-
+        if (CheckDownZone(b)) {
+            b.DownZoneTimer += GetFrameTime();
+        }
+        else {
+            b.DownZoneTimer = 0;
+        }
+        if (b.DownZoneTimer >= 0.1f && GetRandomValue(1, 15) == 1) b.isLaddering = true, b.groundCooldown = 0, b.FlipDirection();
         b.Movement();
         BarrelGroundCollisions(b);
         b.BarrelAnimation();

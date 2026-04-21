@@ -150,6 +150,7 @@ void BarrelGroundCollisions(Barrel& barrel) {
 
 	auto checkTrussArray = [&](Truss* Ramp, int size, bool isBottom) {
 		if (onGround) return;
+
 		for (int i = 0; i < size; i++) {
 			float trussLeft    = Ramp[i].TrussPos.x;
 			float trussRight   = Ramp[i].TrussPos.x + 16;
@@ -159,15 +160,33 @@ void BarrelGroundCollisions(Barrel& barrel) {
 			bool hitSurface = (col.y >= trussSurface && col.y <= trussSurface + barrel.velocityY + 2);
 
 			if (inRangeX && hitSurface) {
-				pos.y = trussSurface - BARRELSIZE;
-				barrel.velocityY = 0.0f;
-				onGround = true;
-				if (isBottom) onRamp0 = true;
-				barrel.justFlipped = false;
-				return;
+				if (!barrel.isLaddering) {
+					pos.y = trussSurface - BARRELSIZE;
+					barrel.velocityY = 0.0f;
+					onGround = true;
+				
+					if (isBottom) onRamp0 = true;
+					barrel.justFlipped = false;
+					return;
+				}
+				else{
+					if (barrel.groundCooldown >= 0.1f) {
+						barrel.groundCooldown = 0.0f;
+						barrel.isLaddering = false;
+						pos.y = trussSurface - BARRELSIZE;
+						barrel.velocityY = 0.0f;
+						onGround = true;
+
+						if (isBottom) onRamp0 = true;
+						barrel.justFlipped = false;
+						return;
+					}
+				}
 			}
 		}
 		};
+
+	if (barrel.isLaddering) barrel.groundCooldown += GetFrameTime();
 
 	checkTrussArray(Ramp_0, 14, true);   // plataforma del suelo
 	checkTrussArray(Ramp_1, 13, false);
@@ -374,6 +393,11 @@ void DrawDownZone(Rectangle* DownZone, int size) {
 bool CheckDownZone(Entity &entity) {
 	for (int i = 0; i < 9; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level1DownZone[i])) {
+			return true;
+		}
+	}
+	for (int i = 0; i < 4; i++) {
+		if (CheckCollisionPointRec(entity.FloorCollider, BrokenDownZone[i])) {
 			return true;
 		}
 	}
