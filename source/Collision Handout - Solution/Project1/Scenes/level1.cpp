@@ -13,6 +13,7 @@
 #include "Entities/Donkey.h"
 #include "Entities/Lady.h"
 #include "Core/UI.h"
+#include "Entities/objects.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ Sound stageClearedSound = { 0 };
 float deathTimer = 0.0f;
 bool  isDeathSequence = false;
 bool Hitboxes_On = false;
+
+Interactable Hammer1, Hammer2;
 
 void runLevel1() {
 
@@ -49,6 +52,8 @@ void runLevel1() {
         stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
         winTriggered = false;
         donkey.Position = { 21.0f, 47.0f };
+        Hammer1.SetObject(16, 90, Hammer);
+        Hammer2.SetObject(165, 182, Hammer);
     }
 
     if (isDeathSequence) {
@@ -103,8 +108,12 @@ void runLevel1() {
         donkey.Draw();
         lady.Draw();
         barrelSpawner.Draw();
+        Hammer1.DrawObject();
+        Hammer2.DrawObject();
         Level1EntitiesRoutine();
         UpdateBonus();
+        Hammer1.CheckInteraction(Mario);
+        Hammer2.CheckInteraction(Mario);
 
         for (Barrel& b : barrelSpawner.barrels) {
             if (!b.has_Spawned || !Mario.isAlive) continue;
@@ -157,6 +166,8 @@ void runLevel1() {
 
     if (Hitboxes_On) {
         DrawLevel1Colliders();
+        Hammer1.DrawCollider();
+        Mario.DrawCollider();
     }
 
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);

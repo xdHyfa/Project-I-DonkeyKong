@@ -30,6 +30,10 @@ public:
         return { Position.x, Position.y, 16, 16 };
     }
     virtual void Movement() = 0;
+
+    void DrawCollider() {
+        DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height,ORANGE);
+    }
 };
 
 

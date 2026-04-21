@@ -344,6 +344,7 @@ void Level2CheckButtons(Entity& entity) {
 
 			PlaySound(buttonSound); //PLAY SOUND HERE
 			ShowScorePopup(Mario.Position);
+			AddPoints(100);
 		}
 
 		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown < Button_Fall_Cooldown) {
