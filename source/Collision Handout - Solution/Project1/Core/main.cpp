@@ -22,7 +22,7 @@ int main()
 	Camera2D camera = { 0 };
 	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
 	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
-	camera.zoom = 4.0f;
+	camera.zoom = 3.0f;
 
 	SetTargetFPS(24);
 
