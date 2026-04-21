@@ -123,7 +123,7 @@ void runWinCutscene() {
         WinCutsceneInit();
         Scene_Init = true;
     }
-
+    if (winPhase == WIN_END && winTimer >= 1.0f) return;
     Level1RampDraw();
     Level1LadderDraw();
 
