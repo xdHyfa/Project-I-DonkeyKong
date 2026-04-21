@@ -49,6 +49,7 @@ void runLevel1() {
         stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
         winTriggered = false;
         donkey.Position = { 21.0f, 47.0f };
+        Mario.Position.y = 230;
     }
 
     if (isDeathSequence) {
@@ -146,6 +147,7 @@ void runLevel1() {
             Mario.die();
             RemoveLife();
             ResetLevel1Entities();
+            Mario.marioVelocity.y = 0;
         }
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
