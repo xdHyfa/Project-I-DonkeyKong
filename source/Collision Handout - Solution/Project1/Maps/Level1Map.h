@@ -13,6 +13,8 @@ void Level1LadderDraw();
 
 void Level1LadderCollisions(Entity &entity);
 
+void BrokenLadderCollisions(Entity& entity);
+
 void Level1RampSetter();
 
 void BarrelGroundCollisions(Barrel &barrel);

@@ -227,7 +227,11 @@ int CheckEntityPlatform(Entity& entity) {
 Ladder Level1Ladders[9];
 Ladder ExtraPieces[16];
 
+Ladder BrokenLadders[4];
+Ladder ExtraBroken[12];
+
 Rectangle Level1DownZone[9];
+Rectangle BrokenDownZone[4];
 
 //LADDER POSITION/SPRITES FOR LEVEL 1 DEFINED HERE
 void Level1LadderSetter() {
@@ -238,7 +242,12 @@ void Level1LadderSetter() {
 	for (int i = 0; i < 16; i++) {
 		ExtraPieces[i].setSprite(1, false);
 	}
-
+	for (int i = 0; i < 4; i++) {
+		BrokenLadders[i].setSprite(1, false);
+	}
+	for (int i = 0; i < 12; i++) {
+		ExtraBroken[i].setSprite(1, false);
+	}
 
 	Level1Ladders[0].setPos(Ramp_1[11].TrussPos.x + Ramp_1[11].TrussBox.width / 4 + 2, Ramp_1[11].TrussPos.y + Ramp_1[11].TrussBox.height * 2);
 	Level1Ladders[0].Hitbox.y += 1;
@@ -287,9 +296,40 @@ void Level1LadderSetter() {
 	ExtraPieces[14].setPos(ExtraPieces[13].Position.x, ExtraPieces[13].Position.y + 3);
 	ExtraPieces[15].setPos(ExtraPieces[14].Position.x, ExtraPieces[14].Position.y + 3);
 
+	BrokenLadders[0].setPos(Ramp_1[5].TrussPos.x, Ramp_1[5].TrussPos.y + Ramp_1[5].TrussBox.height * 2);
+	ExtraBroken[0].setPos(BrokenLadders[0].Position.x, BrokenLadders[0].Position.y + 19);
+	ExtraBroken[1].setPos(BrokenLadders[0].Position.x, BrokenLadders[0].Position.y + 22);
+	ExtraBroken[2].setPos(BrokenLadders[0].Position.x, BrokenLadders[0].Position.y + 25);
+
+	BrokenLadders[1].setPos(Ramp_3[4].TrussPos.x, Ramp_3[4].TrussPos.y + Ramp_3[4].TrussBox.height * 2);
+	ExtraBroken[3].setPos(BrokenLadders[1].Position.x, BrokenLadders[1].Position.y + 3);
+	ExtraBroken[4].setPos(BrokenLadders[1].Position.x, BrokenLadders[1].Position.y + 25);
+	ExtraBroken[5].setPos(BrokenLadders[1].Position.x, BrokenLadders[1].Position.y + 28);
+
+	BrokenLadders[2].setPos(Ramp_4[9].TrussPos.x + 6, Ramp_4[9].TrussPos.y + Ramp_4[9].TrussBox.height * 2);
+	ExtraBroken[6].setPos(BrokenLadders[2].Position.x, BrokenLadders[2].Position.y + 3);
+	ExtraBroken[7].setPos(BrokenLadders[2].Position.x, BrokenLadders[2].Position.y + 27);
+	ExtraBroken[8].setPos(BrokenLadders[2].Position.x, BrokenLadders[2].Position.y + 30);
+
+	BrokenLadders[3].setPos(Ramp_5[5].TrussPos.x + 6, Ramp_5[5].TrussPos.y + Ramp_5[4].TrussBox.height * 2);
+	ExtraBroken[9].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 3);
+	ExtraBroken[10].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 6);
+	ExtraBroken[11	].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 23);
+
+	for (int i = 0; i < 4; i++) {
+		BrokenLadders[i].Hitbox.height += 26;
+	}
+	BrokenLadders[1].Hitbox.height += 2;
+	BrokenLadders[2].Hitbox.height += 4;
+
 	for (int i = 0; i < 9; i++) {
 		Level1DownZone[i] = { Level1Ladders[i].Hitbox.x, Level1Ladders[i].Hitbox.y - 2 , 10, 4 };
 	}
+
+	for (int i = 0; i < 4; i++) {
+		BrokenDownZone[i] = { BrokenLadders[i].Hitbox.x, BrokenLadders[i].Hitbox.y - 2, 10, 4 };
+	}
+
 
 }
 
@@ -300,6 +340,16 @@ void Level1LadderDraw() {
 	for (int i = 0; i < 16; i++) {
 		DrawTextureRec(ExtraPieces[i].texture, ExtraPieces[i].SpriteSelector, ExtraPieces[i].Position, WHITE);
 	}
+	for (int i = 0; i < 4; i++) {
+		DrawTextureRec(BrokenLadders[i].texture, BrokenLadders[i].SpriteSelector, BrokenLadders[i].Position, WHITE);
+	}
+	for (int i = 0; i < 12; i++) {
+		DrawTextureRec(ExtraBroken[i].texture, ExtraBroken[i].SpriteSelector, ExtraBroken[i].Position, WHITE);
+	}
+}
+
+void BrokenLadderCollisions(Entity& entity) {
+	LadderCollisions(entity, BrokenLadders, 4);
 }
 
 void Level1LadderCollisions(Entity& entity) {
@@ -307,9 +357,11 @@ void Level1LadderCollisions(Entity& entity) {
 	LadderCollisions(entity, Level1Ladders, 9);
 	}
 	else {
-		LadderCollisions(entity, Level1Ladders, 8);
+		LadderCollisions(entity, Level1Ladders, BrokenLadders, 8, 4);
+	
 	}
 }
+
 
 
 
@@ -340,5 +392,7 @@ void DrawLevel1Colliders() {
 
 	DrawRectangle(WinHitbox.x, WinHitbox.y, WinHitbox.width, WinHitbox.height, YELLOW);
 	DrawLadderCollider(Level1Ladders, 9);
+	DrawLadderCollider(BrokenLadders, 4);
 	DrawDownZone(Level1DownZone, 9);
+	DrawDownZone(BrokenDownZone, 4);
 }
