@@ -8,12 +8,17 @@
 #include "Core/constants.h"
 #include "Entities/Donkey.h"
 #include "Entities/Lady.h"
+#include "Entities/EntityCollision.hpp"
+#include "Core/UI.h"
 #include <iostream>
 using namespace std;
 
 Music level2Music = { 0 };
 Music deathMusic2 = { 0 };
+Sound deathSound3 = { 0 };
 bool  isDead2 = false;
+float deathTimer2 = 0.0f;
+bool  isDeathSequence2 = false;
 
 // DK animación level2
 Rectangle dk2Frames[3] = {
@@ -78,6 +83,7 @@ void runLevel2() {
 
         level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");      //MUSICA
         deathMusic2 = LoadMusicStream("Audio/Dead.wav");
+        deathSound3 = LoadSound("Audio/Dead.wav");
         level2Music.looping = true;
         PlayMusicStream(level2Music);
         isDead2 = false;
@@ -86,7 +92,44 @@ void runLevel2() {
 
     }
     /* UPDATE STARTS HERE */
-    
+    if (isDeathSequence2) {
+        deathTimer2 += GetFrameTime();
+        
+        Mario.Movement();
+        donkey.Update();
+        lady.Update();
+        
+            Level2LadderDraw();
+        Level2RampDraw();
+        Level2ButtonsDraw();
+        DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
+        DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        
+            if (deathTimer2 >= 5.0f) {
+            UnloadTexture(Mario.Texture);
+            Truss::UnloadSharedTexture();
+            Ladder::UnloadSharedTexture();
+            UnloadLevel2Entities();
+            UnloadButtonTexture();
+            ResetLevel2Entities();
+            ResetButtons();
+            UnloadMusicStream(level2Music);
+            UnloadMusicStream(deathMusic2);
+            UnloadSound(deathSound3);
+            donkey.Unload();
+            lady.Unload();
+            Mario.isAlive = true;
+            Scene_Init = false;
+            isDeathSequence2 = false;
+            deathTimer2 = 0.0f;
+            CheckLives();
+            return;
+            
+        }
+         return;
+        
+    }
 
     Mario.Movement();
     UpdateMusicStream(level2Music);
@@ -148,7 +191,17 @@ void runLevel2() {
     Level2LadderCollisions(Mario);
     Level2CheckButtons(Mario);
 
-    
+    /*---ENTITY COLLISIONS---*/
+    if (Mario.isAlive && (Fire3.has_Spawned && EntityCollision(Mario, Fire3) || Fire4.has_Spawned && EntityCollision(Mario, Fire4))) {
+        StopMusicStream(level2Music);
+        PlaySound(deathSound3);
+        isDeathSequence2 = true;
+        deathTimer2 = 0.0f;
+        Mario.die();
+        RemoveLife();
+        ResetLevel2Entities();
+    }
+
     
     /*---TEXTURE DRAW---*/
     Level2LadderDraw();
@@ -195,6 +248,7 @@ void runLevel2() {
         ResetButtons();
         UnloadMusicStream(level2Music);
         UnloadMusicStream(deathMusic2);
+        UnloadSound(deathSound3);
         donkey.Unload();
         lady.Unload();
 

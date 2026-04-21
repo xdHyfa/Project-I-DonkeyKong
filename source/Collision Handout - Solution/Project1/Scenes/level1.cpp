@@ -150,7 +150,7 @@ void runLevel1() {
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
-    else{
+    else {
 
     // siempre dibuja
     Level1LadderDraw();
