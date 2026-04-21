@@ -40,7 +40,7 @@ void AddPoints(int points) {
 }
 
 void SetCooldown() {
-	if (UI.PointsCooldown > 4.0f) return;
+	if (UI.PointsCooldown > 1.01f) return;
 	UI.PointsCooldown += GetFrameTime();
 }
 

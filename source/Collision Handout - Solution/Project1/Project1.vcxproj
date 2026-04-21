@@ -156,6 +156,7 @@
     <ClCompile Include="Entities\Lady.cpp" />
     <ClCompile Include="Entities\Level1Entities.cpp" />
     <ClCompile Include="Entities\Level2Entities.cpp" />
+    <ClCompile Include="Entities\objects.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Entities\Lady.h" />
     <ClInclude Include="Entities\Level1Entities.h" />
     <ClInclude Include="Entities\Level2Entities.h" />
+    <ClInclude Include="Entities\objects.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="EntityCollision.hpp" />
     <ClInclude Include="include\resource_dir.h" />

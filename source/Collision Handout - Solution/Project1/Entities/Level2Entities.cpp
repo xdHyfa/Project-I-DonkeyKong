@@ -145,11 +145,20 @@ void Level2FireRoutine(Fire& fire) {
 void Level2EntitiesRoutine() {
 
 	float time_buffer = GetTime();
-	if (time_buffer-level2StartTime >= 5){
+	if (time_buffer-level2StartTime >= 1){
 		Level2FireRoutine(Fire3);
 	}
-	if(time_buffer-level2StartTime >= 15){
+	if(time_buffer-level2StartTime >= 3){
 		Level2FireRoutine(Fire4);
+	}
+	if (time_buffer - level2StartTime >= 9) {
+		Level2FireRoutine(Fire5);
+	}
+	if (time_buffer - level2StartTime >= 15) {
+		Level2FireRoutine(Fire6);
+	}
+	if (time_buffer - level2StartTime >= 17) {
+		Level2FireRoutine(Fire7);
 	}
 
 }
@@ -157,9 +166,15 @@ void Level2EntitiesRoutine() {
 void UnloadLevel2Entities() {
 	UnloadTexture(Fire3.Texture);
 	UnloadTexture(Fire4.Texture);
+	UnloadTexture(Fire5.Texture);
+	UnloadTexture(Fire6.Texture);
+	UnloadTexture(Fire7.Texture);
 }
 
 void ResetLevel2Entities() {
 	Fire3.has_Spawned = false;
 	Fire4.has_Spawned = false;
+	Fire5.has_Spawned = false;
+	Fire6.has_Spawned = false;
+	Fire7.has_Spawned = false;
 }

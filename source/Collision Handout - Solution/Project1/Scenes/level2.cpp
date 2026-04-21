@@ -10,6 +10,7 @@
 #include "Entities/Lady.h"
 #include "Entities/EntityCollision.hpp"
 #include "Core/UI.h"
+#include "Entities/objects.h"
 #include <iostream>
 using namespace std;
 
@@ -19,6 +20,8 @@ Sound deathSound3 = { 0 };
 bool  isDead2 = false;
 float deathTimer2 = 0.0f;
 bool  isDeathSequence2 = false;
+
+Interactable Hammer3, Hammer4, Umbrella1, Purse1, Hat1;
 
 // DK animación level2
 Rectangle dk2Frames[3] = {
@@ -78,6 +81,11 @@ void runLevel2() {
         level2Music.looping = true;
         PlayMusicStream(level2Music);
         isDead2 = false;
+        Hammer3.SetObject(12, 132, Hammer);
+        Hammer4.SetObject(106, 90, Hammer);
+        Purse1.SetObject(120, 238, Purse);
+        Hat1.SetObject(196, 197, Hat);
+        Umbrella1.SetObject(28, 65, Umbrella);
     }
 
     /* UPDATE STARTS HERE */
@@ -173,6 +181,7 @@ void runLevel2() {
         }
     }
 
+    SetCooldown();
     Level2RampCollisions(Mario);
     Level2LadderCollisions(Mario);
     Level2CheckButtons(Mario);
@@ -211,6 +220,17 @@ void runLevel2() {
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
 
     Level2EntitiesRoutine();
+    Hammer3.DrawObject();
+    Hammer4.DrawObject();
+    Purse1.DrawObject();
+    Umbrella1.DrawObject();
+    Hat1.DrawObject();
+
+    Hammer3.CheckInteraction(Mario);
+    Hammer4.CheckInteraction(Mario);
+    Purse1.CheckInteraction(Mario);
+    Umbrella1.CheckInteraction(Mario);
+    Hat1.CheckInteraction(Mario);
 
     if (IsKeyPressed(KEY_ONE)) {
         ChangeScene();

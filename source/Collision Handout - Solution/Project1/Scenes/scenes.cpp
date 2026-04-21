@@ -2,7 +2,15 @@
 
 Scene current_scene = INTRO;
 bool Scene_Init = false;
+bool Hammer_time = false;
 
+void StartHammerTime() {
+	Hammer_time = true;
+}
+
+void StopHammerTime() {
+	Hammer_time = false;
+}
 void ChangeScene() {
 	Scene_Init = false;
 	if (current_scene == INTRO) {
@@ -69,3 +77,4 @@ Scene GetCurrentScene() {
 		return LEVEL2;
 	}
 }
+
