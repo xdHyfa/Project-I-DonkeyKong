@@ -1,6 +1,6 @@
 #include "Scenes/scenes.h"
 
-Scene current_scene = LEVEL2;
+Scene current_scene = INTRO;
 bool Scene_Init = false;
 
 void ChangeScene() {
