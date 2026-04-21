@@ -2,10 +2,13 @@
 #include "Entities/Fire_Spawner.h"
 #include "Core/constants.h"
 #include "Maps/Level1Map.h"
+#include "Scenes/scenes.h"
 #include <iostream>
 using namespace std;
 
 #define FIREVELOCITY 1.25f
+
+#define FIRE2VELOCITY 1.5f
 
 
 void Fire::PlayAnimation() {
@@ -39,9 +42,15 @@ void Fire::Movement() {
             }
             return;
         }
-  
-        if (!Facing_left) Position.x += FIREVELOCITY;
-        else Position.x -= FIREVELOCITY;
+    
+        if (GetCurrentScene() == LEVEL1){
+            if (!Facing_left) Position.x += FIREVELOCITY;
+           else Position.x -= FIREVELOCITY;
+        }
+        else 
+            if (!Facing_left) Position.x += FIRE2VELOCITY;
+            else Position.x -= FIRE2VELOCITY;
+
         if (GetRandomValue(1, 150) == 100) {
             ChangeDirection();
         }

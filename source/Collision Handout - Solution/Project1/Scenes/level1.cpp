@@ -138,6 +138,15 @@ void runLevel1() {
             RemoveLife();
             ResetLevel1Entities();
         }
+        if (Mario.isAlive && Mario.marioVelocity.y > 7.5f){
+            StopMusicStream(level1Music);
+            PlaySound(deathSound2);
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Mario.die();
+            RemoveLife();
+            ResetLevel1Entities();
+        }
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
