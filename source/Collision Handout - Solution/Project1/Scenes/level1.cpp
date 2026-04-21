@@ -164,9 +164,9 @@ void runLevel1() {
     Level1CheckWinCondition(Mario);
 
     if (GetCurrentScene() != LEVEL1) {
-        UnloadTexture(Mario.Texture);
+       /* UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
-        Ladder::UnloadSharedTexture();
+        Ladder::UnloadSharedTexture();*/
         UnloadLevel1Entities();
         barrelSpawner.Shutdown();
         barrelSpawner.Reset();

@@ -207,11 +207,11 @@ void runLevel2() {
     CheckWinCondition();
 
     if (GetCurrentScene() != LEVEL2) {
-        UnloadTexture(Mario.Texture);
+        /*UnloadTexture(Mario.Texture);
         UnloadLevel2Entities();
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
-        UnloadButtonTexture();
+        UnloadButtonTexture();*/
         ResetLevel2Entities();
         ResetButtons();
         UnloadMusicStream(level2Music);
