@@ -18,6 +18,9 @@ WinPhase winPhase = WIN_HEART;
 Texture2D heartTexture = { 0 };
 Texture2D winDKTexture = { 0 };
 
+// ---- AUDIO ----
+Sound winSound = { 0 };
+
 // ---- CORAZON ----
 Rectangle heartFull = { 0.0f, 2.0f, 16.0f, 12.0f };
 Rectangle heartBroken = { 16.0f, 2.0f, 16.0f, 12.0f };
@@ -71,6 +74,9 @@ void WinCutsceneInit() {
     winStairsTexture = LoadTexture("sprites/Stairs.png");
     Mario.Texture = LoadTexture("sprites/MARIO.png"); // Mario necesita textura
     lady.Setup();
+
+    winSound = LoadSound("Audio/Stage-Cleared-1.wav");
+    PlaySound(winSound);
     
     Level1RampSetter();   
     Level1LadderSetter(); 
@@ -237,6 +243,9 @@ void runWinCutscene() {
             UnloadTexture(winStairsTexture);
             lady.Unload();
             
+            StopSound(winSound);
+            UnloadSound(winSound);
+
             Scene_Init = false;
             ChangeScene();
         }
