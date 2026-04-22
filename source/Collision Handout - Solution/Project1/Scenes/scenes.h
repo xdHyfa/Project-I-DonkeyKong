@@ -9,6 +9,8 @@ void ChangeScene(bool NoLives);
 
 void StartHammerTime();
 
+bool GetHammerTime();
+
 void StopHammerTime();
 
 Scene GetCurrentScene();

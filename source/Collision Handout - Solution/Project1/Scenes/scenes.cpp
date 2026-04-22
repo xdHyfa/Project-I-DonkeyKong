@@ -1,11 +1,15 @@
 #include "Scenes/scenes.h"
 
-Scene current_scene = INTRO;
+Scene current_scene = LEVEL1 ;
 bool Scene_Init = false;
 bool Hammer_time = false;
 
 void StartHammerTime() {
 	Hammer_time = true;
+}
+
+bool GetHammerTime() {
+	return Hammer_time;
 }
 
 void StopHammerTime() {

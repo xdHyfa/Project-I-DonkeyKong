@@ -26,6 +26,7 @@ float deathTimer = 0.0f;
 bool  isDeathSequence = false;
 bool Hitboxes_On = false;
 
+Sound HammerSound1 = { 0 };
 Interactable Hammer1, Hammer2;
 
 void runLevel1() {
@@ -36,6 +37,9 @@ void runLevel1() {
         Mario.Setup();
         donkey.Setup();
         lady.Setup();
+
+        HammerSound1 = LoadSound("Audio/Bonus.wav");
+
         Level1RampSetter();
         Level1LadderSetter();
         barrelSpawner.Init();
@@ -54,6 +58,7 @@ void runLevel1() {
         donkey.Position = { 21.0f, 47.0f };
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
+        AddLevel();
     }
 
     if (isDeathSequence) {
@@ -115,6 +120,17 @@ void runLevel1() {
         Hammer1.CheckInteraction(Mario);
         Hammer2.CheckInteraction(Mario);
 
+        if (GetHammerTime()) {
+            if (Mario.CheckHammerHitbox(Fire1)) {
+                Fire1.has_Spawned = false;
+                PlaySound(HammerSound1);
+            }
+            if (Mario.CheckHammerHitbox(Fire2)) {
+                Fire2.has_Spawned = false;
+                PlaySound(HammerSound1);
+            }
+        }
+
         for (Barrel& b : barrelSpawner.barrels) {
             if (!b.has_Spawned || !Mario.isAlive) continue;
 
@@ -130,6 +146,12 @@ void runLevel1() {
                 RemoveLife();
                 ResetLevel1Entities();
                 break;
+            }
+            if (GetHammerTime()) {
+                if (Mario.CheckHammerHitbox(b)) {
+                    b.has_Spawned = false;
+                    PlaySound(HammerSound1);
+                }
             }
 
             if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
@@ -149,6 +171,15 @@ void runLevel1() {
             ResetLevel1Entities();
         }
 
+        if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
+            StopMusicStream(level1Music);
+            PlaySound(deathSound2);
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Mario.die();
+            RemoveLife();
+            ResetLevel1Entities();
+          }
         if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
             StopMusicStream(level1Music);
             PlaySound(deathSound2);
@@ -178,7 +209,7 @@ void runLevel1() {
     if (Hitboxes_On) {
         DrawLevel1Colliders();
         Hammer1.DrawCollider();
-        Mario.DrawCollider();
+        DrawMarioCollider();
     }
 
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
@@ -192,6 +223,7 @@ void runLevel1() {
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();*/
+        UnloadSound(HammerSound1);
         barrelSpawner.Shutdown();
         barrelSpawner.Reset();
         UnloadMusicStream(level1Music);
@@ -202,7 +234,6 @@ void runLevel1() {
         UnloadSound(stageClearedSound);
         ResetLevel1Entities();
         AddBonus();
-        AddLevel();
         Scene_Init = false;
         barrelSpawner.Init();
     }
