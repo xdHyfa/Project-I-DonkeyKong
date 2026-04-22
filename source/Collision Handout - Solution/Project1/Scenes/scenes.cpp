@@ -1,7 +1,7 @@
 #include "Scenes/scenes.h"
 #include "Entities/entity.h"
 #include "raylib.h"
-Scene current_scene = LEVEL1 ;
+Scene current_scene = INTRO ;
 bool Scene_Init = false;
 bool Hammer_time = false;
 float DeathTimer = 0.0f;
@@ -21,7 +21,7 @@ void PlayEntityDeath(Entity &entity) {
 	if (!hasStarted) StartEntityDeath();
 	DeathTimer += GetFrameTime();
 	if (DeathTimer < 0.2f) {
-		DrawTextureRec()
+	//	DrawTextureRec()
 	}
 	else if (DeathTimer < 0.4) {
 		
