@@ -25,7 +25,8 @@ Sound stageClearedSound = { 0 };
 float deathTimer = 0.0f;
 bool  isDeathSequence = false;
 bool Hitboxes_On = false;
-
+Music Hammer_Music = { 0 };
+bool isHammerPlaying = false;
 Sound HammerSound1 = { 0 };
 Interactable Hammer1, Hammer2;
 
@@ -37,7 +38,7 @@ void runLevel1() {
         Mario.Setup();
         donkey.Setup();
         lady.Setup();
-
+        StopHammerTime();
         HammerSound1 = LoadSound("Audio/Bonus.wav");
 
         Level1RampSetter();
@@ -58,6 +59,7 @@ void runLevel1() {
         donkey.Position = { 21.0f, 47.0f };
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
+        Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         
     }
 
@@ -104,7 +106,7 @@ void runLevel1() {
         Mario.Movement();
         donkey.Update();
         lady.Update();
-        UpdateMusicStream(level1Music);
+        if(!GetHammerTime()) UpdateMusicStream(level1Music);
         Level1RampCollisions(Mario);
         Level1LadderCollisions(Mario);
         barrelSpawner.Update();
@@ -121,13 +123,21 @@ void runLevel1() {
         Hammer2.CheckInteraction(Mario);
 
         if (GetHammerTime()) {
+            if(!isHammerPlaying) PlayMusicStream(Hammer_Music), isHammerPlaying = true;
+            else {
+                UpdateMusicStream(Hammer_Music);
+            }
             if (Mario.CheckHammerHitbox(Fire1) && Fire1.has_Spawned) {
+                AddPoints(300);
+                ShowScorePopup(Mario.Position, 300);
                 Fire1.has_Spawned = false;
                 PlaySound(HammerSound1);
             }
             if (Mario.CheckHammerHitbox(Fire2) && Fire2.has_Spawned) {
                 Fire2.has_Spawned = false;
                 PlaySound(HammerSound1);
+                AddPoints(300);
+                ShowScorePopup(Mario.Position, 300);
             }
         }
 
@@ -151,13 +161,15 @@ void runLevel1() {
                 if (Mario.CheckHammerHitbox(b)) {
                     b.has_Spawned = false;
                     PlaySound(HammerSound1);
+                    AddPoints(300);
+                    ShowScorePopup(Mario.Position, 300);
                 }
             }
 
             if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
                 PlaySound(jumpBarrelSound);
                 AddPoints(100);
-                ShowScorePopup(Mario.Position);
+                ShowScorePopup(Mario.Position, 100);
             }
         }
 
@@ -224,6 +236,8 @@ void runLevel1() {
         Ladder::UnloadSharedTexture();
         UnloadLevel1Entities();*/
         UnloadSound(HammerSound1);
+        isHammerPlaying = false;
+        UnloadMusicStream(Hammer_Music);
         barrelSpawner.Shutdown();
         barrelSpawner.Reset();
         UnloadMusicStream(level1Music);

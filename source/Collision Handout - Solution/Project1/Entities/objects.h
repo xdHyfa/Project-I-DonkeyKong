@@ -46,7 +46,7 @@ public:
 			Interacted = true;
 			OnInteraction();
 			if (tag != Hammer){
-				ShowScorePopup(entity.Position);
+				ShowScorePopup(entity.Position, 300);
 			}
 		}
 	}

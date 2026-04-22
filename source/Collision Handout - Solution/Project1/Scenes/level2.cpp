@@ -21,6 +21,8 @@ bool  isDead2 = false;
 float deathTimer2 = 0.0f;
 bool  isDeathSequence2 = false;
 
+bool isHammer2Playing = false;
+Music Hammer_Music2 = { 0 };
 Sound HammerSound = { 0 };
 Interactable Hammer3, Hammer4, Umbrella1, Purse1, Hat1;
 
@@ -63,7 +65,7 @@ void runLevel2() {
         lady.Setup();
 
         HammerSound = LoadSound("Audio/Bonus.wav");
-
+        StopHammerTime();
         dk2FrameIdx = 0;
         dk2FrameTimer = 0.0f;
         dk2Forward = true;
@@ -76,6 +78,7 @@ void runLevel2() {
         Level2LadderSetter();
         Level2ButtonSetter();
 
+        Hammer_Music2 = LoadMusicStream("Audio/Hammer-Time_.wav");
         SetStartTime2();
         Scene_Init = true;
 
@@ -134,12 +137,19 @@ void runLevel2() {
     }
 
     Mario.Movement();
-    if(Mario.CheckHammerHitbox(Fire3)) Fire3.has_Spawned = false, PlaySound(HammerSound);
-    if (Mario.CheckHammerHitbox(Fire4)) Fire4.has_Spawned = false, PlaySound(HammerSound);
-    if (Mario.CheckHammerHitbox(Fire5)) Fire5.has_Spawned = false, PlaySound(HammerSound);
-    if (Mario.CheckHammerHitbox(Fire6)) Fire6.has_Spawned = false, PlaySound(HammerSound);
-    if (Mario.CheckHammerHitbox(Fire7)) Fire7.has_Spawned = false, PlaySound(HammerSound);
-    UpdateMusicStream(level2Music);
+    if (GetHammerTime()) {
+        if (!isHammer2Playing) PlayMusicStream(Hammer_Music2), isHammer2Playing = true;
+        else {
+            UpdateMusicStream(Hammer_Music2);
+        }
+    
+    if(Mario.CheckHammerHitbox(Fire3)) Fire3.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    if (Mario.CheckHammerHitbox(Fire4)) Fire4.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    if (Mario.CheckHammerHitbox(Fire5)) Fire5.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    if (Mario.CheckHammerHitbox(Fire6)) Fire6.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    if (Mario.CheckHammerHitbox(Fire7)) Fire7.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    }
+    if (!GetHammerTime()) UpdateMusicStream(level2Music);
     UpdateMusicStream(deathMusic2);
 
     dk2FrameTimer += GetFrameTime();
@@ -265,7 +275,8 @@ void runLevel2() {
         Truss::UnloadSharedTexture();
         Ladder::UnloadSharedTexture();
         UnloadButtonTexture();*/
-
+        isHammer2Playing = false;
+        UnloadMusicStream(Hammer_Music2);
         AddLevel();
         UnloadSound(HammerSound);
         ResetLevel2Entities();

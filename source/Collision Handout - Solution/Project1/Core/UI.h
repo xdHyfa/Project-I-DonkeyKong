@@ -20,7 +20,7 @@ void ResetBonus();
 
 void SetCooldown();
 
-void ShowScorePopup(Vector2 pos);
+void ShowScorePopup(Vector2 pos, int points);
 void UpdateDrawScorePopup();
 
 int GetLevel();

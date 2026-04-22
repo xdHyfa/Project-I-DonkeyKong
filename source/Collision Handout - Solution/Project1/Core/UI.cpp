@@ -135,17 +135,19 @@ void AddBonus() {
 bool popupActive = false;
 float popupTimer = 0.0f;
 Vector2 popupPos = { 0, 0 };
+int PrintedPoints = 100;
 
-void ShowScorePopup(Vector2 pos) {
+void ShowScorePopup(Vector2 pos, int points) {
 	popupActive = true;
 	popupTimer = 0.0f;
 	popupPos = { pos.x, pos.y - 12 };
+	PrintedPoints = points;
 }
 
 void UpdateDrawScorePopup() {
 	if (!popupActive) return;
 	popupTimer += GetFrameTime();
-	DrawTextEx(UI_Font, "100", popupPos, 10, 0.5f, WHITE);
+	DrawTextEx(UI_Font, TextFormat("%d", PrintedPoints), popupPos, 10, 0.5f, WHITE);
 	if (popupTimer >= 1.0f) {
 		popupActive = false;
 	}
