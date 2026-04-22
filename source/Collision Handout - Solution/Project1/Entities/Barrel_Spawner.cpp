@@ -8,7 +8,7 @@ BarrelSpawner barrelSpawner;
 void BarrelSpawner::Init() {
     barrels.clear();
     barrels.reserve(MAX_BARRELS);
-    barrelTexture = LoadTexture("sprites/commonbarrel.png");  // carga una sola vez
+    barrelTexture = LoadTexture("sprites/commonbarrel.png");
 }
 
 void BarrelSpawner::ResetBarrel(Barrel& b) {
@@ -42,6 +42,8 @@ void BarrelSpawner::Update()
     for (int i = (int)barrels.size() - 1; i >= 0; i--) {
         Barrel& b = barrels[i];
 
+        if (b.isDying) continue; // frozen while dying animation plays
+
         if (b.Position.y > SCREEN_HEIGHT + 10 || !b.has_Spawned) {
             barrels.erase(barrels.begin() + i);
             continue;
@@ -65,7 +67,16 @@ void BarrelSpawner::Update()
 
 void BarrelSpawner::Draw() {
     for (Barrel& b : barrels) {
-        if (b.has_Spawned) {
+        if (b.isDying) {
+            bool done = b.UpdateDying();
+            if (done) {
+                b.isDying = false;
+                b.has_Spawned = false;
+                UnloadTexture(b.killAuraTexture);
+                b.killAuraLoaded = false;
+            }
+        }
+        else if (b.has_Spawned) {
             Vector2 drawPos = { b.Position.x, b.Position.y + 1 };
             DrawTextureRec(b.Texture, b.frameRec, drawPos, WHITE);
         }
@@ -73,7 +84,7 @@ void BarrelSpawner::Draw() {
 }
 
 void BarrelSpawner::Shutdown() {
-    UnloadTexture(barrelTexture);  // solo una textura que descargar
+    UnloadTexture(barrelTexture);
     barrels.clear();
 }
 
