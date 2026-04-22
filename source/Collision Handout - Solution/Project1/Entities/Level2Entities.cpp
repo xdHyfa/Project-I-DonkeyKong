@@ -12,6 +12,7 @@ Fire Fire5;
 Fire Fire6;
 Fire Fire7;
 
+
 float level2StartTime = 0;
 bool StartLevel2 = false;
 float SpawnCooldown2 = 0.0f;

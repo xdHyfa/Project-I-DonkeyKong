@@ -121,11 +121,11 @@ void runLevel1() {
         Hammer2.CheckInteraction(Mario);
 
         if (GetHammerTime()) {
-            if (Mario.CheckHammerHitbox(Fire1)) {
+            if (Mario.CheckHammerHitbox(Fire1) && Fire1.has_Spawned) {
                 Fire1.has_Spawned = false;
                 PlaySound(HammerSound1);
             }
-            if (Mario.CheckHammerHitbox(Fire2)) {
+            if (Mario.CheckHammerHitbox(Fire2) && Fire2.has_Spawned) {
                 Fire2.has_Spawned = false;
                 PlaySound(HammerSound1);
             }

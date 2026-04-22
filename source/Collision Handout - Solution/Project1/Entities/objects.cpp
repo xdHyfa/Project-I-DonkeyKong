@@ -6,6 +6,7 @@
 using namespace std;
 
 void Interactable :: SetObject(int x, int y, Items Tag) {
+	PointSound = LoadSound("Audio/Bonus.wav");
 	Interacted = false;
 	Position.x = x;
 	Position.y = y;
@@ -45,6 +46,7 @@ void Interactable :: SetObject(int x, int y, Items Tag) {
 		Sprite = LoadTexture("Sprites/Items.png");
 		UpdateHitbox();
 	}
+
 }
 
 void Interactable :: OnInteraction()
@@ -56,7 +58,10 @@ void Interactable :: OnInteraction()
 		}
 		if (tag == Hat || tag == Purse || tag == Umbrella) {
 			AddPoints(300);
+			PlaySound(PointSound);
 			cout << "Added 300 points" << endl;
 		}
+		
+
 
 }

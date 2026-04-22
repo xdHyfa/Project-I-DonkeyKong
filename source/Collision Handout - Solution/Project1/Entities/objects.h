@@ -16,6 +16,7 @@ private:
 	Rectangle Hitbox = { 0,0, 16, 16 };
 	Rectangle SpriteSelector = { 0,0,16,16 };
 	Items tag;
+	Sound PointSound = { 0 };
 	bool Interacted = false;
 
 	void UpdateHitbox() {
@@ -27,6 +28,7 @@ private:
 
 	void UnloadObject() {
 		UnloadTexture(Sprite);
+		UnloadSound(PointSound);
 	}
 	void OnInteraction();
 
