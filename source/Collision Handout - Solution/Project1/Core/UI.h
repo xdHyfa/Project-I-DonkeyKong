@@ -22,3 +22,5 @@ void SetCooldown();
 
 void ShowScorePopup(Vector2 pos);
 void UpdateDrawScorePopup();
+
+int GetLevel();

@@ -1,6 +1,7 @@
 #include "Scenes/scenes.h"
 #include "raylib.h"
 #include <iostream>
+#include "UI.h"
 using namespace std;
 
 void UpdateDrawScorePopup();
@@ -140,4 +141,9 @@ void UpdateDrawScorePopup() {
 	if (popupTimer >= 1.0f) {
 		popupActive = false;
 	}
+}
+
+int GetLevel()
+{
+	return UI.Level;
 }
