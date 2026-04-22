@@ -11,7 +11,7 @@ public:
 	int score = 0;
 	int HiScore = 0;
 	int Lives = 2;
-	int Level = 0;
+	int Level = 1;
 
 	bool FontLoaded = false;
 	bool BonusLoaded = false;
@@ -31,6 +31,14 @@ Vector2 LevelPos = { 170, 20 };
 Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9};
 
 ui UI;
+
+void ResetUI() {
+	UI.HiScore = UI.score;
+	UI.score = 0;
+	UI.Lives = 2;
+	UI.Level = 1;
+	
+}
 
 void AddPoints(int points) {
 	if(UI.PointsCooldown >= 1.0f){
@@ -142,6 +150,8 @@ void UpdateDrawScorePopup() {
 		popupActive = false;
 	}
 }
+
+
 
 int GetLevel()
 {

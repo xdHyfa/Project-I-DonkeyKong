@@ -58,7 +58,7 @@ void runLevel1() {
         donkey.Position = { 21.0f, 47.0f };
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
-        AddLevel();
+        
     }
 
     if (isDeathSequence) {

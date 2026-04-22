@@ -90,7 +90,6 @@ void runLevel2() {
         Purse1.SetObject(120, 238, Purse);
         Hat1.SetObject(196, 197, Hat);
         Umbrella1.SetObject(28, 65, Umbrella);
-        AddLevel();
         donkey.hitbox = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 16.0f, 45.0f, 32.0f };
     }
 
@@ -267,6 +266,7 @@ void runLevel2() {
         Ladder::UnloadSharedTexture();
         UnloadButtonTexture();*/
 
+        AddLevel();
         UnloadSound(HammerSound);
         ResetLevel2Entities();
         ResetButtons();
