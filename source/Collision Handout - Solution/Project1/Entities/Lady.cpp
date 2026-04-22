@@ -11,6 +11,7 @@ void Lady::Setup()
     animTimer = 0.0f;
     isAnimating = false;
     showHelp = false;
+    Position = { 91.0f, 26.0f };
 }
 
 void Lady::Update()
