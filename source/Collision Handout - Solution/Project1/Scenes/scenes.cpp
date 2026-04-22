@@ -1,9 +1,36 @@
 #include "Scenes/scenes.h"
+#include "Entities/entity.h"
 #include "raylib.h"
 Scene current_scene = LEVEL1 ;
 bool Scene_Init = false;
 bool Hammer_time = false;
+float DeathTimer = 0.0f;
+bool hasStarted = false;
+Rectangle DeathSpriteSelector = { 0,0, 8, 8 };
 
+void StartEntityDeath() {
+	DeathTimer = 0.0f;
+	hasStarted = true;
+}
+
+void EndEntityDeath() {
+	hasStarted = false;
+}
+
+void PlayEntityDeath(Entity &entity) {
+	if (!hasStarted) StartEntityDeath();
+	DeathTimer += GetFrameTime();
+	if (DeathTimer < 0.2f) {
+		DrawTextureRec()
+	}
+	else if (DeathTimer < 0.4) {
+		
+	}
+	else {
+
+	}
+	return;
+}
 
 void StartHammerTime() {
 	Hammer_time = true;
