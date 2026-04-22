@@ -9,12 +9,27 @@ using namespace std;
 Fire Fire1;
 Fire Fire2;
 float level1StartTime = 0;
+float FireCooldown = 0;
+bool LevelStart = false;
 
 void SetStartTime() {
 	level1StartTime = GetTime();
 }
 void Level1FireRoutine(Fire& fire) {
-	if (!fire.has_Spawned) SpawnFire(fire, 20 ,230, 1);
+	if (!LevelStart) {
+		if (!fire.has_Spawned) SpawnFire(fire, 20 ,230, 1);
+		
+	}
+	else {
+		if (!fire.has_Spawned && FireCooldown > 8.0f ) {
+			cout << "Fire Respawned" << endl;
+			SpawnFire(fire, 20, 230, 1);
+			FireCooldown = 0;
+		}
+		else if(!fire.has_Spawned) {
+			FireCooldown += GetFrameTime();
+		}
+	}
 
 	if (fire.has_Spawned) {
 		fire.UpdateSpawnFx();
@@ -36,7 +51,7 @@ void Level1FireRoutine(Fire& fire) {
 			}
 		}
 
-	}
+	
 	Level1LadderCollisions(fire);
 	
 	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
@@ -73,6 +88,7 @@ void Level1FireRoutine(Fire& fire) {
 		DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
 		fire.DrawSpawnFx();	
 	}
+	}
 }
 
 void Level1EntitiesRoutine() {
@@ -85,6 +101,10 @@ void Level1EntitiesRoutine() {
 		Level1FireRoutine(Fire2);
 	}
 
+	if (Fire2.has_Spawned && !LevelStart) {
+		LevelStart = true;
+	}
+
 }
 
 void UnloadLevel1Entities() {
@@ -95,5 +115,6 @@ void UnloadLevel1Entities() {
 void ResetLevel1Entities() {
 	Fire1.has_Spawned = false;
 	Fire2.has_Spawned = false;
-
+	LevelStart = false;
 }
+

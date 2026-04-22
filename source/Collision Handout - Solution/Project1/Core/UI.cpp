@@ -10,7 +10,7 @@ public:
 	int score = 0;
 	int HiScore = 0;
 	int Lives = 2;
-	int Level = 1;
+	int Level = 0;
 
 	bool FontLoaded = false;
 	bool BonusLoaded = false;

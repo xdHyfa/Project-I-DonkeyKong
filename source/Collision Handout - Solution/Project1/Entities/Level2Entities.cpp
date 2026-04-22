@@ -13,6 +13,8 @@ Fire Fire6;
 Fire Fire7;
 
 float level2StartTime = 0;
+bool StartLevel2 = false;
+float SpawnCooldown2 = 0.0f;
 
 enum Levels {
 	Base1 = 231,
@@ -28,7 +30,7 @@ void SetStartTime2() {
 void Level2FireRoutine(Fire& fire) {
 	
 
-	if (!fire.has_Spawned) {
+	if (!fire.has_Spawned && !StartLevel2) {
 		int RandomLevel = GetRandomValue(1, 5);
 		if (RandomLevel == 1) RandomLevel = Base1;
 		else if (RandomLevel == 2) RandomLevel = Base2;
@@ -36,7 +38,22 @@ void Level2FireRoutine(Fire& fire) {
 		else if (RandomLevel == 4) RandomLevel = Base4;
 		else if (RandomLevel == 5) RandomLevel = Base5;
 		SpawnFire(fire, 20, RandomLevel, 2);
-	}	
+	}
+	else if (!fire.has_Spawned) {
+		if(SpawnCooldown2 > 5.0f){
+		int RandomLevel = GetRandomValue(1, 5);
+		if (RandomLevel == 1) RandomLevel = Base1;
+		else if (RandomLevel == 2) RandomLevel = Base2;
+		else if (RandomLevel == 3) RandomLevel = Base3;
+		else if (RandomLevel == 4) RandomLevel = Base4;
+		else if (RandomLevel == 5) RandomLevel = Base5;
+		SpawnFire(fire, 20, RandomLevel, 2);
+		SpawnCooldown2 = 0.0f;
+		}
+		else {
+			SpawnCooldown2 += GetFrameTime();
+		}
+	}
 	if (fire.has_Spawned) {
 		fire.Movement();
 		int FirePlatform = Level2CheckEntityPlatform(fire);
@@ -94,7 +111,7 @@ void Level2FireRoutine(Fire& fire) {
 			}
 		}
 
-	}
+	
 	Level2LadderCollisions(fire);
 
 	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
@@ -140,6 +157,7 @@ void Level2FireRoutine(Fire& fire) {
 
 	}
 	fire.Position.y -= 2;
+	}
 }
 
 void Level2EntitiesRoutine() {
@@ -160,6 +178,9 @@ void Level2EntitiesRoutine() {
 	if (time_buffer - level2StartTime >= 17) {
 		Level2FireRoutine(Fire7);
 	}
+	if (Fire7.has_Spawned && !StartLevel2) {
+		StartLevel2 = true;
+	}
 
 }
 
@@ -177,4 +198,5 @@ void ResetLevel2Entities() {
 	Fire5.has_Spawned = false;
 	Fire6.has_Spawned = false;
 	Fire7.has_Spawned = false;
+	StartLevel2 = false;
 }

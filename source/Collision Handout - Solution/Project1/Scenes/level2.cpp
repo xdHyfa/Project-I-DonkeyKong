@@ -21,6 +21,7 @@ bool  isDead2 = false;
 float deathTimer2 = 0.0f;
 bool  isDeathSequence2 = false;
 
+Sound HammerSound = { 0 };
 Interactable Hammer3, Hammer4, Umbrella1, Purse1, Hat1;
 
 // DK animación level2
@@ -61,6 +62,8 @@ void runLevel2() {
         donkey.Setup();
         lady.Setup();
 
+        HammerSound = LoadSound("Audio/Bonus.wav");
+
         dk2FrameIdx = 0;
         dk2FrameTimer = 0.0f;
         dk2Forward = true;
@@ -86,6 +89,7 @@ void runLevel2() {
         Purse1.SetObject(120, 238, Purse);
         Hat1.SetObject(196, 197, Hat);
         Umbrella1.SetObject(28, 65, Umbrella);
+        AddLevel();
     }
 
     /* UPDATE STARTS HERE */
@@ -129,6 +133,11 @@ void runLevel2() {
     }
 
     Mario.Movement();
+    if(Mario.CheckHammerHitbox(Fire3)) Fire3.has_Spawned = false, PlaySound(HammerSound);
+    if (Mario.CheckHammerHitbox(Fire4)) Fire4.has_Spawned = false, PlaySound(HammerSound);
+    if (Mario.CheckHammerHitbox(Fire5)) Fire5.has_Spawned = false, PlaySound(HammerSound);
+    if (Mario.CheckHammerHitbox(Fire6)) Fire6.has_Spawned = false, PlaySound(HammerSound);
+    if (Mario.CheckHammerHitbox(Fire7)) Fire7.has_Spawned = false, PlaySound(HammerSound);
     UpdateMusicStream(level2Music);
     UpdateMusicStream(deathMusic2);
 
@@ -245,6 +254,7 @@ void runLevel2() {
         Ladder::UnloadSharedTexture();
         UnloadButtonTexture();*/
 
+        UnloadSound(HammerSound);
         ResetLevel2Entities();
         ResetButtons();
         UnloadMusicStream(level2Music);
