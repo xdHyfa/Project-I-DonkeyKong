@@ -236,5 +236,6 @@ void runLevel1() {
         AddBonus();
         Scene_Init = false;
         barrelSpawner.Init();
+        AddLevel();
     }
 }
