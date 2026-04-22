@@ -20,6 +20,11 @@ public:
 
 Font UI_Font;
 Texture BonusTexture;
+
+Texture2D LifeIcon = { 0 };
+bool LifeIconLoaded = false;
+
+
 Rectangle BonusRec = { 93,0,45, 21 };
 Vector2 BonusTexturePos = { 170, 35 };
 
@@ -29,6 +34,9 @@ Vector2 HiScorePos = { 75, 0 };
 Vector2 HiScoreNumPos = { HiScorePos.x + 16, HiScorePos.y + 8 };
 Vector2 LevelPos = { 170, 20 };
 Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9};
+
+
+
 
 ui UI;
 
@@ -62,12 +70,25 @@ void PrintUI() {
 		UI_Font = LoadFont("Fonts/donkey-kong-arcade-1981.otf");
 		UI.FontLoaded = true;
 	}
+	if (!LifeIconLoaded) {
+		LifeIcon = LoadTexture("Sprites/MARIO.png");
+		LifeIconLoaded = true;
+	}
+
 	DrawTextEx(UI_Font, "1UP", OneUpPos, 10, 0.5f, RED);
 	DrawTextEx(UI_Font, TextFormat("%06d", UI.score), scorePos, 10, 0.5f, WHITE);
-	DrawTextEx(UI_Font,"HIGH SCORE", HiScorePos, 10, 0.5f, RED);
+	DrawTextEx(UI_Font, "HIGH SCORE", HiScorePos, 10, 0.5f, RED);
 	DrawTextEx(UI_Font, TextFormat("%06d", UI.HiScore), HiScoreNumPos, 10, 0.5f, WHITE);
 	DrawTextEx(UI_Font, TextFormat("L=%02d", UI.Level), LevelPos, 7.5, 0.5f, BLUE);
 	UpdateDrawScorePopup();
+
+	// Draw life icons below 1UP/score
+	int livesToShow = UI.Lives + 1;
+	Rectangle lifeFrame = { 32.0f, 1.0f, 14.0f, 14.0f };
+	for (int i = 0; i < livesToShow; i++) {
+		Rectangle destRect = { 4.0f + (i * 8.0f), 20.0f, 7.0f, 7.0f };
+		DrawTexturePro(LifeIcon, lifeFrame, destRect, { 0, 0 }, 0.0f, WHITE);
+	}
 }
 
 void RemoveLife() {
@@ -76,7 +97,7 @@ void RemoveLife() {
 
 void CheckLives() {
 	if (UI.Lives < 0) {
-		UI.Lives = 3;
+		UI.Lives = 2;
 		ChangeScene(true);
 	}
 }
