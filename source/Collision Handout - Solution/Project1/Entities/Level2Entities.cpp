@@ -111,6 +111,9 @@ void Level2FireRoutine(Fire& fire) {
 				fire.Position.x = 32;
 			}
 		}
+		else {
+			fire.ChangeDirection();
+		}
 
 	
 	Level2LadderCollisions(fire);
@@ -140,6 +143,11 @@ void Level2FireRoutine(Fire& fire) {
 		fire.climbTimer = 0.0f;
 		Level2RampCollisions(fire);
 		fire.ladderCooldown += GetFrameTime();
+
+		if (!fire.getIsGrounded()) {
+			fire.ChangeDirection();
+			fire.Position.y = fire.FloorCollider.y - 16; // keep it on surface
+		}
 	}
 
 	fire.Position.y += 2;
