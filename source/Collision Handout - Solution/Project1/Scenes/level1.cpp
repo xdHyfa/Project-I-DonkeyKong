@@ -60,6 +60,7 @@ void runLevel1() {
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
+        Hammer_Music.looping = true;
         
     }
 

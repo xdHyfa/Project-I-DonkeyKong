@@ -79,6 +79,7 @@ void runLevel2() {
         Level2ButtonSetter();
 
         Hammer_Music2 = LoadMusicStream("Audio/Hammer-Time_.wav");
+        Hammer_Music2.looping = true;
         SetStartTime2();
         Scene_Init = true;
 
