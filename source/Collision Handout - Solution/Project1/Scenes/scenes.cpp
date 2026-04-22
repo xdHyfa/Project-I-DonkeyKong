@@ -1,6 +1,6 @@
 #include "Scenes/scenes.h"
 
-Scene current_scene = LEVEL1 ;
+Scene current_scene = INTRO ;
 bool Scene_Init = false;
 bool Hammer_time = false;
 
