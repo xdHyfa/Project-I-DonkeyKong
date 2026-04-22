@@ -37,7 +37,6 @@ void Donkey::PlayThrowAnim()
 
 void Donkey::Update()
 {
-    hitbox = { Position.x, Position.y, 37.0f, 32.0f };
     if (isIdle)
     {
         idleTimer += GetFrameTime();
