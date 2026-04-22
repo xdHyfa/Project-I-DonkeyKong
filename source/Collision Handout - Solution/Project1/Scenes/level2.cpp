@@ -201,8 +201,6 @@ void runLevel2() {
         ResetLevel2Entities();
     }
 
-    DrawRectangle(donkey.hitbox.x, donkey.hitbox.y, donkey.hitbox.width, donkey.hitbox.height, RAYWHITE);
-
     if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
         StopMusicStream(level2Music);
         PlaySound(deathSound3);
