@@ -19,10 +19,13 @@ Texture2D heartTexture = { 0 };
 Texture2D winDKTexture = { 0 };
 Texture2D winStairsTexture = { 0 };
 
+// ---- AUDIO ----
+Sound winSound = { 0 };          // <-- NEW: streaming .wav track
+
 // ---- CORAZON ----
-Rectangle heartFull = { 0.0f, 2.0f, 16.0f, 12.0f };
+Rectangle heartFull = { 0.0f,  2.0f, 16.0f, 12.0f };
 Rectangle heartBroken = { 16.0f, 2.0f, 16.0f, 12.0f };
-Vector2   heartPos = { 0.0f, 0.0f };
+Vector2   heartPos = { 0.0f,  0.0f };
 bool      showBroken = false;
 
 // ---- DK FRAMES SIN LADY ----
@@ -35,9 +38,9 @@ Rectangle emptyFrames[4] = {
 
 // ---- DK FRAMES CON LADY ----
 Rectangle winClimbFrames[4] = {
-    {  3.0f, 78.0f, 38.0f, 36.0f },
-    { 44.0f, 82.0f, 43.0f, 32.0f },
-    { 90.0f, 78.0f, 38.0f, 36.0f },
+    {  3.0f,  78.0f, 38.0f, 36.0f },
+    { 44.0f,  82.0f, 43.0f, 32.0f },
+    { 90.0f,  78.0f, 38.0f, 36.0f },
     { 131.0f, 82.0f, 43.0f, 32.0f }
 };
 
@@ -61,26 +64,28 @@ float winTimer = 0.0f;
 
 
 void WinCutsceneInit() {
-    // Solo cargamos las texturas NUEVAS que la cutscene necesita.
-    // donkey.Texture, lady.Texture, Mario.Texture, rampas y escaleras
-    // ya están cargados y en el estado correcto — NO los tocamos.
     SearchAndSetResourceDir("resources");
+
+    // Textures
     heartTexture = LoadTexture("sprites/HEARTS.png");
     winDKTexture = LoadTexture("Sprites/donko 2-0.png");
     winStairsTexture = LoadTexture("sprites/Stairs.png");
 
-    // Mario mira a la izquierda (ajuste visual para la cutscene)
+    // ---- AUDIO ----                                          // <-- NEW
+    winSound = LoadSound("Audio/Stage-Cleared-1.wav");
+    PlaySound(winSound);                                // start playing immediately
+
+    // Mario mira a la izquierda
     frameRec.width = -abs(frameRec.width);
 
-    // Posiciones de referencia para la animación
+    // Posiciones de referencia
     winRamp5Y = SCREEN_HEIGHT - 16.0f - 169;
     winRamp6Y = SCREEN_HEIGHT - 16.0f - 200;
 
-    // DK empieza exactamente donde Level1 lo dejó
+    // DK empieza donde Level1 lo dejó
     winDKPos = donkey.Position;
     ladyWinY = lady.Position.y;
 
-    // Corazón entre Mario y Lady
     heartPos = {
         (Mario.Position.x + lady.Position.x) / 2.0f + 2.0f,
         lady.Position.y - 10.0f
@@ -109,33 +114,32 @@ void DrawWinStairs() {
 
 void runWinCutscene() {
 
-    // Init: solo la primera vez, sin return para no perder el frame
+    // Init: solo la primera vez
     if (!Scene_Init) {
         WinCutsceneInit();
         Scene_Init = true;
     }
 
-    // Guardia de fin para no actualizar tras el unload
+    // Guardia de fin
     if (winPhase == WIN_END && winTimer >= 1.0f) return;
 
     // Timers
     winTimer += GetFrameTime();
     winFrameTimer += GetFrameTime();
 
-    // ---- DRAW BASE: mismas rampas y escaleras que Level1 ----
+    
+    // ---- DRAW BASE ----
     Level1RampDraw();
     Level1LadderDraw();
     DrawWinStairs();
 
-    // ---- MARIO: misma textura y posición que dejó Level1 ----
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
 
-    // ---- LADY: mientras DK no la haya capturado ----
     if (!hasLady)
         DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, lady.Position, WHITE);
 
     // ================================================================
-    // FASE 0: CORAZON — pausa inicial, DK quieto en su posición
+    // FASE 0: CORAZON
     // ================================================================
     if (winPhase == WIN_HEART) {
         Rectangle& hRec = showBroken ? heartBroken : heartFull;
@@ -149,7 +153,7 @@ void runWinCutscene() {
     }
 
     // ================================================================
-    // FASE 1: DK SALTA hacia la escalera
+    // FASE 1: DK SALTA
     // ================================================================
     else if (winPhase == WIN_JUMP) {
         DrawTextureRec(heartTexture, heartFull, heartPos, WHITE);
@@ -199,7 +203,7 @@ void runWinCutscene() {
     }
 
     // ================================================================
-    // FASE 3: SECUESTRO — DK sube con Lady
+    // FASE 3: SECUESTRO
     // ================================================================
     else if (winPhase == WIN_KIDNAP) {
         DrawTextureRec(heartTexture, heartBroken, heartPos, WHITE);
@@ -220,18 +224,22 @@ void runWinCutscene() {
     }
 
     // ================================================================
-    // FASE 4: FIN — espera 1s, descarga todo y cambia de escena
+    // FASE 4: FIN
     // ================================================================
     else if (winPhase == WIN_END) {
         DrawTextureRec(heartTexture, heartBroken, heartPos, WHITE);
 
         if (winTimer >= 1.0f) {
-            // Descarga las texturas propias de la cutscene
+            // ---- AUDIO cleanup ----                          // <-- NEW
+            StopSound(winSound);
+            UnloadSound(winSound);
+            CloseAudioDevice();
+
+            // Textures cleanup
             UnloadTexture(heartTexture);
             UnloadTexture(winDKTexture);
             UnloadTexture(winStairsTexture);
 
-            // Ahora sí descargamos lo que Level1 dejó vivo
             UnloadTexture(Mario.Texture);
             Truss::UnloadSharedTexture();
             Ladder::UnloadSharedTexture();

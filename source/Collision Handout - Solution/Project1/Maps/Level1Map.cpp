@@ -23,7 +23,7 @@ void Level1CheckWinCondition(Entity& entity) {
 	if (entity.tag == EntityTag::PLAYER && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
 		if (!winTriggered) {
 			StopMusicStream(level1Music);
-			PlaySound(stageClearedSound);
+			
 			winTriggered = true;
 		}
 		// Ya NO llamamos ChangeScene() aquí.
