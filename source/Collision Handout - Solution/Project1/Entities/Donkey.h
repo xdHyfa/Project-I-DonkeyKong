@@ -22,6 +22,13 @@ public:
     bool isThrowing = false;
     bool throwReady = false; // true cuando la animación termina
     bool spawnBarrel = false;
+
+    int wavePattern[2] = { 2, 3 };
+    int waveIndex = 0;
+    int barrelsThisWave = 0;
+    float shortInterval = 0.5f;   
+    float longInterval = 3.0f;
+
     void Setup();
     void Update();
     void Draw();
