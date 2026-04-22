@@ -16,6 +16,7 @@ float frameOffsetsY[3] = { 2.0f, 41.0f, 41.0f };
 
 void Donkey::Setup()
 {
+    hitbox = { Position.x, Position.y, 37.0f, 32.0f };
     Texture = LoadTexture("Sprites/donko 2-0.png");
     frameRec = { 3.0f, 2.0f, 38.0f, 32.0f }; 
     isThrowing = false;
@@ -36,6 +37,7 @@ void Donkey::PlayThrowAnim()
 
 void Donkey::Update()
 {
+    hitbox = { Position.x, Position.y, 37.0f, 32.0f };
     if (isIdle)
     {
         idleTimer += GetFrameTime();
@@ -77,6 +79,7 @@ void Donkey::Update()
             spawnBarrel = true;
         }
     }
+    
 }
 
 void Donkey::Draw()
