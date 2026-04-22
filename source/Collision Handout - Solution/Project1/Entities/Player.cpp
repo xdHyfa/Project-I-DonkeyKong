@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Core/constants.h"
 #include "Entities/entity.h"
+#include "Scenes/scenes.h"
 
 
 using namespace std;
@@ -19,14 +20,17 @@ float  frameDelay = 0.5;
 unsigned  frameDelayCounter = 0;
 unsigned  frameIndex = 0;
 unsigned finishFrameDelayCounter = 0;
-
-
+float HammerTimer = 0.0f;
+float HammerTick = 0.0f;
+bool LooksRight = true;
 /*---Audio Level---*/
 Sound jumpSound = { 0 };
 Music walkMusic = { 0 };        //music en vez de Sound para que se repita
 Sound deathSound = { 0 };
 Music climbMusic = { 0 };
-
+Texture2D HammerTexture;
+Vector2 HammerPos;
+Rectangle HammerSelector = { 0,0,12,16 };
 
 const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
 float       lockedVelocityX = 0.0f;
@@ -78,7 +82,7 @@ void Player::Setup()
     climbMusic = LoadMusicStream("Audio/WalkingDef3.wav");
     climbMusic.looping = true;
     deathSound = LoadSound("Audio/Dead.wav");
-
+    HammerTexture = LoadTexture("Sprites/Hammer.png");
 
 
     //Walking Def 3 Para subir y bajar escaleras
@@ -129,8 +133,90 @@ void Player::Movement()
         }
         return;
     }*/
-    if (OnLadder&& CanClimb){
-        cout << "ON LADDER" <<endl;
+
+    // --- Input horizontal (siempre se lee, en suelo y aire) ---
+    marioVelocity.x = 0.0f;
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+    {
+        marioVelocity.x = (float)Mario.velocity;
+        if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+        
+        if (Mario.getIsGrounded())
+        {
+            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
+            UpdateMusicStream(walkMusic);
+        }
+        LooksRight = true;
+    }
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+    {
+        marioVelocity.x = -(float)Mario.velocity;
+        if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+       
+        if (Mario.getIsGrounded())
+        {
+            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
+            UpdateMusicStream(walkMusic);
+        }
+        LooksRight = false;
+    }
+    else
+    {
+        StopMusicStream(walkMusic); // para cuando sueltas la tecla
+    }
+
+
+    //Hammer time
+    if (GetHammerTime()) {
+        if (HammerTimer > 10.0f) {
+            StopHammerTime();
+            HammerTimer = 0.0f;
+        }
+        else {
+            HammerTimer += GetFrameTime();
+            if (HammerTick > 0.15f ){
+                if(LooksRight){
+                    HammerHitbox.x = Position.x + 16;
+                    HammerPos.x = Position.x + 16;
+                    HammerPos.y = Position.y +2;
+                    HammerSelector.x = 12;
+                    HammerSelector.width = 12;
+                    DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
+                }
+                else {
+                    HammerHitbox.x = Position.x - 16;
+                    HammerPos.x = Position.x - 16;
+                    HammerPos.y = Position.y +1;
+                    HammerSelector.width = -12;
+                    HammerSelector.x = 12;
+                    DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
+                }
+                HammerHitbox.y = Position.y;
+                HammerTick += GetFrameTime();
+                if (HammerTick > 0.3f) {
+                    HammerTick = 0.0f;
+                }
+
+            }
+            else {
+                HammerHitbox.x = Position.x;
+                HammerHitbox.y = Position.y - 16;
+                HammerPos.x = Position.x;
+                HammerHitbox.y = Position.y - 16;
+                HammerPos.y = Position.y - 16;
+                HammerSelector.x = 0;
+                HammerSelector.width = 12;
+                DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
+                HammerTick += GetFrameTime();
+            }
+        }
+    }
+
+    else{
+
+    //Ladder Climb
+    if (OnLadder && CanClimb) {
+        cout << "ON LADDER" << endl;
         MarioLadderMovement();
 
         if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
@@ -159,34 +245,6 @@ void Player::Movement()
             Mario.UpdateCollider();
         }
     }
-    // --- Input horizontal (siempre se lee, en suelo y aire) ---
-    marioVelocity.x = 0.0f;
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-    {
-        marioVelocity.x = (float)Mario.velocity;
-        if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
-        
-        if (Mario.getIsGrounded())
-        {
-            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
-            UpdateMusicStream(walkMusic);
-        }
-    }
-    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-    {
-        marioVelocity.x = -(float)Mario.velocity;
-        if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
-       
-        if (Mario.getIsGrounded())
-        {
-            if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
-            UpdateMusicStream(walkMusic);
-        }
-    }
-    else
-    {
-        StopMusicStream(walkMusic); // para cuando sueltas la tecla
-    }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
     if (IsKeyPressed(KEY_SPACE))
@@ -198,6 +256,7 @@ void Player::Movement()
             isJumping = true;
             marioVelocity.y = -(float)Mario.jumpHeight;
         }
+    }
     }
 
     // --- En el aire: congelar velocidad horizontal ---
@@ -314,6 +373,9 @@ void Player::Movement()
 void DrawMarioCollider() {
     DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
     DrawPixel(Mario.Position.x, Mario.Position.y, RED);
+    if (GetHammerTime()){
+    DrawRectangle(Mario.HammerHitbox.x, Mario.HammerHitbox.y, Mario.HammerHitbox.width, Mario.HammerHitbox.height, BROWN);
+    }
 }
 
 void Player::Unload()

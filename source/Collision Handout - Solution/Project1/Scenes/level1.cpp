@@ -131,6 +131,11 @@ void runLevel1() {
                 ResetLevel1Entities();
                 break;
             }
+            if (GetHammerTime()) {
+                if (Mario.CheckHammerHitbox(b)) {
+                    b.has_Spawned = false;
+                }
+            }
 
             if (diffX < 16 && diffY > -20 && diffY < 0 && Mario.isJumping) {
                 PlaySound(jumpBarrelSound);
@@ -167,7 +172,7 @@ void runLevel1() {
     if (Hitboxes_On) {
         DrawLevel1Colliders();
         Hammer1.DrawCollider();
-        Mario.DrawCollider();
+        DrawMarioCollider();
     }
 
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);

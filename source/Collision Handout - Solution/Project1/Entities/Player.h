@@ -25,6 +25,8 @@ public:
     const int jumpHeight = 6;
 
     int deathLoopCount = 0;
+
+    Rectangle HammerHitbox = { 0,0, 16,16 };
     
 
     void die();
@@ -48,6 +50,12 @@ public:
     }
     Player() {
         tag = EntityTag::PLAYER;
+    }
+    bool CheckHammerHitbox(Entity &entity) {
+        if (CheckCollisionRecs(entity.getHitbox(), HammerHitbox)) {
+            return true;
+        }
+        else false;
     }
 };
 
