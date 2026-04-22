@@ -56,7 +56,7 @@ void Interactable :: OnInteraction()
 		if (tag == Hammer) {
 			StartHammerTime();
 		}
-		if (tag == Hat || tag == Purse || tag == Umbrella) {
+		else if (tag == Hat || tag == Purse || tag == Umbrella) {
 			AddPoints(300);
 			PlaySound(PointSound);
 			cout << "Added 300 points" << endl;

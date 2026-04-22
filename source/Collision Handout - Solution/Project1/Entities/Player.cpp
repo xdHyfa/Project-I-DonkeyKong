@@ -168,7 +168,7 @@ void Player::Movement()
 
     //Hammer time
     if (GetHammerTime()) {
-        if (HammerTimer > 10.0f) {
+        if (HammerTimer > 11.5f) {
             StopHammerTime();
             HammerTimer = 0.0f;
         }

@@ -1,8 +1,9 @@
 #include "Scenes/scenes.h"
-
-Scene current_scene = INTRO ;
+#include "raylib.h"
+Scene current_scene = LEVEL1 ;
 bool Scene_Init = false;
 bool Hammer_time = false;
+
 
 void StartHammerTime() {
 	Hammer_time = true;
