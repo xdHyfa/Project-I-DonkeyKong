@@ -67,6 +67,7 @@ void runLevel2() {
 
         lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f, (float)Base_5_YPos - 22.0f };
         donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos - 32.0f };
+       
 
         Level2RampSetter();
         Level2LadderSetter();
@@ -86,6 +87,8 @@ void runLevel2() {
         Purse1.SetObject(120, 238, Purse);
         Hat1.SetObject(196, 197, Hat);
         Umbrella1.SetObject(28, 65, Umbrella);
+
+        donkey.hitbox = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 16.0f, 45.0f, 32.0f };
     }
 
     /* UPDATE STARTS HERE */
@@ -197,6 +200,19 @@ void runLevel2() {
         RemoveLife();
         ResetLevel2Entities();
     }
+
+    DrawRectangle(donkey.hitbox.x, donkey.hitbox.y, donkey.hitbox.width, donkey.hitbox.height, RAYWHITE);
+
+    if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
+        StopMusicStream(level2Music);
+        PlaySound(deathSound3);
+        isDeathSequence2 = true;
+        deathTimer2 = 0.0f;
+        Mario.die();
+        RemoveLife();
+        ResetLevel2Entities();
+    }
+
     if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
         StopMusicStream(level2Music);
         PlaySound(deathSound3);
