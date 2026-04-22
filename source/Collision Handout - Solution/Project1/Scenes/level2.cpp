@@ -24,7 +24,7 @@ bool  isDeathSequence2 = false;
 Sound HammerSound = { 0 };
 Interactable Hammer3, Hammer4, Umbrella1, Purse1, Hat1;
 
-// DK animación level2
+// DK animaciÃ³n level2
 Rectangle dk2Frames[3] = {
     {  1.0f, 2.0f, 40.0f, 32.0f }, // frame 1 - idle
     { 85.0f, 2.0f, 46.0f, 32.0f }, // frame 2
@@ -70,6 +70,7 @@ void runLevel2() {
 
         lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f, (float)Base_5_YPos - 22.0f };
         donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos - 32.0f };
+       
 
         Level2RampSetter();
         Level2LadderSetter();
@@ -90,6 +91,7 @@ void runLevel2() {
         Hat1.SetObject(196, 197, Hat);
         Umbrella1.SetObject(28, 65, Umbrella);
         AddLevel();
+        donkey.hitbox = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 16.0f, 45.0f, 32.0f };
     }
 
     /* UPDATE STARTS HERE */
@@ -206,6 +208,17 @@ void runLevel2() {
         RemoveLife();
         ResetLevel2Entities();
     }
+
+    if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
+        StopMusicStream(level2Music);
+        PlaySound(deathSound3);
+        isDeathSequence2 = true;
+        deathTimer2 = 0.0f;
+        Mario.die();
+        RemoveLife();
+        ResetLevel2Entities();
+    }
+
     if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
         StopMusicStream(level2Music);
         PlaySound(deathSound3);

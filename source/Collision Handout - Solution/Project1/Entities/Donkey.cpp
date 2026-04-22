@@ -16,6 +16,7 @@ float frameOffsetsY[3] = { 2.0f, 41.0f, 41.0f };
 
 void Donkey::Setup()
 {
+    hitbox = { Position.x, Position.y, 37.0f, 32.0f };
     Texture = LoadTexture("Sprites/donko 2-0.png");
     frameRec = { 3.0f, 2.0f, 38.0f, 32.0f }; 
     isThrowing = false;
@@ -60,11 +61,20 @@ void Donkey::Update()
 
         if (frameIndex >= 3)
         {
-            
             frameIndex = 0;
             isThrowing = false;
-            isIdle = true; // vuelve al idle
+            isIdle = true;
             frameRec = { 3.0f, 2.0f, 38.0f, 32.0f };
+
+            barrelsThisWave++;
+            if (barrelsThisWave >= wavePattern[waveIndex]) {
+                barrelsThisWave = 0;
+                waveIndex = (waveIndex + 1) % 2;
+                idleInterval = longInterval;
+            }
+            else {
+                idleInterval = shortInterval;
+            }
         }
         else
         {
@@ -77,6 +87,7 @@ void Donkey::Update()
             spawnBarrel = true;
         }
     }
+    
 }
 
 void Donkey::Draw()
@@ -133,4 +144,8 @@ void Donkey::Reset() {
     throwReady = false;
     spawnBarrel = false;
     frameRec = { 3.0f, 2.0f, 38.0f, 32.0f };
+
+    waveIndex = 0;
+    barrelsThisWave = 0;
+    idleInterval = longInterval;
 }

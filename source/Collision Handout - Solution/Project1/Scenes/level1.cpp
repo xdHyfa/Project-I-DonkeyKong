@@ -179,7 +179,17 @@ void runLevel1() {
             Mario.die();
             RemoveLife();
             ResetLevel1Entities();
+          }
+        if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
+            StopMusicStream(level1Music);
+            PlaySound(deathSound2);
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Mario.die();
+            RemoveLife();
+            ResetLevel1Entities();
         }
+
 
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }

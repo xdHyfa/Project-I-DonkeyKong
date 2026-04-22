@@ -6,6 +6,7 @@ public:
     Texture2D Texture = { 0 };
     Vector2 Position = { 21.0f, 47.0f }; // ajusta a donde quieres a DK
     Rectangle frameRec = { 0.0f, 0.0f, 39.0f, 32.0f };
+    Rectangle hitbox = { Position.x,Position.y,37,32 };
     Texture2D barrelTexture = { 0 };
     Texture2D stairsTexture = { 0 };
     Texture2D oilTexture = { 0 };
@@ -21,6 +22,13 @@ public:
     bool isThrowing = false;
     bool throwReady = false; // true cuando la animación termina
     bool spawnBarrel = false;
+
+    int wavePattern[2] = { 2, 3 };
+    int waveIndex = 0;
+    int barrelsThisWave = 0;
+    float shortInterval = 0.5f;   
+    float longInterval = 3.0f;
+
     void Setup();
     void Update();
     void Draw();
