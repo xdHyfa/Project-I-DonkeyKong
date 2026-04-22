@@ -23,11 +23,10 @@ void BarrelSpawner::ResetBarrel(Barrel& b) {
     b.has_Spawned = true;
 }
 
-void BarrelSpawner::Update() {
-    
+void BarrelSpawner::Update()
+{
     if (donkey.spawnBarrel) {
         donkey.spawnBarrel = false;
-
         if ((int)barrels.size() < MAX_BARRELS) {
             Barrel b;
             b.Texture = barrelTexture;
@@ -40,24 +39,24 @@ void BarrelSpawner::Update() {
         }
     }
 
-    for (Barrel& b : barrels) {
-        if (!b.has_Spawned) {
-            // Reciclado: ya sea por salir por abajo o por llegar al borde en Ramp_0
-            ResetBarrel(b);
+    for (int i = (int)barrels.size() - 1; i >= 0; i--) {
+        Barrel& b = barrels[i];
+
+        if (b.Position.y > SCREEN_HEIGHT + 10 || !b.has_Spawned) {
+            barrels.erase(barrels.begin() + i);
             continue;
         }
 
-        if (b.Position.y > SCREEN_HEIGHT + 10) {
-            ResetBarrel(b);
-            continue;
-        }
         if (CheckDownZone(b)) {
             b.DownZoneTimer += GetFrameTime();
         }
         else {
             b.DownZoneTimer = 0;
         }
-        if (b.DownZoneTimer >= 0.1f && GetRandomValue(1, 10) == 1) b.isLaddering = true, b.groundCooldown = 0, b.FlipDirection();
+
+        if (b.DownZoneTimer >= 0.1f && GetRandomValue(1, 10) == 1)
+            b.isLaddering = true, b.groundCooldown = 0, b.FlipDirection();
+
         b.Movement();
         BarrelGroundCollisions(b);
         b.BarrelAnimation();
