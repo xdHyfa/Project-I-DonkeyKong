@@ -57,6 +57,7 @@ void runLevel1() {
         stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
         winTriggered = false;
         donkey.Position = { 21.0f, 47.0f };
+        donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f }; //RESET DE LA HITBOX?
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
