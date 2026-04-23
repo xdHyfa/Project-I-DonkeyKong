@@ -100,6 +100,8 @@ void CheckLives() {
 		UI.Lives = 2;
 		ChangeScene(true);
 		UI.Level = 1;
+		if (UI.HiScore < UI.score) UI.HiScore = UI.score;
+		UI.score = 0;
 	}
 }
 
