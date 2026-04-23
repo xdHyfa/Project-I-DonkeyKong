@@ -6,7 +6,7 @@
 #define NORMAL 0
 #define RANDOM 1
 #define BARRELSIZE 14
-#define BARRELVELOCITY 2.2f
+#define BARRELVELOCITY 3.2f
 #define BARREL_GRAVITY 0.3f
 
 class Barrel : public Entity {
