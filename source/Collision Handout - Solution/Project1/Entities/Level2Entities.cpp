@@ -111,12 +111,9 @@ void Level2FireRoutine(Fire& fire) {
 				fire.Position.x = 32;
 			}
 		}
-		else {
-			fire.ChangeDirection();
-		}
 
 	
-	Level2LadderCollisions(fire);
+		Level2LadderCollisions(fire);
 
 	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
 	else {

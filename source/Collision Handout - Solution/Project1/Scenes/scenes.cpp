@@ -1,7 +1,7 @@
 #include "Scenes/scenes.h"
 #include "Entities/entity.h"
 #include "raylib.h"
-Scene current_scene = INTRO ;
+Scene current_scene = INTRO;
 bool Scene_Init = false;
 bool Hammer_time = false;
 float DeathTimer = 0.0f;

@@ -56,7 +56,6 @@ void Fire::PlayAnimation() {
 
 void Fire::Movement() {
 
-        setGrounded(false);
         PlayAnimation();
         hitbox = { Position.x, Position.y };
         FloorCollider.x = Position.x + 8;
