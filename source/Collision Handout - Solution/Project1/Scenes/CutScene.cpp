@@ -82,6 +82,9 @@ float rampYPositions[6];
 
 void CutsceneInit() {
     SearchAndSetResourceDir("resources");
+
+    donkey.Position = { 21.0f, 47.0f };
+
     cutDKTexture = LoadTexture("Sprites/donko 2-0.png");
     cutStairsTexture = LoadTexture("Sprites/Stairs.png");
     cutTrussTexture = LoadTexture("Sprites/TRUSS.png");
