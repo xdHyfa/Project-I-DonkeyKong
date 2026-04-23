@@ -322,6 +322,7 @@ void runLevel2() {
         Ladder::UnloadSharedTexture();
         UnloadButtonTexture();*/
         isHammer2Playing = false;
+        cout << "chat do we get here?" << endl << endl << endl << endl << endl;
         UnloadMusicStream(Hammer_Music2);
         AddLevel();
         AddBonus();

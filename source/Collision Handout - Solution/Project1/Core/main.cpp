@@ -95,6 +95,7 @@ int main()
 			break;
 
 		case WINCUTSCENE2:
+			PrintUI();
 			runWinCutscene2();
 			break;
 		}

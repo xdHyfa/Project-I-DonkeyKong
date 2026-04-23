@@ -55,6 +55,11 @@ void AddPoints(int points) {
 		UI.PointsCooldown = 0;
 	}
 }
+void AddPoints(int points, bool isBonus) {
+		cout << "Adding points " << endl;
+		UI.score += points;
+		UI.PointsCooldown = 0;
+}
 
 void SetCooldown() {
 	if (UI.PointsCooldown > 1.01f) return;
@@ -151,7 +156,7 @@ void PrintBonus() {
 }
 
 void AddBonus() {
-	AddPoints(bonus);
+	AddPoints(bonus, true);
 	bonus_tick = 0.0f;
 	ResetBonus();
 }

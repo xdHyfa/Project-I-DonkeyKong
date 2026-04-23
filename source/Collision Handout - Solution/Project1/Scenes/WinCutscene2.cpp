@@ -127,12 +127,13 @@ void runWinCutscene2() {
         WinCutscene2Init();
         Scene_Init = true;
     }
-
+    
     winTimer2 += GetFrameTime();
     shakeTimer += GetFrameTime();
 
     Level2LadderDraw();
     Level2RampDraw();
+    DrawRectangle(59, 67, 112, 180, BLACK);
 
     // ---- FASE 1: DK SE SACUDE, ACELERANDO ----
     if (winPhase2 == WPHASE_SHAKE) {
