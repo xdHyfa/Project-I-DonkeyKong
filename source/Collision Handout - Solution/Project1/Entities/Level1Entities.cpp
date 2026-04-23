@@ -14,11 +14,13 @@ bool LevelStart = false;
 
 void SetStartTime() {
 	level1StartTime = GetTime();
+
 }
 void Level1FireRoutine(Fire& fire) {
 	if (!LevelStart) {
 		if (!fire.has_Spawned) SpawnFire(fire, 20 ,230, 1);
-		
+		Fire1.setGrounded(true);
+		Fire2.setGrounded(true);
 	}
 	else {
 		if (!fire.has_Spawned && FireCooldown > 8.0f ) {
@@ -52,42 +54,42 @@ void Level1FireRoutine(Fire& fire) {
 		}
 
 	
-	Level1LadderCollisions(fire);
-	
-	if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
-	else { 
-		fire.ladderContactTime = 0.0f; 
-		fire.CanClimbDown = false;
-	}
-
-	if ((fire.ladderContactTime > 0.1f && (GetRandomValue(0,2) == 1)) && fire.ladderCooldown > 1.5f) {
-		fire.OnLadder = true;
-		cout << "ONLADDER" << endl;
-		if (CheckDownZone(fire)) {
-			fire.CanClimbDown = true;
+		Level1LadderCollisions(fire);
+		
+		if (fire.CanClimb) fire.ladderContactTime += GetFrameTime();
+		else { 
+			fire.ladderContactTime = 0.0f; 
+			fire.CanClimbDown = false;
 		}
-	}
-	if (fire.OnLadder) {
-		fire.ladderCooldown = 0;
-	}
-	else {
-		Level1RampCollisions(fire);
-		fire.ladderCooldown += GetFrameTime();
-	}
 
-	fire.bounceTick += GetFrameTime();
-	if (fire.bounceTick >= 0.5f){
-		DrawTextureRec(fire.Texture, fire.FireSprite, fire.Position, WHITE);
-		fire.DrawSpawnFx();
-		if (fire.bounceTick >= 0.65f){
-			fire.bounceTick = 0;
+		if ((fire.ladderContactTime > 0.1f && (GetRandomValue(0,2) == 1)) && fire.ladderCooldown > 1.5f) {
+			fire.OnLadder = true;
+			cout << "ONLADDER" << endl;
+			if (CheckDownZone(fire)) {
+				fire.CanClimbDown = true;
+			}
 		}
-	}
-	else {
-		Vector2 BouncePos = { fire.Position.x, fire.Position.y - 2 };
-		DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
-		fire.DrawSpawnFx();	
-	}
+		if (fire.OnLadder) {
+			fire.ladderCooldown = 0;
+		}
+		else {
+			Level1RampCollisions(fire);
+			fire.ladderCooldown += GetFrameTime();
+		}
+
+		fire.bounceTick += GetFrameTime();
+		if (fire.bounceTick >= 0.5f){
+			DrawTextureRec(fire.Texture, fire.FireSprite, fire.Position, WHITE);
+			fire.DrawSpawnFx();
+			if (fire.bounceTick >= 0.65f){
+				fire.bounceTick = 0;
+			}
+		}
+		else {
+			Vector2 BouncePos = { fire.Position.x, fire.Position.y - 2 };
+			DrawTextureRec(fire.Texture, fire.FireSprite, BouncePos, WHITE);
+			fire.DrawSpawnFx();	
+		}
 	}
 }
 

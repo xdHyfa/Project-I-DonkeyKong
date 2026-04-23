@@ -10,10 +10,13 @@ using namespace std;
 Texture Ladder::texture;
 
 bool Ladder::CheckEntityOnLadder(Entity& entity) {
+
 	if (CheckCollisionPointRec(entity.FloorCollider, Hitbox) && entity.getIsGrounded()) {
+   
 		return true;
 	}
 	else {
+
 		return false;
 	}
 }
@@ -44,6 +47,7 @@ void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size) {
 }
 
 void LadderCollisions(Entity& entity, Ladder* Map_Ladders, Ladder*Map_Ladders2 ,int size1, int size2) {
+
     for (int i = 0; i < size1; i++) {
         if (Map_Ladders[i].CheckEntityOnLadder(entity)) {
             entity.CanClimb = true;
@@ -56,10 +60,9 @@ void LadderCollisions(Entity& entity, Ladder* Map_Ladders, Ladder*Map_Ladders2 ,
             return;
         }
     }
-    if (entity.OnLadder && entity.tag == EntityTag::PLAYER) {
-        Mario.justClimbedLadder = true;
-        Mario.climbFinishFrame = 0;
-    }
+
     entity.OnLadder = false;
     entity.CanClimb = false;
+
+
 }
