@@ -28,7 +28,7 @@ Rectangle climbFrames[4] = {
 Rectangle walkFrame = { 1.0f, 2.0f, 39.0f, 31.0f };
 // Frame boca abierta (idle DK) - usa el que tienes
 Rectangle roarFrame = { 3.0f, 2.0f, 38.0f, 32.0f }; // ajusta si tienes uno específico
-
+Rectangle peakLadyFrame = { 206.0f, 41.0f, 42.0f, 31.0f };
 
 
 Vector2 ladyFixedPos = { 0.0f, 0.0f };
@@ -82,6 +82,9 @@ float rampYPositions[6];
 
 void CutsceneInit() {
     SearchAndSetResourceDir("resources");
+
+    donkey.Position = { 21.0f, 47.0f };
+
     cutDKTexture = LoadTexture("Sprites/donko 2-0.png");
     cutStairsTexture = LoadTexture("Sprites/Stairs.png");
     cutTrussTexture = LoadTexture("Sprites/TRUSS.png");
@@ -277,7 +280,6 @@ void runCutscene() {
     }
 
     else if (cutPhase == PHASE_JUMP_PEAK) {
-        cout << "JUMP_PEAK timer: " << cutTimer << " ladyVisible: " << ladyVisible << endl;
         float jumpHeightPx = 25.0f;
         float baseY = rampYPositions[5] - 31.0f;
         cutDKPos.y = baseY - jumpHeightPx;
@@ -286,11 +288,14 @@ void runCutscene() {
         ladyVisible = true;
 
         DrawTextureRec(lady.Texture, { 1.0f, 1.0f, 14.0f, 22.0f }, ladyFixedPos, WHITE);
-        DrawTextureRec(cutDKTexture, climbFrames[3], cutDKPos, WHITE);
 
-        // espera 1 segundo y luego cae
-        if (cutTimer >= 1.0f) {
-            float fallProgress = (cutTimer - 1.0f) / 0.3f;
+        // Cambia de sprite inmediatamente al aparecer Lady, sin delay
+        Rectangle& peakFrame = ladyVisible ? peakLadyFrame : climbFrames[3];
+        DrawTextureRec(cutDKTexture, peakFrame, cutDKPos, WHITE);
+
+        // Reducido de 1.0f a 0.4f para acortar la pausa
+        if (cutTimer >= 0.4f) {
+            float fallProgress = (cutTimer - 0.4f) / 0.3f;
             cutDKPos.y = (baseY - jumpHeightPx) + fallProgress * jumpHeightPx;
 
             if (cutDKPos.y >= baseY) {
