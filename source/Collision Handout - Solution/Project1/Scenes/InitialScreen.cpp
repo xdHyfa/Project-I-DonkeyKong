@@ -21,12 +21,14 @@ Rectangle NameRec = {
 };
 
 Vector2 origin = { 0.0f, 20.0f };
+Sound DonkeyMotif = { 0 };
 
 
 void runInitialScreen() {
 
     if (!Scene_Init) {
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
+        DonkeyMotif = LoadSound("Audio/DonkeyMotif.wav");
         SearchAndSetResourceDir("resources");
         LogoGrupo = LoadTexture("SPRITES/LOGOGRUPO.png");
         Names = LoadTexture("Sprites/nombre2.png");
@@ -35,10 +37,12 @@ void runInitialScreen() {
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         ChangeScene();
+        
 
     }
     DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 34.0f }, WHITE);
 
     DrawTexturePro(Names, sourceRec, NameRec, origin, 0.0f, WHITE);
+    PlaySound(DonkeyMotif);
    
 }
