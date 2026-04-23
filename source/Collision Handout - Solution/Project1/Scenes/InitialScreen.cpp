@@ -12,7 +12,7 @@ Texture Names;
 //DEFINE SCALES 
 
 Rectangle LOGO = { -30, 10, 400, 400 };
-Rectangle sourceRec = { 0, 0, 641, 400 };
+Rectangle sourceRec = { 0, 0, 560, 720 };
 Rectangle NameRec = {
     70.0f,   // X: pegado a la izquierda
     140.0f,  // Y: ajústalo para que baje más (sube este número si sigue tapando)
@@ -20,7 +20,7 @@ Rectangle NameRec = {
     100.0f   // Alto: el original
 };
 
-Vector2 origin = { 0.0f, 0.0f };
+Vector2 origin = { 0.0f, 20.0f };
 
 
 void runInitialScreen() {
@@ -29,7 +29,7 @@ void runInitialScreen() {
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
         LogoGrupo = LoadTexture("SPRITES/LOGOGRUPO.png");
-        Names = LoadTexture("Sprites/nombre.png");
+        Names = LoadTexture("Sprites/nombre2.png");
         Scene_Init = true;
 
     }
@@ -37,8 +37,8 @@ void runInitialScreen() {
         ChangeScene();
 
     }
-    DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 64.0f }, WHITE);
+    DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 34.0f }, WHITE);
 
     DrawTexturePro(Names, sourceRec, NameRec, origin, 0.0f, WHITE);
-    
+   
 }
