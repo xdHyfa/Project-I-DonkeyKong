@@ -170,6 +170,7 @@
     <ClCompile Include="Scenes\scenes.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
     <ClCompile Include="Scenes\WinCutScene.cpp" />
+    <ClCompile Include="Scenes\WinCutscene2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\constants.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Scenes\scenes.h" />
     <ClInclude Include="Scenes\TitleScreen.h" />
     <ClInclude Include="Scenes\WinCutScene.h" />
+    <ClInclude Include="Scenes\WinCutscene2.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Sprites\Blue barrel.png" />
