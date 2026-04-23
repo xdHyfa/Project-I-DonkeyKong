@@ -11,17 +11,10 @@ void BarrelSpawner::Init() {
     barrelTexture = LoadTexture("sprites/commonbarrel.png");
     blueBarrelTexture = LoadTexture("sprites/blue barrel.png");
 
-    Barrel intro;
-    intro.isUnique = true;
-    intro.Texture = blueBarrelTexture;
-    intro.barrelFrameWidth = BARRELSIZE + 4;
-    intro.frameRec.width = intro.barrelFrameWidth;
-    intro.SetPos(spawnX + 16.0f, spawnY);
-    intro.velocityX = 0.0f;
-    intro.velocityY = 0.0f;
-    intro.has_Spawned = true;
-    intro.ignoreGround = true;
-    barrels.push_back(intro);
+    introBarrelDone = false;
+    introBarrelTimer = 0.0f;
+    introBarrelQueued = true;
+    TraceLog(LOG_INFO, "Init called");
 }
 
 void BarrelSpawner::ResetBarrel(Barrel& b) {
@@ -38,6 +31,26 @@ void BarrelSpawner::ResetBarrel(Barrel& b) {
 
 void BarrelSpawner::Update()
 {
+    if (introBarrelQueued) {
+        TraceLog(LOG_INFO, "timer: %f | queued: %d", introBarrelTimer, introBarrelQueued);
+        introBarrelTimer += GetFrameTime();
+        if (introBarrelTimer >= 1.0f) {
+            introBarrelQueued = false;
+            Barrel intro;
+            intro.isUnique = true;
+            intro.Texture = blueBarrelTexture;
+            intro.barrelFrameWidth = BARRELSIZE + 4;
+            intro.frameRec.width = intro.barrelFrameWidth;
+            intro.SetPos(spawnX + 16.0f, spawnY);
+            intro.velocityX = 0.0f;
+            intro.velocityY = 0.0f;
+            intro.has_Spawned = true;
+            intro.ignoreGround = true;
+            barrels.insert(barrels.begin(), intro);
+        }
+        return;
+    }
+
     if (donkey.spawnBarrel) {
         donkey.spawnBarrel = false;
         if ((int)barrels.size() < MAX_BARRELS) {
@@ -60,7 +73,6 @@ void BarrelSpawner::Update()
             continue;
         }
 
-        // Barril de intro
         if (!introBarrelDone && i == 0) {
             b.velocityX = 0.0f;
             b.ignoreGround = true;
@@ -112,4 +124,6 @@ void BarrelSpawner::Reset() {
     barrels.clear();
     spawnTimer = 0.0f;
     introBarrelDone = false;
+    introBarrelTimer = 0.0f;
+    introBarrelQueued = true;
 }

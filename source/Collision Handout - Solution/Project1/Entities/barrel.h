@@ -33,6 +33,7 @@ public:
     bool ladderFrameToggle = false;
     bool Unladder_anim = false;
 
+
     bool ignoreGround = false;
     
     void SetPos(float x, float y) {
