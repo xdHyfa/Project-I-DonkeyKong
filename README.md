@@ -10,6 +10,8 @@
 
 # License
 
+All game assets (sprites, sounds) are property of Nintendo Co., Ltd. and are not covered by this license. This project is a fan recreation for educational purposes only.
+
 MIT License
 
 Copyright (c) 2026 SlopSquad.
