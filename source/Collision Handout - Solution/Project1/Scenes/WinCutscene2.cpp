@@ -26,12 +26,21 @@ static int   impactFrameIdx = 0;
 static float impactFrameTimer = 0.0f;
 static float impactTotalTimer = 0.0f;
 static const float IMPACT_FRAME_INTERVAL = 0.5f;  // 0.5s por frame
-static const float IMPACT_TOTAL_DURATION = 4.0f;  // duración total ~4 segundos
+static const float IMPACT_TOTAL_DURATION = 4.0f;  // duracion total ~4 segundos
 static float dkImpactStopY = 0.0f; // Y donde DK se detiene (Base_0_YPos - 32)
 
 static Texture2D dkTexture = { 0 };
 static Texture2D ladyTexture = { 0 };
 static Texture2D heartTexture = { 0 };
+
+// --- Sonidos ---
+static Sound sfxStageClear = { 0 };
+static Sound sfxFall = { 0 };
+static Sound sfxStomp = { 0 };
+static Sound sfxHeart = { 0 };
+
+// *** CAMBIA AQUI EL NOMBRE DEL SONIDO DEL CORAZON ***
+static const char* HEART_SOUND_FILE = "sounds/Heart.wav";
 
 // DK sprites - sacudida
 static Rectangle dkShakeFrames[2] = {
@@ -78,18 +87,24 @@ void WinCutscene2Init() {
     ladyTexture = LoadTexture("sprites/LADY.png");
     heartTexture = LoadTexture("sprites/HEARTS.png");
 
+    // --- Cargar sonidos (Sound, no Music) ---
+    sfxStageClear = LoadSound("Audio/Stage-Cleared-2.wav");
+    sfxFall = LoadSound("Audio/Fall.wav");
+    sfxStomp = LoadSound("Audio/Stomp.wav");
+    sfxHeart = LoadSound("Audio/A-Happy-Ending.wav");
+
     savedDKPos = donkey.Position;
     dkFallY = donkey.Position.y;
 
     // Y donde DK se frena: encima del truss base (Base_0)
-    // Base_0_YPos = (SCREEN_HEIGHT - TrussHeight) - 1  =>  SCREEN_HEIGHT - 17
-    // DK sprite height = 32, lo paramos justo encima del truss
     dkImpactStopY = (float)(SCREEN_HEIGHT - 16 - 1) - 24.0f;
 
     // Lady no se mueve, guardamos su posicion actual
     reunionLadyPos = lady.Position;
-    // Mario aparece a la DERECHA de Lady, hardcodeado en su misma Y
-    reunionMarioPos = { reunionLadyPos.x + 14.0f + 2.0f, reunionLadyPos.y };
+
+    // Mario aparece a la DERECHA de Lady.
+    // +8 en Y para bajarlo un poco respecto a Lady
+    reunionMarioPos = { reunionLadyPos.x + 14.0f + 2.0f, reunionLadyPos.y + 6.0f };
 
     winPhase2 = WPHASE_SHAKE;
     winTimer2 = 0.0f;
@@ -101,6 +116,9 @@ void WinCutscene2Init() {
     impactFrameIdx = 0;
     impactFrameTimer = 0.0f;
     impactTotalTimer = 0.0f;
+
+    // Reproducir Stage-Cleared al inicio de la escena
+    PlaySound(sfxStageClear);
 }
 
 void runWinCutscene2() {
@@ -136,6 +154,8 @@ void runWinCutscene2() {
         if (shakeCount >= 24) {
             winPhase2 = WPHASE_FALL;
             winTimer2 = 0.0f;
+            // Reproducir sonido de caida al empezar FALL
+            PlaySound(sfxFall);
         }
     }
 
@@ -152,6 +172,8 @@ void runWinCutscene2() {
             impactFrameTimer = 0.0f;
             winPhase2 = WPHASE_IMPACT;
             winTimer2 = 0.0f;
+            // Reproducir sonido de golpe al impactar
+            PlaySound(sfxStomp);
         }
         else {
             donkey.Position.y = dkFallY;
@@ -196,30 +218,36 @@ void runWinCutscene2() {
         // Lady en su sitio
         DrawTextureRec(ladyTexture, ladyFrameRec, reunionLadyPos, WHITE);
 
-        // Mario flipeado horizontalmente (miraba al lado incorrecto),
-        // posicionado a la derecha de Lady
+        // Mario flipeado horizontalmente, posicionado a la derecha de Lady (y mas abajo)
         DrawTextureRecFlippedH(Mario.Texture, marioReunionFrame, reunionMarioPos, WHITE);
 
-        // Corazon aparece tras 2 segundos, centrado entre ambos
-        if (heartTimer >= 2.0f) {
+        // Corazon aparece tras 2 segundos
+        if (heartTimer >= 1.0f && !heartVisible) {
             heartVisible = true;
+            PlaySound(sfxHeart); // suena al aparecer el corazon
         }
 
         if (heartVisible) {
-            // Centrado entre el centro de Lady (14px ancho) y el centro de Mario (12px ancho)
+            // Desplazado mas a la derecha: centramos entre Lady y Mario
+            // y sumamos un offset adicional hacia la derecha
             float ladyCenterX = reunionLadyPos.x + 7.0f;
             float marioCenterX = reunionMarioPos.x + 6.0f;
             Vector2 heartPos = {
-                (ladyCenterX + marioCenterX) / 2.0f - 7.5f,
+                (ladyCenterX + marioCenterX) / 2.0f - 7.5f + 6.0f,   // +6 px a la derecha
                 reunionLadyPos.y - 14.0f
             };
             DrawTextureRec(heartTexture, heartRec, heartPos, WHITE);
         }
 
-        if (winTimer2 >= 5.0f) {
+        // Esperar a que el timer supere 5s Y a que el sonido del corazon haya terminado
+        if (winTimer2 >= 5.0f && !IsSoundPlaying(sfxHeart)) {
             UnloadTexture(dkTexture);
             UnloadTexture(ladyTexture);
             UnloadTexture(heartTexture);
+            UnloadSound(sfxStageClear);
+            UnloadSound(sfxFall);
+            UnloadSound(sfxStomp);
+            UnloadSound(sfxHeart);
             Scene_Init = false;
             ChangeScene();
         }
