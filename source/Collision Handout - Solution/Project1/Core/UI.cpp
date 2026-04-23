@@ -49,7 +49,7 @@ void ResetUI() {
 }
 
 void AddPoints(int points) {
-	if(UI.PointsCooldown >= 1.0f){
+	if(UI.PointsCooldown >= 0.5f){
 		cout << "Adding points " << endl;
 		UI.score += points;
 		UI.PointsCooldown = 0;
@@ -99,6 +99,7 @@ void CheckLives() {
 	if (UI.Lives < 0) {
 		UI.Lives = 2;
 		ChangeScene(true);
+		UI.Level = 1;
 	}
 }
 

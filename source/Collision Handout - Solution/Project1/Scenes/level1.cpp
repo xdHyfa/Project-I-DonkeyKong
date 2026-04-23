@@ -102,7 +102,19 @@ void runLevel1() {
 
     /* UPDATE STARTS HERE */
 
-
+    if (GetIsKilling()) {
+        Level1LadderDraw();
+        Level1RampDraw();
+        donkey.Draw();
+        lady.Draw();
+        barrelSpawner.Draw();
+        Hammer1.DrawObject();
+        Hammer2.DrawObject();
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        PlayEntityDeath();
+        UpdateMusicStream(Hammer_Music);
+        return;
+    }
 
     if (!winTriggered) {
         Mario.Movement();
@@ -134,13 +146,20 @@ void runLevel1() {
                 ShowScorePopup(Mario.Position, 300);
                 Fire1.has_Spawned = false;
                 PlaySound(HammerSound1);
+                StartEntityDeath(Fire1);
+                return;
             }
             if (Mario.CheckHammerHitbox(Fire2) && Fire2.has_Spawned) {
                 Fire2.has_Spawned = false;
                 PlaySound(HammerSound1);
                 AddPoints(300);
                 ShowScorePopup(Mario.Position, 300);
+                StartEntityDeath(Fire2);
+                return;
             }
+        }
+        else {
+            isHammerPlaying = false;
         }
 
         for (Barrel& b : barrelSpawner.barrels) {
@@ -165,6 +184,8 @@ void runLevel1() {
                     PlaySound(HammerSound1);
                     AddPoints(300);
                     ShowScorePopup(Mario.Position, 300);
+                    StartEntityDeath(b);
+                    return;
                 }
             }
 

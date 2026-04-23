@@ -137,18 +137,61 @@ void runLevel2() {
         return;
     }
 
+    if (GetIsKilling()) {
+        Level2LadderDraw();
+        Level2RampDraw();
+        Level2ButtonsDraw();
+        lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f,  (float)Base_5_YPos - 14.0f };
+        donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 17.0f };
+
+        DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
+        DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
+        Hammer3.DrawObject();
+        Hammer4.DrawObject();
+        Hammer3.DrawObject();
+        Hammer4.DrawObject();
+        Purse1.DrawObject();
+        Umbrella1.DrawObject();
+        Hat1.DrawObject();
+        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        PlayEntityDeath();
+        UpdateMusicStream(Hammer_Music2);
+        return;
+    }
+
+
     Mario.Movement();
+    
+    Level2LadderDraw();
+    Level2RampDraw();
+    Level2ButtonsDraw();
+
+    lady.Position = { (float)SCREEN_WIDTH / 2 - 7.0f,  (float)Base_5_YPos - 14.0f };
+    donkey.Position = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 17.0f };
+
+    DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
+    DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
+    DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+    Hammer3.DrawObject();
+    Hammer4.DrawObject();
+    Purse1.DrawObject();
+    Umbrella1.DrawObject();
+    Hat1.DrawObject();
+
     if (GetHammerTime()) {
         if (!isHammer2Playing) PlayMusicStream(Hammer_Music2), isHammer2Playing = true;
         else {
             UpdateMusicStream(Hammer_Music2);
         }
     
-    if(Mario.CheckHammerHitbox(Fire3)) Fire3.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
-    if (Mario.CheckHammerHitbox(Fire4)) Fire4.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
-    if (Mario.CheckHammerHitbox(Fire5)) Fire5.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
-    if (Mario.CheckHammerHitbox(Fire6)) Fire6.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
-    if (Mario.CheckHammerHitbox(Fire7)) Fire7.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300);
+    if (Mario.CheckHammerHitbox(Fire3) && Fire3.has_Spawned) { Fire3.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire3); return; }
+    if (Mario.CheckHammerHitbox(Fire4) && Fire4.has_Spawned) { Fire4.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire4); return; }
+    if (Mario.CheckHammerHitbox(Fire5) && Fire5.has_Spawned) { Fire5.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire5); return; }
+    if (Mario.CheckHammerHitbox(Fire6) && Fire6.has_Spawned) { Fire6.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire6); return; }
+    if (Mario.CheckHammerHitbox(Fire7) && Fire7.has_Spawned) { Fire7.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire7); return; }
+    }
+    else {
+        isHammer2Playing = false;
     }
     if (!GetHammerTime()) UpdateMusicStream(level2Music);
     UpdateMusicStream(deathMusic2);
