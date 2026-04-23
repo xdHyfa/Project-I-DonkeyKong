@@ -30,6 +30,8 @@ public:
     float ladderFrameTimer = 0.0f;
     bool ladderFrameToggle = false;
     bool Unladder_anim = false;
+
+    bool ignoreGround = false;
     
     void SetPos(float x, float y) {
         Position.x = x;
