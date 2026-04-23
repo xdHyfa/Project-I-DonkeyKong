@@ -89,7 +89,7 @@ void runLevel2() {
         level2Music.looping = true;
         PlayMusicStream(level2Music);
         isDead2 = false;
-        Hammer3.SetObject(12, 132, Hammer);
+        Hammer3.SetObject(8, 132, Hammer);
         Hammer4.SetObject(106, 90, Hammer);
         Purse1.SetObject(120, 238, Purse);
         Hat1.SetObject(196, 197, Hat);
