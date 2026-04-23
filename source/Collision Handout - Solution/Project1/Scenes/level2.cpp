@@ -121,6 +121,7 @@ void runLevel2() {
             isDeathSequence2 = false;
             deathTimer2 = 0.0f;
             CheckLives();
+            ResetBonus();
             return;
         }
 
@@ -161,7 +162,8 @@ void runLevel2() {
 
 
     Mario.Movement();
-    
+    UpdateBonus();
+
     Level2LadderDraw();
     Level2RampDraw();
     Level2ButtonsDraw();
@@ -322,6 +324,7 @@ void runLevel2() {
         isHammer2Playing = false;
         UnloadMusicStream(Hammer_Music2);
         AddLevel();
+        AddBonus();
         UnloadSound(HammerSound);
         ResetLevel2Entities();
         ResetButtons();
