@@ -173,7 +173,7 @@ void Player::Movement()
             HammerTimer = 0.0f;
         }
         else {
-            HammerTimer += GetFrameTime();
+            if (!GetIsKilling()) HammerTimer += GetFrameTime();
             if (HammerTick > 0.15f ){
                 if(LooksRight){
                     HammerHitbox.x = Position.x + 16;

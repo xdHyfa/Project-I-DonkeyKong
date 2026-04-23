@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Entities/entity.h"
 typedef enum Scene { INTRO, TITLE, CUTSCENE, HOWHIGH, LEVEL1, WINCUTSCENE, HOWHIGH2, LEVEL2 } Scene;
 extern bool Scene_Init;
 
@@ -10,6 +10,12 @@ void ChangeScene(bool NoLives);
 void StartHammerTime();
 
 bool GetHammerTime();
+
+bool GetIsKilling();
+
+void StartEntityDeath(Entity &entity);
+
+void PlayEntityDeath();
 
 void StopHammerTime();
 
