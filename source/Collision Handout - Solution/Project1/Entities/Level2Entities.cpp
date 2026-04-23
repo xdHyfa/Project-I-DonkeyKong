@@ -38,7 +38,8 @@ void Level2FireRoutine(Fire& fire) {
 		else if (RandomLevel == 3) RandomLevel = Base3;
 		else if (RandomLevel == 4) RandomLevel = Base4;
 		else if (RandomLevel == 5) RandomLevel = Base5;
-		SpawnFire(fire, 20, RandomLevel, 2);
+		if (GetRandomValue(1,2) == 1) SpawnFire(fire, GetRandomValue(36, 40), RandomLevel, 2);
+		else SpawnFire(fire, GetRandomValue(160, 15), RandomLevel, 2);
 	}
 	else if (!fire.has_Spawned) {
 		if(SpawnCooldown2 > 5.0f){
@@ -48,7 +49,8 @@ void Level2FireRoutine(Fire& fire) {
 		else if (RandomLevel == 3) RandomLevel = Base3;
 		else if (RandomLevel == 4) RandomLevel = Base4;
 		else if (RandomLevel == 5) RandomLevel = Base5;
-		SpawnFire(fire, 20, RandomLevel, 2);
+		if (GetRandomValue(1, 2) == 1) SpawnFire(fire, GetRandomValue(36, 40), RandomLevel, 2);
+		else SpawnFire(fire, GetRandomValue(160, 15), RandomLevel, 2);
 		SpawnCooldown2 = 0.0f;
 		}
 		else {
