@@ -12,10 +12,11 @@ void BarrelSpawner::Init() {
     blueBarrelTexture = LoadTexture("sprites/blue barrel.png");
 
     Barrel intro;
+    intro.isUnique = true;
     intro.Texture = blueBarrelTexture;
     intro.barrelFrameWidth = BARRELSIZE + 4;
     intro.frameRec.width = intro.barrelFrameWidth;
-    intro.SetPos(spawnX, spawnY);
+    intro.SetPos(spawnX + 16.0f, spawnY);
     intro.velocityX = 0.0f;
     intro.velocityY = 0.0f;
     intro.has_Spawned = true;

@@ -12,6 +12,7 @@
 class Barrel : public Entity {
 public:
     bool has_Spawned = false;
+   
     
     float velocityX = BARRELVELOCITY;   
     float velocityY = 0.0f;
@@ -25,6 +26,7 @@ public:
 
     bool justFlipped = false;
     bool isLaddering = false;
+    bool isUnique = false;
     float DownZoneTimer = 0.0f;
     float groundCooldown = 0.0f;
     float ladderFrameTimer = 0.0f;
@@ -72,6 +74,16 @@ public:
     void BarrelAnimation() {
         ++frameDelayCounter;
         
+        if (isUnique)
+        {
+            if (frameDelayCounter > frameDelay) {
+                frameDelayCounter = 0;
+                ladderFrameToggle = !ladderFrameToggle;
+            }
+            frameRec = { 17.0f * (ladderFrameToggle ? 4.0f : 5.0f) - 5.0f, 0.0f, 17.0f, 17.0f };
+            return;
+        }
+
         if (isLaddering) {
             Unladder_anim = false;
             ladderFrameTimer += GetFrameTime();
