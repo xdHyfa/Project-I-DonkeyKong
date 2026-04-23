@@ -51,11 +51,8 @@ public:
     Player() {
         tag = EntityTag::PLAYER;
     }
-    bool CheckHammerHitbox(Entity &entity) {
-        if (CheckCollisionRecs(entity.getHitbox(), HammerHitbox)) {
-            return true;
-        }
-        else false;
+    bool CheckHammerHitbox(Entity& entity) {
+        return CheckCollisionRecs(entity.getHitbox(), HammerHitbox);
     }
 };
 
