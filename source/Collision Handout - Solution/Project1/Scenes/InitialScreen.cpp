@@ -12,15 +12,16 @@ Texture Names;
 //DEFINE SCALES 
 
 Rectangle LOGO = { -30, 10, 400, 400 };
-Rectangle sourceRec = { 0, 0, 457, 546 };
+Rectangle sourceRec = { 0, 0, 641, 400 };
 Rectangle NameRec = {
     70.0f,   // X: pegado a la izquierda
     140.0f,  // Y: ajústalo para que baje más (sube este número si sigue tapando)
     80.0f,  // Ancho: el original para que no se deforme
-    90.0f   // Alto: el original
+    100.0f   // Alto: el original
 };
 
 Vector2 origin = { 0.0f, 0.0f };
+
 
 void runInitialScreen() {
 
@@ -28,10 +29,8 @@ void runInitialScreen() {
         // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
         SearchAndSetResourceDir("resources");
         LogoGrupo = LoadTexture("SPRITES/LOGOGRUPO.png");
-        Names = LoadTexture("SPRITES/FULL NAMES.png");
-
+        Names = LoadTexture("Sprites/nombre.png");
         Scene_Init = true;
-
 
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
