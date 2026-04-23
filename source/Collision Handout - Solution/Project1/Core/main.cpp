@@ -11,6 +11,8 @@
 #include "Scenes/Cutscene.h"
 #include "Scenes/WinCutscene.h"
 #include "Core/UI.h"
+#include "Scenes/WinCutscene2.h"
+
 
 int main()
 {
@@ -90,6 +92,10 @@ int main()
 			PrintBonus();
 			runLevel2();
 
+			break;
+
+		case WINCUTSCENE2:
+			runWinCutscene2();
 			break;
 		}
 
