@@ -11,6 +11,9 @@ public:
     std::vector<Barrel> barrels;
     Texture2D barrelTexture = { 0 };  
 
+    bool introBarrelDone = false;
+    Texture2D blueBarrelTexture = { 0 };
+
     float spawnTimer = 0.0f;
     float spawnX = 50.0f;
     float spawnY = 63.0f;
@@ -27,3 +30,4 @@ private:
 };
 
 extern BarrelSpawner barrelSpawner;
+
