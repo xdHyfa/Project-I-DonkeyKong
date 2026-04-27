@@ -15,6 +15,7 @@ public:
 
     bool justClimbedLadder = false;
     int climbFinishFrame = 0;
+    int PlayerNum = 1;
 
     bool deathStarted = false;
     float deathStartTimer = 0.0f;

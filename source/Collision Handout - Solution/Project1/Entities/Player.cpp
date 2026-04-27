@@ -10,6 +10,7 @@
 
 using namespace std;
 Player Mario;
+Player Luigi;
 
 /*---Animation Stuff---*/
 Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -136,7 +137,7 @@ void Player::Movement()
 
     // --- Input horizontal (siempre se lee, en suelo y aire) ---
     marioVelocity.x = 0.0f;
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+    if (IsKeyDown(KEY_RIGHT) && PlayerNum == 1 || IsKeyDown(KEY_D) && PlayerNum == 2)
     {
         marioVelocity.x = (float)Mario.velocity;
         if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
@@ -148,7 +149,7 @@ void Player::Movement()
         }
         LooksRight = true;
     }
-    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+    else if (IsKeyDown(KEY_LEFT) && PlayerNum == 1 || IsKeyDown(KEY_A) && PlayerNum == 2)
     {
         marioVelocity.x = -(float)Mario.velocity;
         if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
