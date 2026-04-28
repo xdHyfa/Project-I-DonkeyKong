@@ -49,8 +49,12 @@ public:
         FloorCollider.x = Position.x + 8;
         FloorCollider.y = Position.y + 16;
     }
-    Player() {
-        tag = EntityTag::PLAYER;
+    Player(bool isPlayer1) {
+        if (isPlayer1) {
+            tag = EntityTag::PLAYER1;
+        }
+        else
+            tag = EntityTag::PLAYER2;
     }
     bool CheckHammerHitbox(Entity& entity) {
         return CheckCollisionRecs(entity.getHitbox(), HammerHitbox);
@@ -58,6 +62,7 @@ public:
 };
 
 extern Player Mario;
+extern Player Luigi;
 extern Rectangle frameRec;
 
 void DrawMarioCollider();

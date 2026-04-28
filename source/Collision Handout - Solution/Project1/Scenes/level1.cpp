@@ -35,7 +35,12 @@ void runLevel1() {
     if (!Scene_Init) {
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
+        Luigi.Texture = LoadTexture("sprites/Mario.png");
         Mario.Setup();
+        Mario.PlayerNum = 1;
+        Luigi.Setup();
+        Luigi.PlayerNum = 2;
+        Luigi.Position = { 96, SCREEN_HEIGHT - (float)Luigi.SpriteSize - 17 };
         donkey.Setup();
         lady.Setup();
         StopHammerTime();
@@ -69,6 +74,7 @@ void runLevel1() {
         deathTimer += GetFrameTime();
 
         Mario.Movement();
+        Luigi.Movement();
         donkey.Update();
         donkey.Draw();
         lady.Update();
@@ -85,6 +91,7 @@ void runLevel1() {
             UnloadSound(deathSound2);
             ResetLevel1Entities();
             Mario.isAlive = true;
+            Luigi.isAlive = true;
             Scene_Init = false;
             isDeathSequence = false;
             CheckLives();
@@ -97,6 +104,7 @@ void runLevel1() {
         Level1RampDraw();
         barrelSpawner.Draw();
         DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        DrawTextureRec(Luigi.Texture, frameRec, Luigi.Position, GREEN);
         return;
     }
 
@@ -111,6 +119,7 @@ void runLevel1() {
         Hammer1.DrawObject();
         Hammer2.DrawObject();
         DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        DrawTextureRec(Luigi.Texture, frameRec, Luigi.Position, GREEN);
         PlayEntityDeath();
         UpdateMusicStream(Hammer_Music);
         return;
@@ -118,11 +127,14 @@ void runLevel1() {
 
     if (!winTriggered) {
         Mario.Movement();
+        Luigi.Movement();
         donkey.Update();
         lady.Update();
         if(!GetHammerTime()) UpdateMusicStream(level1Music);
         Level1RampCollisions(Mario);
+        Level1RampCollisions(Luigi);
         Level1LadderCollisions(Mario);
+        Level1LadderCollisions(Luigi);
         barrelSpawner.Update();
         Level1LadderDraw();
         Level1RampDraw();
@@ -248,6 +260,7 @@ void runLevel1() {
     }
 
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+    DrawTextureRec(Luigi.Texture, frameRec, Luigi.Position, GREEN);
     UpdateDrawScorePopup();
     SetCooldown();
    

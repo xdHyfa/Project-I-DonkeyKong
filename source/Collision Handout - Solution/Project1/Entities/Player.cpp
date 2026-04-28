@@ -9,8 +9,8 @@
 
 
 using namespace std;
-Player Mario;
-Player Luigi;
+Player Mario(true);
+Player Luigi(false);
 
 /*---Animation Stuff---*/
 Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -41,19 +41,19 @@ bool isTextureValid(const Texture2D& texture)
     return texture.id > 0;
 }
 
-void MarioLadderMovement() {
+void PlayerLadderMovement(Player& player) {
     if (IsKeyDown(KEY_UP)) {
-        Mario.OnLadder = true;
-        Mario.Position.y -= 1.0f;
-        Mario.UpdateCollider();
+        player.OnLadder = true;
+        player.Position.y -= 1.0f;
+        player.UpdateCollider();
     }
     else if (IsKeyDown(KEY_DOWN)) {
-        Mario.OnLadder = true;
-        Mario.Position.y += 1.0f;
-        Mario.UpdateCollider();
+        player.OnLadder = true;
+        player.Position.y += 1.0f;
+        player.UpdateCollider();
     }
 
-    frameRec.y = 1 * Mario.SpriteSize;
+    frameRec.y = 1 * player.SpriteSize;
     frameRec.width = marioFrameWidth;
     ++frameDelayCounter;
     if (frameDelayCounter > 4)
@@ -139,10 +139,10 @@ void Player::Movement()
     marioVelocity.x = 0.0f;
     if (IsKeyDown(KEY_RIGHT) && PlayerNum == 1 || IsKeyDown(KEY_D) && PlayerNum == 2)
     {
-        marioVelocity.x = (float)Mario.velocity;
-        if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+        marioVelocity.x = (float)velocity;
+        if (frameRec.width < 0 && getIsGrounded()) frameRec.width = -frameRec.width;
         
-        if (Mario.getIsGrounded())
+        if (getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
             UpdateMusicStream(walkMusic);
@@ -151,10 +151,10 @@ void Player::Movement()
     }
     else if (IsKeyDown(KEY_LEFT) && PlayerNum == 1 || IsKeyDown(KEY_A) && PlayerNum == 2)
     {
-        marioVelocity.x = -(float)Mario.velocity;
-        if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
+        marioVelocity.x = -(float)velocity;
+        if (frameRec.width > 0 && getIsGrounded()) frameRec.width = -frameRec.width;
        
-        if (Mario.getIsGrounded())
+        if (getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
             UpdateMusicStream(walkMusic);
@@ -218,7 +218,8 @@ void Player::Movement()
     //Ladder Climb
     if (OnLadder && CanClimb) {
         cout << "ON LADDER" << endl;
-        MarioLadderMovement();
+        if (PlayerNum == 1) PlayerLadderMovement(Mario);
+        else PlayerLadderMovement(Luigi);
 
         if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
         {
@@ -233,31 +234,63 @@ void Player::Movement()
         return;
     }
     if (CanClimb) {
+        if(PlayerNum == 1){
         if (IsKeyPressed(KEY_UP)) {
-            Mario.OnLadder = true;
-            Mario.Position.y -= 1.0f;
-            Mario.UpdateCollider();
+            OnLadder = true;
+            Position.y -= 1.0f;
+            UpdateCollider();
 
 
         }
         else if (IsKeyPressed(KEY_DOWN)) {
-            Mario.OnLadder = true;
-            Mario.Position.y += 1.0f;
-            Mario.UpdateCollider();
+            OnLadder = true;
+            Position.y += 1.0f;
+            UpdateCollider();
+        }
+        }
+        else {
+            if (IsKeyPressed(KEY_W)) {
+                OnLadder = true;
+                Position.y -= 1.0f;
+                UpdateCollider();
+
+
+            }
+            else if (IsKeyPressed(KEY_S)) {
+                OnLadder = true;
+                Position.y += 1.0f;
+                UpdateCollider();
+            }
         }
     }
 
     // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        if (Mario.tryJump())
+    if (IsKeyPressed(KEY_RIGHT_SHIFT) && PlayerNum == 1 || IsKeyPressed(KEY_LEFT_SHIFT) && PlayerNum == 2) {
+        if (tryJump())
         {
             PlaySound(jumpSound);
+            
+            //WARNING
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            //LockedVelocityX Probablement no funcioni si salten els 2 players a la vegada
+
+
             lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
             isJumping = true;
-            marioVelocity.y = -(float)Mario.jumpHeight;
+            marioVelocity.y = -(float)jumpHeight;
         }
     }
+    
     }
 
     // --- En el aire: congelar velocidad horizontal ---
@@ -267,7 +300,7 @@ void Player::Movement()
     }
 
     // --- Física: gravedad ---
-    if (!Mario.getIsGrounded() || isFalling)
+    if (!getIsGrounded() || isFalling)
     {
         marioVelocity.y += GRAVITY;
     }
@@ -283,7 +316,7 @@ void Player::Movement()
         // FIX: NO reseteamos x aquí, para que la animación funcione correctamente
         lockedVelocityX = 0.0f;
         isJumping = false;
-        Mario.setGrounded(true);
+        setGrounded(true);
     }
     // --- Detección de paredes ---
     if (Position.x > 208) {
@@ -329,24 +362,24 @@ void Player::Movement()
         }*/
         
         frameDelayCounter = 0;
-        if (Mario.justClimbedLadder)
+        if (justClimbedLadder)
         {
             frameRec.y = 1 * SpriteSize;
             frameRec.width = marioFrameWidth;
-            frameRec.x = marioFrameWidth * (float)(4 + Mario.climbFinishFrame);
+            frameRec.x = marioFrameWidth * (float)(4 + climbFinishFrame);
             ++finishFrameDelayCounter;
             if (finishFrameDelayCounter > 2)
             {
                 finishFrameDelayCounter = 0;
-                if (Mario.climbFinishFrame >= 2)
+                if (climbFinishFrame >= 2)
                 {
-                    Mario.justClimbedLadder = false;
-                    Mario.climbFinishFrame = 0;
+                    justClimbedLadder = false;
+                    climbFinishFrame = 0;
                     frameRec.y = 0.0f;
                 }
                 else
                 {
-                    ++Mario.climbFinishFrame;
+                    ++climbFinishFrame;
                 }
             }
         }

@@ -20,7 +20,7 @@ bool winTriggered = false;
 float winDelay = 0.0f;
 
 void Level1CheckWinCondition(Entity& entity) {
-	if (entity.tag == EntityTag::PLAYER && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
+	if (entity.tag == EntityTag::PLAYER1 && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
 		if (!winTriggered) {
 			StopMusicStream(level1Music);
 			
@@ -136,8 +136,11 @@ void Level1RampCollisions(Entity& entity) {
 		RampCollision(Ramp_5, 13, entity);
 	}
 	else {
-		if (entity.tag == EntityTag::PLAYER) {
+		if (entity.tag == EntityTag::PLAYER1) {
 			Mario.isFalling = true;
+		}
+		if (entity.tag == EntityTag::PLAYER2) {
+			Luigi.isFalling = true;
 		}
 	}
 }
@@ -372,7 +375,7 @@ void BrokenLadderCollisions(Entity& entity) {
 }
 
 void Level1LadderCollisions(Entity& entity) {
-	if (entity.tag == EntityTag::PLAYER){
+	if (entity.tag == EntityTag::PLAYER1 || entity.tag == EntityTag::PLAYER2 ){
 	LadderCollisions(entity, Level1Ladders, 9);
 	}
 	else {

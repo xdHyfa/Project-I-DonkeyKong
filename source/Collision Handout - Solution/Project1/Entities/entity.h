@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <iostream>
 
-enum class EntityTag { FIRE, BARREL, PLAYER, DONKO };
+enum class EntityTag { FIRE, BARREL, PLAYER1, PLAYER2, DONKO };
 
 class Entity
 {

@@ -135,8 +135,11 @@ void Level2RampCollisions(Entity& entity) {
 		RampCollision(Base_4, 10, entity);
 	}
 	else {
-		if (entity.tag == EntityTag::PLAYER) {
+		if (entity.tag == EntityTag::PLAYER1) {
 			Mario.isFalling = true;
+		}
+		if (entity.tag == EntityTag::PLAYER2) {
+			Luigi.isFalling = true;
 		}
 	}
 }
