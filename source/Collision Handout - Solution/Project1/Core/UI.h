@@ -23,4 +23,11 @@ void SetCooldown();
 void ShowScorePopup(Vector2 pos, int points);
 void UpdateDrawScorePopup();
 
+void TriggerGameOver();
+bool IsGameOver();
+void TickGameOver();
+float GetGameOverTimer();
+void EndGameOver();
+void UpdateDrawGameOver();
+
 int GetLevel();

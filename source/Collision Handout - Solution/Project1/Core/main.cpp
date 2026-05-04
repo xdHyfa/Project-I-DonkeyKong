@@ -16,11 +16,11 @@
 
 int main()
 {
-		
+
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
-	InitAudioDevice(); // <-- Añade esto después de InitWindow
+	InitAudioDevice(); // <-- A?ade esto despu?s de InitWindow
 	Camera2D camera = { 0 };
 	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
 	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
@@ -34,6 +34,22 @@ int main()
 		BeginDrawing();
 		ClearBackground(BLACK);
 		BeginMode2D(camera);
+
+		// --- GAME OVER ---
+		// Mientras est? activo, bloqueamos todo el switch y solo dibujamos el panel.
+		// Cuando el timer llega a 3s, reseteamos y cambiamos a Title limpiamente.
+		if (IsGameOver()) {
+			TickGameOver();
+			PrintUI();
+			UpdateDrawGameOver();
+			if (GetGameOverTimer() >= 3.0f) {
+				EndGameOver();
+				ChangeScene(true);
+			}
+			EndMode2D();
+			EndDrawing();
+			continue;
+		}
 
 		switch (GetCurrentScene()) {
 		case INTRO:
@@ -83,7 +99,7 @@ int main()
 
 		case HOWHIGH2:
 			PrintUI();
-			runHowHigh(); 
+			runHowHigh();
 			break;
 
 		case LEVEL2:
