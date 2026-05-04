@@ -1,4 +1,4 @@
-#include "Scenes/WinCutscene.h"
+ï»¿#include "Scenes/WinCutscene.h"
 #include "Scenes/scenes.h"
 #include "Entities/Donkey.h"
 #include "Entities/Lady.h"
@@ -11,7 +11,7 @@
 #include <iostream>
 using namespace std;
 
-enum WinPhase { WIN_HEART,WIN_JUMP, WIN_CLIMB, WIN_KIDNAP, WIN_END };
+enum WinPhase { WIN_HEART, WIN_JUMP, WIN_CLIMB, WIN_KIDNAP, WIN_END };
 WinPhase winPhase = WIN_HEART;
 
 // ---- TEXTURAS ----
@@ -77,29 +77,29 @@ void WinCutsceneInit() {
 
     winSound = LoadSound("Audio/Stage-Cleared-1.wav");
     PlaySound(winSound);
-    
-    Level1RampSetter();   
-    Level1LadderSetter(); 
-    
-    
-    Vector2 savedPos = Mario.Position; // guarda posición
+
+    Level1RampSetter();
+    Level1LadderSetter();
+
+
+    Vector2 savedPos = Mario.Position; // guarda posiciï¿½n
     Mario.Setup();
-    Mario.Position = savedPos; // restaura posición
+    Mario.Position = savedPos; // restaura posiciï¿½n
     Mario.Position.y -= 1.0f;
-    frameRec.width = -abs(frameRec.width); // mira a la izquierda
+    Mario.frameRec.width = -abs(Mario.frameRec.width); // mira a la izquierda
 
 
 
     winRamp5Y = SCREEN_HEIGHT - 16.0f - 169;
     winRamp6Y = SCREEN_HEIGHT - 16.0f - 200;
 
-    // DK empieza en su posición normal
+    // DK empieza en su posiciï¿½n normal
     winDKPos = donkey.Position;
 
-    // Lady en su posición normal
+    // Lady en su posiciï¿½n normal
     ladyWinY = lady.Position.y;
 
-    // Corazón entre Mario y Lady
+    // Corazï¿½n entre Mario y Lady
     heartPos = { (Mario.Position.x + lady.Position.x) / 2.0f + 2.0f, lady.Position.y - 10.0f };
     winTriggered = false;
     winPhase = WIN_HEART;
@@ -140,7 +140,7 @@ void runWinCutscene() {
     DrawWinStairs();
 
     // ---- DIBUJAR MARIO ----
-    DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+    DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
 
     // ---- DIBUJAR LADY ----
     if (!hasLady)
@@ -205,7 +205,7 @@ void runWinCutscene() {
             winTimer = 0.0f;
             hasLady = true;
             showBroken = true;
-             
+
         }
 
         DrawTextureRec(winDKTexture, emptyFrames[winFrameIdx], winDKPos, WHITE);
@@ -242,7 +242,7 @@ void runWinCutscene() {
             UnloadTexture(winDKTexture);
             UnloadTexture(winStairsTexture);
             lady.Unload();
-            
+
             StopSound(winSound);
             UnloadSound(winSound);
 

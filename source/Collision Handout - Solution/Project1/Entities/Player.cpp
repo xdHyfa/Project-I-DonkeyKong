@@ -7,141 +7,136 @@
 #include "Entities/entity.h"
 #include "Scenes/scenes.h"
 
-
 using namespace std;
+
 Player Mario(true);
 Player Luigi(false);
 
-/*---Animation Stuff---*/
-Rectangle frameRec = { 0.0f, 0.0f, 0.0f, 0.0f };
-unsigned  numFrames = 4;
-float     marioFrameWidth = 0.0f;
-float     marioFrameHeight = 0.0f;
-float  frameDelay = 0.5;
-unsigned  frameDelayCounter = 0;
-unsigned  frameIndex = 0;
-unsigned finishFrameDelayCounter = 0;
-float HammerTimer = 0.0f;
-float HammerTick = 0.0f;
-bool LooksRight = true;
-/*---Audio Level---*/
-Sound jumpSound = { 0 };
-Music walkMusic = { 0 };        //music en vez de Sound para que se repita
-Sound deathSound = { 0 };
-Music climbMusic = { 0 };
-Texture2D HammerTexture;
-Vector2 HammerPos;
-Rectangle HammerSelector = { 0,0,12,16 };
+// --- Static audio members: defined once, shared by both players ---
+Sound Player::jumpSound = { 0 };
+Music Player::walkMusic = { 0 };
+Sound Player::deathSound = { 0 };
+Music Player::climbMusic = { 0 };
 
-const float GROUND_Y = SCREEN_HEIGHT - 16.0f;
-float       lockedVelocityX = 0.0f;
+// --- Constants (no per-player state here) ---
+const unsigned NUM_FRAMES = 4;
+const float    FRAME_DELAY = 0.5f;
+const float    GROUND_Y = SCREEN_HEIGHT - 16.0f;
 
 bool isTextureValid(const Texture2D& texture)
 {
     return texture.id > 0;
 }
 
-void PlayerLadderMovement(Player& player) {
-    if (IsKeyDown(KEY_UP)) {
+// ------------------------------------------------------------
+// Ladder movement — works entirely on the player passed in
+// ------------------------------------------------------------
+void PlayerLadderMovement(Player& player)
+{
+    bool up = (player.PlayerNum == 1) ? IsKeyDown(KEY_UP) : IsKeyDown(KEY_W);
+    bool down = (player.PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsKeyDown(KEY_S);
+
+    if (up) {
         player.OnLadder = true;
         player.Position.y -= 1.0f;
         player.UpdateCollider();
     }
-    else if (IsKeyDown(KEY_DOWN)) {
+    else if (down) {
         player.OnLadder = true;
         player.Position.y += 1.0f;
         player.UpdateCollider();
     }
 
-    frameRec.y = 1 * player.SpriteSize;
-    frameRec.width = marioFrameWidth;
-    ++frameDelayCounter;
-    if (frameDelayCounter > 4)
+    player.frameRec.y = 1 * player.SpriteSize;
+    player.frameRec.width = player.SpriteSize;
+
+    ++player.frameDelayCounter;
+    if (player.frameDelayCounter > 4)
     {
-        frameDelayCounter = 0;
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+        player.frameDelayCounter = 0;
+        if (up || down)
         {
-            ++frameIndex;
-            frameIndex %= 2;  
-            frameRec.x = marioFrameWidth * (float)frameIndex;
+            ++player.frameIndex;
+            player.frameIndex %= 2;
+            player.frameRec.x = player.SpriteSize * (float)player.frameIndex;
         }
     }
-
-    return;
 }
 
+// ------------------------------------------------------------
+// Setup
+// ------------------------------------------------------------
 void Player::Setup()
 {
     SpriteSize = (float)playerSize;
-    marioFrameWidth = (float)Mario.SpriteSize;
-    marioFrameHeight = (float)Mario.SpriteSize;
-    frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
-    Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
-    jumpSound = LoadSound("Audio/Game-Startup.wav"); 
-    walkMusic = LoadMusicStream("Audio/WalkingDef2.wav");
-    walkMusic.looping = true;
-    climbMusic = LoadMusicStream("Audio/WalkingDef3.wav");
-    climbMusic.looping = true;
-    deathSound = LoadSound("Audio/Dead.wav");
+    frameRec = { 0.0f, 0.0f, SpriteSize, SpriteSize };
+    Position = { 64, SCREEN_HEIGHT - SpriteSize - 17 };
+
     HammerTexture = LoadTexture("Sprites/Hammer.png");
 
-
-    //Walking Def 3 Para subir y bajar escaleras
-    //Walkinf Def 2 para caminar normal
+    // Audio is static — only load once (guard with id check)
+    if (jumpSound.frameCount == 0)
+    {
+        jumpSound = LoadSound("Audio/Game-Startup.wav");
+        walkMusic = LoadMusicStream("Audio/WalkingDef2.wav");
+        walkMusic.looping = true;
+        climbMusic = LoadMusicStream("Audio/WalkingDef3.wav");
+        climbMusic.looping = true;
+        deathSound = LoadSound("Audio/Dead.wav");
+    }
 }
 
-
+// ------------------------------------------------------------
+// Movement
+// ------------------------------------------------------------
 void Player::Movement()
 {
-    if (!isAlive) {
+    if (!isAlive)
+    {
         frameRec.width = abs(frameRec.width);
         frameRec.y = 4 * SpriteSize;
 
-        if (!deathStarted) {
-            frameRec.x = 0.0f; // primer frame fijo
+        if (!deathStarted)
+        {
+            frameRec.x = 0.0f;
             deathStartTimer += GetFrameTime();
-            if (deathStartTimer >= 1.0f) {
+            if (deathStartTimer >= 1.0f)
+            {
                 deathStarted = true;
-                frameIndex = 1; // empieza en el segundo frame, el primero ya lo vimos
+                frameIndex = 1;
                 frameDelayCounter = 0;
             }
             return;
         }
 
-        if (deathLoopCount < 2) {
+        if (deathLoopCount < 2)
+        {
             ++frameDelayCounter;
-            if (frameDelayCounter > 6) {
+            if (frameDelayCounter > 6)
+            {
                 frameDelayCounter = 0;
                 frameRec.x = SpriteSize * (float)frameIndex;
                 ++frameIndex %= 4;
                 if (frameIndex == 0) ++deathLoopCount;
             }
-        } else {
+        }
+        else
+        {
             frameRec.x = 4 * SpriteSize;
         }
         return;
     }
-    //UNCOMMENT TO CHECK IF TEXTURE WORKS
-    
-    /*  if (!isTextureValid(Texture))
-    {
-        while (!WindowShouldClose())
-        {
-            BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText("ERROR: No se pudo cargar la textura de Mario.", 20, 20, 20, RED);
-            EndDrawing();
-        }
-        return;
-    }*/
 
-    // --- Input horizontal (siempre se lee, en suelo y aire) ---
+    // --- Horizontal input ---
     marioVelocity.x = 0.0f;
-    if (IsKeyDown(KEY_RIGHT) && PlayerNum == 1 || IsKeyDown(KEY_D) && PlayerNum == 2)
+
+    bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : IsKeyDown(KEY_D);
+    bool moveLeft = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT) : IsKeyDown(KEY_A);
+
+    if (moveRight)
     {
         marioVelocity.x = (float)velocity;
         if (frameRec.width < 0 && getIsGrounded()) frameRec.width = -frameRec.width;
-        
         if (getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
@@ -149,11 +144,10 @@ void Player::Movement()
         }
         LooksRight = true;
     }
-    else if (IsKeyDown(KEY_LEFT) && PlayerNum == 1 || IsKeyDown(KEY_A) && PlayerNum == 2)
+    else if (moveLeft)
     {
         marioVelocity.x = -(float)velocity;
         if (frameRec.width > 0 && getIsGrounded()) frameRec.width = -frameRec.width;
-       
         if (getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
@@ -163,47 +157,50 @@ void Player::Movement()
     }
     else
     {
-        StopMusicStream(walkMusic); // para cuando sueltas la tecla
+        StopMusicStream(walkMusic);
     }
 
-
-    //Hammer time
-    if (GetHammerTime()) {
-        if (HammerTimer > 11.5f) {
-            StopHammerTime();
+    // --- Hammer ---
+    if (GetHammerTime(PlayerNum))
+    {
+        if (HammerTimer > 11.5f)
+        {
+            StopHammerTime(PlayerNum);
             HammerTimer = 0.0f;
         }
-        else {
+        else
+        {
             if (!GetIsKilling()) HammerTimer += GetFrameTime();
-            if (HammerTick > 0.15f ){
-                if(LooksRight){
+
+            if (HammerTick > 0.15f)
+            {
+                if (LooksRight)
+                {
                     HammerHitbox.x = Position.x + 16;
                     HammerPos.x = Position.x + 16;
-                    HammerPos.y = Position.y +2;
+                    HammerPos.y = Position.y + 2;
                     HammerSelector.x = 12;
                     HammerSelector.width = 12;
-                    DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
                 }
-                else {
+                else
+                {
                     HammerHitbox.x = Position.x - 16;
                     HammerPos.x = Position.x - 16;
-                    HammerPos.y = Position.y +1;
-                    HammerSelector.width = -12;
+                    HammerPos.y = Position.y + 1;
                     HammerSelector.x = 12;
-                    DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
+                    HammerSelector.width = -12;
                 }
                 HammerHitbox.y = Position.y;
-                HammerTick += GetFrameTime();
-                if (HammerTick > 0.3f) {
-                    HammerTick = 0.0f;
-                }
+                DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
 
+                HammerTick += GetFrameTime();
+                if (HammerTick > 0.3f) HammerTick = 0.0f;
             }
-            else {
+            else
+            {
                 HammerHitbox.x = Position.x;
                 HammerHitbox.y = Position.y - 16;
                 HammerPos.x = Position.x;
-                HammerHitbox.y = Position.y - 16;
                 HammerPos.y = Position.y - 16;
                 HammerSelector.x = 0;
                 HammerSelector.width = 12;
@@ -212,161 +209,103 @@ void Player::Movement()
             }
         }
     }
-
-    else{
-
-    //Ladder Climb
-    if (OnLadder && CanClimb) {
-        cout << "ON LADDER" << endl;
-        if (PlayerNum == 1) PlayerLadderMovement(Mario);
-        else PlayerLadderMovement(Luigi);
-
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+    else
+    {
+        // --- Ladder climb ---
+        if (OnLadder && CanClimb)
         {
-            if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
-            UpdateMusicStream(climbMusic);
+            cout << "ON LADDER" << endl;
+            PlayerLadderMovement(*this);
+
+            bool upHeld = (PlayerNum == 1) ? IsKeyDown(KEY_UP) : IsKeyDown(KEY_W);
+            bool downHeld = (PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsKeyDown(KEY_S);
+            if (upHeld || downHeld)
+            {
+                if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
+                UpdateMusicStream(climbMusic);
+            }
+            else
+            {
+                StopMusicStream(climbMusic);
+            }
+            return;
         }
-        else
+
+        if (CanClimb)
         {
-            StopMusicStream(climbMusic);
-        }
+            bool climbUp = (PlayerNum == 1) ? IsKeyPressed(KEY_UP) : IsKeyPressed(KEY_W);
+            bool climbDown = (PlayerNum == 1) ? IsKeyPressed(KEY_DOWN) : IsKeyPressed(KEY_S);
 
-        return;
-    }
-    if (CanClimb) {
-        if(PlayerNum == 1){
-        if (IsKeyPressed(KEY_UP)) {
-            OnLadder = true;
-            Position.y -= 1.0f;
-            UpdateCollider();
-
-
-        }
-        else if (IsKeyPressed(KEY_DOWN)) {
-            OnLadder = true;
-            Position.y += 1.0f;
-            UpdateCollider();
-        }
-        }
-        else {
-            if (IsKeyPressed(KEY_W)) {
+            if (climbUp)
+            {
                 OnLadder = true;
                 Position.y -= 1.0f;
                 UpdateCollider();
-
-
             }
-            else if (IsKeyPressed(KEY_S)) {
+            else if (climbDown)
+            {
                 OnLadder = true;
                 Position.y += 1.0f;
                 UpdateCollider();
             }
         }
-    }
 
-    // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
-    if (IsKeyPressed(KEY_RIGHT_SHIFT) && PlayerNum == 1 || IsKeyPressed(KEY_LEFT_SHIFT) && PlayerNum == 2) {
-        if (tryJump())
+        // --- Jump ---
+        bool jumpKey = (PlayerNum == 1) ? IsKeyPressed(KEY_RIGHT_SHIFT)
+            : IsKeyPressed(KEY_LEFT_SHIFT);
+        if (jumpKey && tryJump())
         {
             PlaySound(jumpSound);
-            
-            //WARNING
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            // 
-            //LockedVelocityX Probablement no funcioni si salten els 2 players a la vegada
-
-
-            lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
+            lockedVelocityX = marioVelocity.x;
             isJumping = true;
             marioVelocity.y = -(float)jumpHeight;
         }
     }
-    
-    }
 
-    // --- En el aire: congelar velocidad horizontal ---
-    if (isJumping)
-    {
-        marioVelocity.x = lockedVelocityX;
-    }
+    // --- Freeze horizontal velocity in air ---
+    if (isJumping) marioVelocity.x = lockedVelocityX;
 
-    // --- Física: gravedad ---
-    if (!getIsGrounded() || isFalling)
-    {
-        marioVelocity.y += GRAVITY;
-    }
+    // --- Gravity ---
+    if (!getIsGrounded() || isFalling) marioVelocity.y += GRAVITY;
 
-    // --- Aplicar velocidad ---
+    // --- Apply velocity ---
     Position = Vector2Add(Position, marioVelocity);
 
-    // --- Detección de suelo ---
+    // --- Ground detection ---
     if (Position.y >= GROUND_Y)
     {
         Position.y = GROUND_Y;
         marioVelocity.y = 0.0f;
-        // FIX: NO reseteamos x aquí, para que la animación funcione correctamente
         lockedVelocityX = 0.0f;
         isJumping = false;
         setGrounded(true);
     }
-    // --- Detección de paredes ---
-    if (Position.x > 208) {
-        Position.x = 208;
-    }
-    if (Position.x < 0) {
-        Position.x = 0;
-    }
 
-    if (IsKeyPressed(KEY_R)) {
-        Position.y -= 32;
-    }
-    if (IsKeyPressed(KEY_Q)) {
-        Position.y += 32;
-    }
+    // --- Wall detection ---
+    if (Position.x > 208) Position.x = 208;
+    if (Position.x < 0)   Position.x = 0;
 
-    // --- Sincronizar entidad ---
+    // --- Debug keys ---
+    if (IsKeyPressed(KEY_R)) Position.y -= 32;
+    if (IsKeyPressed(KEY_Q)) Position.y += 32;
+
+    // --- Sync floor collider ---
     FloorCollider.x = Position.x + 8;
     FloorCollider.y = Position.y + 16;
-    // --- Animación ---
-    bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
-    
-    //Check for Animation Check DrawRectangle(Mario.Position.x, Mario.Position.y, (int)SpriteSize, (int)SpriteSize, WHITE);
-    
-    ++frameDelayCounter;
-    if (frameDelayCounter > frameDelay)
-    {
-        /*if (!isAlive)
-        {
-            frameRec.width = 16;
-            frameRec.y = 3 * 16;
 
-            if (deathLoopCount < 2)
-            {
-                ++frameIndex %= numFrames;
-                frameRec.x = 16 * (float)frameIndex;
-                if (frameIndex == 0) ++deathLoopCount;
-            }
-            else
-            {
-                frameRec.x = 5 * 16;
-            }
-        }*/
-        
+    // --- Animation ---
+    bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
+
+    ++frameDelayCounter;
+    if (frameDelayCounter > FRAME_DELAY)
+    {
         frameDelayCounter = 0;
+
         if (justClimbedLadder)
         {
             frameRec.y = 1 * SpriteSize;
-            frameRec.width = marioFrameWidth;
-            frameRec.x = marioFrameWidth * (float)(4 + climbFinishFrame);
+            frameRec.width = SpriteSize;
+            frameRec.x = SpriteSize * (float)(4 + climbFinishFrame);
             ++finishFrameDelayCounter;
             if (finishFrameDelayCounter > 2)
             {
@@ -385,42 +324,60 @@ void Player::Movement()
         }
         else if (marioMoving && !isJumping)
         {
-            frameRec.y = 0.0f; 
+            frameRec.y = 0.0f;
             ++frameIndex;
-            frameIndex %= numFrames;
-            frameRec.x = marioFrameWidth * (float)frameIndex;
+            frameIndex %= NUM_FRAMES;
+            frameRec.x = SpriteSize * (float)frameIndex;
         }
         else if (isJumping)
         {
-            frameRec.y = 0.0f;  
+            frameRec.y = 0.0f;
             frameRec.x = 3 * SpriteSize;
         }
         else
         {
-            frameRec.y = 0.0f;  
+            frameRec.y = 0.0f;
             frameIndex = 0;
             frameRec.x = 0.0f;
         }
     }
 }
 
-void DrawMarioCollider() {
+// ------------------------------------------------------------
+// Debug draw
+// ------------------------------------------------------------
+void DrawMarioCollider()
+{
     DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
     DrawPixel(Mario.Position.x, Mario.Position.y, RED);
-    if (GetHammerTime()){
-    DrawRectangle(Mario.HammerHitbox.x, Mario.HammerHitbox.y, Mario.HammerHitbox.width, Mario.HammerHitbox.height, BROWN);
+    if (GetHammerTime())
+        DrawRectangle(Mario.HammerHitbox.x, Mario.HammerHitbox.y,
+            Mario.HammerHitbox.width, Mario.HammerHitbox.height, BROWN);
+}
+
+// ------------------------------------------------------------
+// Unload
+// ------------------------------------------------------------
+void Player::Unload()
+{
+    UnloadTexture(HammerTexture);
+
+    // Audio is static — only unload once
+    if (jumpSound.frameCount != 0)
+    {
+        UnloadSound(jumpSound);
+        UnloadMusicStream(walkMusic);
+        UnloadSound(deathSound);
+        UnloadMusicStream(climbMusic);
+        jumpSound = { 0 };  // mark as unloaded
     }
 }
 
-void Player::Unload()
+// ------------------------------------------------------------
+// Die
+// ------------------------------------------------------------
+void Player::die()
 {
-    UnloadSound(jumpSound);
-    UnloadMusicStream(walkMusic);
-    UnloadSound(deathSound);
-    UnloadMusicStream(climbMusic);
-}
-
-void Player::die() {
     isGrounded = false;
     isJumping = false;
     isAlive = false;

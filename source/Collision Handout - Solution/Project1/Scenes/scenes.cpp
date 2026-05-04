@@ -3,7 +3,9 @@
 #include "raylib.h"
 Scene current_scene = LEVEL1;
 bool Scene_Init = false;
-bool Hammer_time = false;
+bool Hammer_time = false;      // legacy / fallback
+bool Hammer_time_p1 = false;
+bool Hammer_time_p2 = false;
 float DeathTimer = 0.0f;
 bool hasStarted = false;
 Texture2D DeathEffect;
@@ -12,7 +14,7 @@ Vector2 SavedPosition = { 0,0 };
 Sound DeathSFX = { 0 };
 bool SoundPlayed = false;
 
-void StartEntityDeath(Entity &entity) {
+void StartEntityDeath(Entity& entity) {
 	DeathTimer = 0.0f;
 	hasStarted = true;
 	DeathEffect = LoadTexture("Sprites/Kill aura.png");
@@ -36,7 +38,7 @@ void PlayEntityDeath() {
 	DeathTimer += GetFrameTime();
 	if (!SoundPlayed) PlaySound(DeathSFX), SoundPlayed = true;
 	if (DeathTimer < 0.2f) {
-		DeathSpriteSelector = { 0,0,18, 16};
+		DeathSpriteSelector = { 0,0,18, 16 };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, SavedPosition, WHITE);
 		return;
 	}
@@ -46,13 +48,13 @@ void PlayEntityDeath() {
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, buffer, WHITE);
 		return;
 	}
-	else if (DeathTimer < 0.6f){
+	else if (DeathTimer < 0.6f) {
 		DeathSpriteSelector = { 31,0,7, 16 };
 		Vector2 buffer = { SavedPosition.x + 4, SavedPosition.y };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, buffer, WHITE);
 		return;
 	}
-	else if (DeathTimer < 0.8f){
+	else if (DeathTimer < 0.8f) {
 		DeathSpriteSelector = { 39,0,20, 16 };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, SavedPosition, WHITE);
 		return;
@@ -60,17 +62,24 @@ void PlayEntityDeath() {
 	EndEntityDeath();
 }
 
-void StartHammerTime() {
-	Hammer_time = true;
+// Per-player hammer
+void StartHammerTime(int playerNum) {
+	if (playerNum == 1) Hammer_time_p1 = true;
+	else                Hammer_time_p2 = true;
+}
+bool GetHammerTime(int playerNum) {
+	if (playerNum == 1) return Hammer_time_p1;
+	else                return Hammer_time_p2;
+}
+void StopHammerTime(int playerNum) {
+	if (playerNum == 1) Hammer_time_p1 = false;
+	else                Hammer_time_p2 = false;
 }
 
-bool GetHammerTime() {
-	return Hammer_time;
-}
-
-void StopHammerTime() {
-	Hammer_time = false;
-}
+// Legacy (used by Player.cpp internamente via PlayerNum)
+void StartHammerTime() { Hammer_time_p1 = true; Hammer_time_p2 = true; }
+bool GetHammerTime() { return Hammer_time_p1 || Hammer_time_p2; }
+void StopHammerTime() { Hammer_time_p1 = false; Hammer_time_p2 = false; }
 void ChangeScene() {
 	Scene_Init = false;
 	if (current_scene == INTRO) {
@@ -88,7 +97,7 @@ void ChangeScene() {
 	if (current_scene == HOWHIGH) {
 		current_scene = LEVEL1;
 		return;
-	
+
 	}
 	if (current_scene == LEVEL1) {
 		current_scene = WINCUTSCENE;
@@ -125,8 +134,8 @@ Scene GetCurrentScene() {
 	if (current_scene == CUTSCENE) {
 		return CUTSCENE;
 	}
-	if (current_scene == HOWHIGH) { 
-		return HOWHIGH; 
+	if (current_scene == HOWHIGH) {
+		return HOWHIGH;
 	}
 	if (current_scene == LEVEL1) {
 		return LEVEL1;
@@ -142,6 +151,5 @@ Scene GetCurrentScene() {
 	}
 	if (current_scene == WINCUTSCENE2) {
 		return WINCUTSCENE2;
-	} 
+	}
 }
-

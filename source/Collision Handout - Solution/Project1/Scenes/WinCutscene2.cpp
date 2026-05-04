@@ -127,7 +127,7 @@ void runWinCutscene2() {
         WinCutscene2Init();
         Scene_Init = true;
     }
-    
+
     winTimer2 += GetFrameTime();
     shakeTimer += GetFrameTime();
 
@@ -150,7 +150,7 @@ void runWinCutscene2() {
 
         DrawTextureRec(dkTexture, dkShakeFrames[shakeFrameIdx], donkey.Position, WHITE);
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
-        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
 
         if (shakeCount >= 24) {
             winPhase2 = WPHASE_FALL;
@@ -182,7 +182,7 @@ void runWinCutscene2() {
 
         DrawTextureRec(dkTexture, dkFallFrame, donkey.Position, WHITE);
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
-        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
     }
 
     // ---- FASE 2b: ANIMACION DE IMPACTO DE DK (loop ~4s, 0.5s por frame) ----
@@ -208,7 +208,7 @@ void runWinCutscene2() {
         }
 
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
-        DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
+        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
     }
 
     // ---- FASE 3: REUNION, CORAZON, Y PASA ----
