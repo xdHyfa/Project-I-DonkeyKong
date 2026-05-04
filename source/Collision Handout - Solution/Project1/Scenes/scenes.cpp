@@ -12,7 +12,7 @@ Vector2 SavedPosition = { 0,0 };
 Sound DeathSFX = { 0 };
 bool SoundPlayed = false;
 
-void StartEntityDeath(Entity &entity) {
+void StartEntityDeath(Entity& entity) {
 	DeathTimer = 0.0f;
 	hasStarted = true;
 	DeathEffect = LoadTexture("Sprites/Kill aura.png");
@@ -36,7 +36,7 @@ void PlayEntityDeath() {
 	DeathTimer += GetFrameTime();
 	if (!SoundPlayed) PlaySound(DeathSFX), SoundPlayed = true;
 	if (DeathTimer < 0.2f) {
-		DeathSpriteSelector = { 0,0,18, 16};
+		DeathSpriteSelector = { 0,0,18, 16 };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, SavedPosition, WHITE);
 		return;
 	}
@@ -46,13 +46,13 @@ void PlayEntityDeath() {
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, buffer, WHITE);
 		return;
 	}
-	else if (DeathTimer < 0.6f){
+	else if (DeathTimer < 0.6f) {
 		DeathSpriteSelector = { 31,0,7, 16 };
 		Vector2 buffer = { SavedPosition.x + 4, SavedPosition.y };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, buffer, WHITE);
 		return;
 	}
-	else if (DeathTimer < 0.8f){
+	else if (DeathTimer < 0.8f) {
 		DeathSpriteSelector = { 39,0,20, 16 };
 		DrawTextureRec(DeathEffect, DeathSpriteSelector, SavedPosition, WHITE);
 		return;
@@ -88,7 +88,7 @@ void ChangeScene() {
 	if (current_scene == HOWHIGH) {
 		current_scene = LEVEL1;
 		return;
-	
+
 	}
 	if (current_scene == LEVEL1) {
 		current_scene = WINCUTSCENE;
@@ -110,9 +110,14 @@ void ChangeScene() {
 		current_scene = HOWHIGH;
 		return;
 	}
+	if (current_scene == HIGHSCORE) {
+		current_scene = TITLE;
+		return;
+	}
 }
 void ChangeScene(bool NoLives) {
-	current_scene = TITLE;
+	Scene_Init = false;
+	current_scene = HIGHSCORE;
 }
 
 Scene GetCurrentScene() {
@@ -125,8 +130,8 @@ Scene GetCurrentScene() {
 	if (current_scene == CUTSCENE) {
 		return CUTSCENE;
 	}
-	if (current_scene == HOWHIGH) { 
-		return HOWHIGH; 
+	if (current_scene == HOWHIGH) {
+		return HOWHIGH;
 	}
 	if (current_scene == LEVEL1) {
 		return LEVEL1;
@@ -142,6 +147,8 @@ Scene GetCurrentScene() {
 	}
 	if (current_scene == WINCUTSCENE2) {
 		return WINCUTSCENE2;
-	} 
+	}
+	if (current_scene == HIGHSCORE) {
+		return HIGHSCORE;
+	}
 }
-

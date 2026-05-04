@@ -100,6 +100,12 @@ void RemoveLife() {
 	UI.Lives--;
 }
 
+void CheckLives() {
+	if (UI.Lives < 0) {
+		TriggerGameOver();
+	}
+}
+
 // --- GAME OVER ---
 bool gameOverActive = false;
 float gameOverTimer = 0.0f;
@@ -114,6 +120,7 @@ bool IsGameOver() {
 }
 
 void TickGameOver() {
+	if (!gameOverActive) return;
 	gameOverTimer += GetFrameTime();
 }
 
@@ -121,15 +128,15 @@ float GetGameOverTimer() {
 	return gameOverTimer;
 }
 
+// Llamado desde main cuando el timer acaba: resetea estado y va a HIGHSCORE
 void EndGameOver() {
 	gameOverActive = false;
 	gameOverTimer = 0.0f;
-	if (UI.HiScore < UI.score) UI.HiScore = UI.score;
-	UI.score = 0;
-	UI.Lives = 2;
-	UI.Level = 1;
+	// El reset de score/lives/level lo hace la pantalla de highscore
+	// despues de leer los valores, NO aqui
 }
 
+// Solo dibuja el panel, no cambia nada
 void UpdateDrawGameOver() {
 	if (!gameOverActive) return;
 	const int rectW = 100;
@@ -141,12 +148,6 @@ void UpdateDrawGameOver() {
 	DrawRectangle(rectX, rectY, rectW, rectH, BLACK);
 	Vector2 textPos = { (float)rectX + 10, (float)rectY + 6 };
 	DrawTextEx(UI_Font, "GAME  OVER", textPos, 10, 0.5f, WHITE);
-}
-
-void CheckLives() {
-	if (UI.Lives < 0) {
-		TriggerGameOver();
-	}
 }
 
 
@@ -226,4 +227,22 @@ void UpdateDrawScorePopup() {
 int GetLevel()
 {
 	return UI.Level;
+}
+
+int GetHiScore()
+{
+	return UI.HiScore;
+}
+
+int GetScore()
+{
+	return UI.score;
+}
+
+void ResetAfterGameOver()
+{
+	if (UI.HiScore < UI.score) UI.HiScore = UI.score;
+	UI.score = 0;
+	UI.Lives = 2;
+	UI.Level = 1;
 }

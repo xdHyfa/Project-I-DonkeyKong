@@ -12,6 +12,7 @@
 #include "Scenes/WinCutscene.h"
 #include "Core/UI.h"
 #include "Scenes/WinCutscene2.h"
+#include "Scenes/HighScoreScreen.h"
 
 
 int main()
@@ -36,15 +37,15 @@ int main()
 		BeginMode2D(camera);
 
 		// --- GAME OVER ---
-		// Mientras est? activo, bloqueamos todo el switch y solo dibujamos el panel.
-		// Cuando el timer llega a 3s, reseteamos y cambiamos a Title limpiamente.
+		// Bloquea el switch entero mientras esta activo.
+		// Cuando llega a 3s llama ChangeScene(true) -> HIGHSCORE.
 		if (IsGameOver()) {
 			TickGameOver();
 			PrintUI();
 			UpdateDrawGameOver();
 			if (GetGameOverTimer() >= 3.0f) {
 				EndGameOver();
-				ChangeScene(true);
+				ChangeScene(true);   // -> HIGHSCORE
 			}
 			EndMode2D();
 			EndDrawing();
@@ -113,6 +114,10 @@ int main()
 		case WINCUTSCENE2:
 			PrintUI();
 			runWinCutscene2();
+			break;
+
+		case HIGHSCORE:
+			runHighScoreScreen();
 			break;
 		}
 
