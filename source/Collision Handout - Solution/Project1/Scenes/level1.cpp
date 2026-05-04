@@ -62,7 +62,7 @@ void runLevel1() {
         Hammer2.SetObject(165, 182, Hammer);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
-        
+
     }
 
     if (isDeathSequence) {
@@ -89,8 +89,8 @@ void runLevel1() {
             isDeathSequence = false;
             CheckLives();
             ResetBonus();
-            barrelSpawner.Init();
-             return;
+            if (!IsGameOver()) barrelSpawner.Init();
+            return;
         }
 
         Level1LadderDraw();
@@ -120,7 +120,7 @@ void runLevel1() {
         Mario.Movement();
         donkey.Update();
         lady.Update();
-        if(!GetHammerTime()) UpdateMusicStream(level1Music);
+        if (!GetHammerTime()) UpdateMusicStream(level1Music);
         Level1RampCollisions(Mario);
         Level1LadderCollisions(Mario);
         barrelSpawner.Update();
@@ -137,7 +137,7 @@ void runLevel1() {
         Hammer2.CheckInteraction(Mario);
 
         if (GetHammerTime()) {
-            if(!isHammerPlaying) PlayMusicStream(Hammer_Music), isHammerPlaying = true;
+            if (!isHammerPlaying) PlayMusicStream(Hammer_Music), isHammerPlaying = true;
             else {
                 UpdateMusicStream(Hammer_Music);
             }
@@ -214,7 +214,7 @@ void runLevel1() {
             Mario.die();
             RemoveLife();
             ResetLevel1Entities();
-          }
+        }
         if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
             StopMusicStream(level1Music);
             PlaySound(deathSound2);
@@ -230,12 +230,12 @@ void runLevel1() {
     }
     else {
 
-    // siempre dibuja
-    Level1LadderDraw();
-    Level1RampDraw();
-    donkey.Draw();
-    lady.Draw();
-    barrelSpawner.Draw();
+        // siempre dibuja
+        Level1LadderDraw();
+        Level1RampDraw();
+        donkey.Draw();
+        lady.Draw();
+        barrelSpawner.Draw();
     }
     if (IsKeyPressed(KEY_H)) {
         Hitboxes_On = !Hitboxes_On;
@@ -250,9 +250,9 @@ void runLevel1() {
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
     UpdateDrawScorePopup();
     SetCooldown();
-   
+
     Level1CheckWinCondition(Mario);
-    
+
     if (GetCurrentScene() != LEVEL1) {
         /*UnloadTexture(Mario.Texture);
         Truss::UnloadSharedTexture();
