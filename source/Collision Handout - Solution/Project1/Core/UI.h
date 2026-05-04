@@ -31,3 +31,6 @@ void EndGameOver();
 void UpdateDrawGameOver();
 
 int GetLevel();
+int GetHiScore();
+int GetScore();
+void ResetAfterGameOver();
