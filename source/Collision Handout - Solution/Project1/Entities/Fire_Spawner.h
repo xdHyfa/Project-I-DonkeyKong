@@ -20,7 +20,9 @@ public:
     bool Anim_blink = false;
     bool Facing_left = false;
 
-
+    Texture2D NormalTexture = { 0 };
+    Texture2D HammerTexture = { 0 };
+    bool hammerTextureLoaded = false;
 
 
 
