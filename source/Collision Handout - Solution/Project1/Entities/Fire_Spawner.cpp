@@ -38,6 +38,10 @@ void Fire::DrawSpawnFx() {
 
 
 void Fire::PlayAnimation() {
+    if (hammerTextureLoaded) {
+        Texture = GetHammerTime() ? HammerTexture : NormalTexture;
+    }
+
     fireTick += GetFrameTime();
     if (Facing_left) { FireSprite.width = -16.0f; }
     else { FireSprite.width = 16.0f; }
@@ -88,27 +92,27 @@ void Fire::Movement() {
 
 
 
-void SpawnFire(Fire &fire, int x, int y, int sprite) {
-	if (!fire.has_Spawned) {
-        if (sprite == 1){
-		    fire.Texture = LoadTexture("sprites/FIREBALL.png");
-
+void SpawnFire(Fire& fire, int x, int y, int sprite) {
+    if (!fire.has_Spawned) {
+        if (sprite == 1) {
+            fire.NormalTexture = LoadTexture("sprites/FIREBALL.png");
+            fire.HammerTexture = LoadTexture("sprites/FIREBALL2.png");
         }
         else {
-            fire.Texture = LoadTexture("sprites/SMALLFIREBALL.png");
+            fire.NormalTexture = LoadTexture("sprites/SMALLFIREBALL.png");
+            fire.HammerTexture = LoadTexture("sprites/SMALLFIREBALL2.png");
         }
-        fire.SetPos(x,y);
-		fire.has_Spawned = true;
-	}
-
-    fire.SpawnTexture = LoadTexture("sprites/fire.png"); // tu nombre de archivo
+        fire.Texture = fire.NormalTexture;
+        fire.hammerTextureLoaded = true;
+        fire.SetPos(x, y);
+        fire.has_Spawned = true;
+    }
+    fire.SpawnTexture = LoadTexture("sprites/fire.png");
     fire.spawnFxPlaying = true;
     fire.spawnFxTick = 0.0f;
     fire.spawnFxFrame = 0;
     fire.spawnFxCycle = 0;
     fire.spawnFxPos = { (float)x + 3, (float)y - 15 };
-
-
 }
 
 
