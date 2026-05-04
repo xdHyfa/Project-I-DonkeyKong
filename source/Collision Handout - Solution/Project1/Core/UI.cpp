@@ -1,4 +1,5 @@
 #include "Scenes/scenes.h"
+#include "Scenes/HighScoreScreen.h"   // <-- añadido para HS_SetJustPlayed
 #include "raylib.h"
 #include <iostream>
 #include "UI.h"
@@ -110,9 +111,16 @@ void CheckLives() {
 bool gameOverActive = false;
 float gameOverTimer = 0.0f;
 
+// Score/Level guardados antes del reset, para que HighScoreScreen los lea
+static int savedScoreForHS = 0;
+static int savedLevelForHS = 0;
+
 void TriggerGameOver() {
 	gameOverActive = true;
 	gameOverTimer = 0.0f;
+	// Guardar valores ahora, antes de cualquier reset
+	savedScoreForHS = UI.score;
+	savedLevelForHS = UI.Level;
 }
 
 bool IsGameOver() {
@@ -132,8 +140,9 @@ float GetGameOverTimer() {
 void EndGameOver() {
 	gameOverActive = false;
 	gameOverTimer = 0.0f;
-	// El reset de score/lives/level lo hace la pantalla de highscore
-	// despues de leer los valores, NO aqui
+	// Avisar al highscore que venimos de una partida real
+	HS_SetJustPlayed(true);
+	// El reset de score/lives/level lo hace HighScoreScreen después de leer los valores
 }
 
 // Solo dibuja el panel, no cambia nada
