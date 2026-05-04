@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include <iostream>
 #include "UI.h"
+#include <fstream>
+
 using namespace std;
 
 void UpdateDrawScorePopup();
@@ -17,6 +19,13 @@ public:
 	bool BonusLoaded = false;
 	float PointsCooldown = 0.0f;
 };
+
+struct ScoreEntry {
+	char name[4];
+	int score;
+};
+
+ScoreEntry HighScores[5];
 
 Font UI_Font;
 Texture BonusTexture;
@@ -39,6 +48,26 @@ Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9};
 
 
 ui UI;
+
+void OrderHighScores() {
+	ScoreEntry buffer;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4 - i; j++) {
+			if (HighScores[i].score > HighScores[i + 1].score) {
+				buffer = HighScores[i];
+				HighScores[i] = HighScores[i + 1];
+				HighScores[i + 1] = buffer;
+			}
+		}
+	}
+}
+
+void SaveHighScores() {
+	OrderHighScores();
+	ofstream out("highscores.txt");
+	for (int i = 0; i < 5; i++)
+		out << HighScores[i].name << " " << HighScores[i].score << "\n";
+}
 
 void ResetUI() {
 	UI.HiScore = UI.score;
