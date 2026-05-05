@@ -1,6 +1,6 @@
 #pragma once
 #include "Entities/entity.h"
-typedef enum Scene { INTRO, TITLE, CUTSCENE, HOWHIGH, LEVEL1, WINCUTSCENE, HOWHIGH2, LEVEL2, WINCUTSCENE2, HIGHSCORE } Scene;
+typedef enum Scene { INTRO, TITLE, CUTSCENE, HOWHIGH, LEVEL1, WINCUTSCENE, NEWSCENE, HOWHIGH2, LEVEL2, WINCUTSCENE2, HIGHSCORE } Scene;
 extern bool Scene_Init;
 
 void ChangeScene();

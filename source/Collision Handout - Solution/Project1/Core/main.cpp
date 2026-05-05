@@ -13,6 +13,7 @@
 #include "Core/UI.h"
 #include "Scenes/WinCutscene2.h"
 #include "Scenes/HighScoreScreen.h"
+#include "Scenes/newscene.h"
 
 
 int main()
@@ -102,6 +103,12 @@ int main()
 			PrintUI();
 			runHowHigh();
 			break;
+
+		case NEWSCENE:
+			PrintUI();
+			runNewScene();   // your new scene function
+			break;
+
 
 		case LEVEL2:
 

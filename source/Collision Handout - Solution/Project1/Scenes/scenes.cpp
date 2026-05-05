@@ -98,11 +98,11 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == WINCUTSCENE) {
-		current_scene = HOWHIGH2;
+		current_scene = NEWSCENE;   // was HOWHIGH2
 		return;
 	}
-	if (current_scene == HOWHIGH2) {
-		current_scene = LEVEL2;
+	if (current_scene == NEWSCENE) {
+		current_scene = HOWHIGH2;
 		return;
 	}
 	if (current_scene == LEVEL2) {
