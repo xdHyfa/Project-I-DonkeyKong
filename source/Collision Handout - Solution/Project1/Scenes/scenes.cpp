@@ -76,7 +76,7 @@ void StopHammerTime() {
 void ChangeScene() {
 	Scene_Init = false;
 
-	// Al arrancar, INTRO salta directo al highscore (solo visualización)
+	// Al arrancar, INTRO salta directo al highscore (solo visualizaci?n)
 	if (current_scene == INTRO) {
 		current_scene = HIGHSCORE;
 		return;
@@ -105,6 +105,10 @@ void ChangeScene() {
 		current_scene = HOWHIGH2;
 		return;
 	}
+	if (current_scene == HOWHIGH2) {
+		current_scene = LEVEL2;
+		return;
+	}
 	if (current_scene == LEVEL2) {
 		current_scene = WINCUTSCENE2;
 		return;
@@ -131,6 +135,7 @@ Scene GetCurrentScene() {
 	if (current_scene == HOWHIGH)     return HOWHIGH;
 	if (current_scene == LEVEL1)      return LEVEL1;
 	if (current_scene == WINCUTSCENE) return WINCUTSCENE;
+	if (current_scene == NEWSCENE)    return NEWSCENE;   // was missing — caused the INTRO flash
 	if (current_scene == HOWHIGH2)    return HOWHIGH2;
 	if (current_scene == LEVEL2)      return LEVEL2;
 	if (current_scene == WINCUTSCENE2)return WINCUTSCENE2;
