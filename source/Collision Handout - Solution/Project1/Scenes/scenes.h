@@ -3,6 +3,10 @@
 typedef enum Scene { INTRO, TITLE, CUTSCENE, HOWHIGH, LEVEL1, WINCUTSCENE, HOWHIGH2, LEVEL2, WINCUTSCENE2 } Scene;
 extern bool Scene_Init;
 
+void CheckTwoPlayers();
+
+bool GetTwoPlayers();
+
 void ChangeScene();
 
 void ChangeScene(bool NoLives);

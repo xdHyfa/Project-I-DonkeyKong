@@ -132,15 +132,16 @@ void runLevel1() {
     }
 
     if (!winTriggered) {
+        CheckTwoPlayers();
         Mario.Movement();
-        Luigi.Movement();
+        if (GetTwoPlayers()) Luigi.Movement();
         donkey.Update();
         lady.Update();
         if (!GetHammerTime()) UpdateMusicStream(level1Music);
         Level1RampCollisions(Mario);
-        Level1RampCollisions(Luigi);
+        if (GetTwoPlayers()) Level1RampCollisions(Luigi);
         Level1LadderCollisions(Mario);
-        Level1LadderCollisions(Luigi);
+        if (GetTwoPlayers()) Level1LadderCollisions(Luigi);
         barrelSpawner.Update();
         Level1LadderDraw();
         Level1RampDraw();
@@ -153,8 +154,8 @@ void runLevel1() {
         UpdateBonus();
         Hammer1.CheckInteraction(Mario, 1);
         Hammer2.CheckInteraction(Mario, 1);
-        Hammer1.CheckInteraction(Luigi, 2);
-        Hammer2.CheckInteraction(Luigi, 2);
+        if (GetTwoPlayers()) Hammer1.CheckInteraction(Luigi, 2);
+        if (GetTwoPlayers()) Hammer2.CheckInteraction(Luigi, 2);
 
         if (GetHammerTime()) {
             if (!isHammerPlaying) PlayMusicStream(Hammer_Music), isHammerPlaying = true;
@@ -177,7 +178,7 @@ void runLevel1() {
                 StartEntityDeath(Fire2);
                 return;
             }
-            if (Luigi.CheckHammerHitbox(Fire1) && Fire1.has_Spawned) {
+            if (GetTwoPlayers() && Luigi.CheckHammerHitbox(Fire1) && Fire1.has_Spawned) {
                 AddPoints(300);
                 ShowScorePopup(Luigi.Position, 300);
                 Fire1.has_Spawned = false;
@@ -185,7 +186,7 @@ void runLevel1() {
                 StartEntityDeath(Fire1);
                 return;
             }
-            if (Luigi.CheckHammerHitbox(Fire2) && Fire2.has_Spawned) {
+            if (GetTwoPlayers() && Luigi.CheckHammerHitbox(Fire2) && Fire2.has_Spawned) {
                 Fire2.has_Spawned = false;
                 PlaySound(HammerSound1);
                 AddPoints(300);
@@ -212,7 +213,7 @@ void runLevel1() {
                 Mario.die();
                 RemoveLife();
             }
-            if (Luigi.isAlive && EntityCollision(Luigi, b)) {
+            if (GetTwoPlayers() && Luigi.isAlive && EntityCollision(Luigi, b)) {
                 StopMusicStream(level1Music);
                 PlaySound(deathSound2);
                 isDeathSequence = true;
@@ -230,7 +231,7 @@ void runLevel1() {
                     StartEntityDeath(b);
                     return;
                 }
-                if (Luigi.CheckHammerHitbox(b)) {
+                if (GetTwoPlayers() && Luigi.CheckHammerHitbox(b)) {
                     b.has_Spawned = false;
                     PlaySound(HammerSound1);
                     AddPoints(300);
@@ -256,7 +257,7 @@ void runLevel1() {
             RemoveLife();
             ResetLevel1Entities();
         }
-        if (Luigi.isAlive && (Fire1.has_Spawned && EntityCollision(Luigi, Fire1) || Fire2.has_Spawned && EntityCollision(Luigi, Fire2))) {
+        if (GetTwoPlayers() && Luigi.isAlive && (Fire1.has_Spawned && EntityCollision(Luigi, Fire1) || Fire2.has_Spawned && EntityCollision(Luigi, Fire2))) {
             StopMusicStream(level1Music);
             PlaySound(deathSound2);
             isDeathSequence = true;
@@ -275,7 +276,7 @@ void runLevel1() {
             RemoveLife();
             ResetLevel1Entities();
         }
-        if (Luigi.isAlive && Luigi.marioVelocity.y > 7.0f) {
+        if (GetTwoPlayers() && Luigi.isAlive && Luigi.marioVelocity.y > 7.0f) {
             StopMusicStream(level1Music);
             PlaySound(deathSound2);
             isDeathSequence = true;
@@ -293,7 +294,7 @@ void runLevel1() {
             RemoveLife();
             ResetLevel1Entities();
         }
-        if (Luigi.isAlive && CheckCollisionRecs(Luigi.getHitbox(), donkey.hitbox)) {
+        if (GetTwoPlayers() && Luigi.isAlive && CheckCollisionRecs(Luigi.getHitbox(), donkey.hitbox)) {
             StopMusicStream(level1Music);
             PlaySound(deathSound2);
             isDeathSequence = true;
@@ -326,7 +327,7 @@ void runLevel1() {
     }
 
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
     UpdateDrawScorePopup();
     SetCooldown();
 

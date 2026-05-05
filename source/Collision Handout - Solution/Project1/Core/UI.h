@@ -1,5 +1,7 @@
 #pragma once
 
+extern Font UI_Font;
+
 void AddPoints(int points);
 
 void PrintUI();

@@ -1,6 +1,7 @@
 #include "Scenes/scenes.h"
 #include "Entities/entity.h"
 #include "raylib.h"
+#include "Core/UI.h"
 Scene current_scene = LEVEL1;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
@@ -13,6 +14,28 @@ Rectangle DeathSpriteSelector = { 0,0, 16, 16 };
 Vector2 SavedPosition = { 0,0 };
 Sound DeathSFX = { 0 };
 bool SoundPlayed = false;
+bool TwoPlayerMode = false;
+bool Start2PTextTimer = false;
+float TextTimer = 0;
+Vector2 Text2PlayerPos = { 50, 100 };
+
+void CheckTwoPlayers() {
+	if (IsKeyPressed(KEY_RIGHT_BRACKET))
+	{
+		if (!TwoPlayerMode) TwoPlayerMode = true, Start2PTextTimer = true;
+		else TwoPlayerMode = false, Start2PTextTimer = false, TextTimer = 0;
+	}
+	if (Start2PTextTimer) {
+		if (TextTimer < 1.5f) {
+			TextTimer += GetFrameTime();
+			DrawTextEx(UI_Font, "2 PLAYER MODE ON", Text2PlayerPos, 10, 0.5f, YELLOW);
+		}
+	}
+}
+
+bool GetTwoPlayers() {
+	return TwoPlayerMode;
+}
 
 void StartEntityDeath(Entity& entity) {
 	DeathTimer = 0.0f;
