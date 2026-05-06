@@ -49,7 +49,7 @@ void ResetUI() {
 }
 
 void AddPoints(int points) {
-	if(UI.PointsCooldown >= 0.5f){
+	if(UI.PointsCooldown >= 0.5f || GetHammerTime()){
 		cout << "Adding points " << endl;
 		UI.score += points;
 		UI.PointsCooldown = 0;
