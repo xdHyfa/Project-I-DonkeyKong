@@ -64,6 +64,7 @@ public:
         return false;
     }
     void Movement() override;
+    void DeathSequence();
     void Setup();
     void Unload();
 

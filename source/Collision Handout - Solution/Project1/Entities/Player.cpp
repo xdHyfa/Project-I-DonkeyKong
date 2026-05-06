@@ -89,10 +89,10 @@ void Player::Setup()
 // ------------------------------------------------------------
 // Movement
 // ------------------------------------------------------------
-void Player::Movement()
-{
-    if (!isAlive)
-    {
+
+void Player::DeathSequence() {
+    
+
         frameRec.width = abs(frameRec.width);
         frameRec.y = 4 * SpriteSize;
 
@@ -124,6 +124,13 @@ void Player::Movement()
         {
             frameRec.x = 4 * SpriteSize;
         }
+        return;
+
+}
+void Player::Movement()
+{
+    if (!isAlive) {
+        DeathSequence();
         return;
     }
 
