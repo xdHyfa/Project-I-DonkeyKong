@@ -14,59 +14,71 @@ using namespace std;
 
 // -----------------------------------------------------------------------
 //  PLATFORM LAYOUT  (224x256 screen, bottom -> top)
+//  Matches the whiteboard design:
 //
-//  Floor 0  : x=0..224   (14 trusses) full width          y = ground
-//  Platform1: x=0..112   ( 7 trusses) left side           y = ground-40
-//  Platform2: x=80..208  ( 8 trusses) right portion only  y = ground-80
-//  Platform4: x=112..224 ( 7 trusses) right side          y = ground-160
-//  Top      : x=112..224 ( 7 trusses) top-right, DK+Lady  y = ground-200
+//  Floor 0  : x=0..224  (14 trusses) full width              y = ground
+//  Platform1L: x=0..96  ( 6 trusses) left side               y = ground-40
+//  Platform1R: x=128..224( 6 trusses) right side             y = ground-40
+//  Platform2 : x=64..192 ( 8 trusses) central                y = ground-80
+//  Platform3L: x=0..80  ( 5 trusses) left portion            y = ground-120
+//  Platform3R: x=96..208 ( 7 trusses) right portion          y = ground-120
+//  Platform4 : x=112..224( 7 trusses) upper-right, STAR here y = ground-160
+//  Platform7 : x=0..80  ( 5 trusses) upper-left, DK here     y = ground-200
+//  Top (P5)  : x=112..224( 7 trusses) topmost-right, Lady    y = ground-200
 //
-//  Platform1R: x=112..224 (7 trusses) RIGHT mirror of P1    y = ground-40  [NEW]
-//  Platform3L: x=0..80    (5 trusses) left portion          y = ground-120 [NEW]
-//  Platform3R: x=80..176  (6 trusses) right portion         y = ground-120 [NEW]
-//  Platform7:  x=0..80    (5 trusses) upper-left            y = ground-165 [NEW]
-//
-//  Ladders:
-//   L0: x=8,   ground -> P1        (far left)               [KEPT]
-//   L1: x=24,  P7     -> P3L       (left H ladder)          [NEW]
-//   L2: x=128, Top    -> P4        (right top H)            [NEW]
-//   L3: x=144, P4     -> P3R       (right mid H)            [NEW]
-//   L4: x=128, P3R    -> P2        (right bottom H)         [NEW]
+//  Ladders (matching whiteboard left->right, bottom->top):
+//   L0: x=8,   ground -> P1L       (far left)
+//   L1: x=48,  P1L    -> P3L       (left mid)
+//   L2: x=32,  P3L    -> P7        (left top)
+//   L3: x=160, P1R    -> P2        (right low)
+//   L4: x=144, P2     -> P3R       (right mid)
+//   L5: x=160, P3R    -> P4        (right high)
 // -----------------------------------------------------------------------
 
-int L3_Y0, L3_Y1, L3_Y2, L3_Y3, L3_Y4, L3_Y5;
+// Platform Y positions – declared at file scope so ALL functions can see them
+int L3_Y0;   // ground / floor
+int L3_Y1;   // P1L and P1R  (ground-40)
+int L3_Y2;   // P2 central   (ground-80)
+int L3_Y3;   // P3L and P3R  (ground-120)
+int L3_Y4;   // P4 upper-right + Star  (ground-160)
+int L3_Y5;   // Top right / Lady       (ground-200)
+int L3_Y7;   // P7 upper-left / DK     (ground-200, same row as Top)
 
+// Truss arrays
 Truss L3_Base0[14];
-Truss L3_Base1[7];
-Truss L3_Base1R[7];  // NEW: right mirror of P1, x=112..224
+Truss L3_Base1L[6];
+Truss L3_Base1R[6];
 Truss L3_Base2[8];
-Truss L3_Base3[6];   // kept in memory but NOT drawn/collided (P3 removed)
-Truss L3_Base3L[5];  // NEW: P3 left portion  x=0..80
-Truss L3_Base3R[6];  // NEW: P3 right portion x=80..176
+Truss L3_Base3L[5];
+Truss L3_Base3R[7];
 Truss L3_Base4[7];
-Truss L3_Base5[7];
-Truss L3_Base6[4];   // kept in memory but NOT drawn/collided (P6 removed)
-Truss L3_Base7[5];   // NEW: upper-left platform x=0..80
+Truss L3_Base5[7];   // Top-right (Lady platform)
+Truss L3_Base7[5];   // Upper-left (DK platform)
 
+// Collision zones
 Rectangle L3_Zone0 = { 0,0,0,0 };
-Rectangle L3_Zone1 = { 0,0,0,0 };
-Rectangle L3_Zone1R = { 0,0,0,0 };  // NEW: right mirror of P1
+Rectangle L3_Zone1L = { 0,0,0,0 };
+Rectangle L3_Zone1R = { 0,0,0,0 };
 Rectangle L3_Zone2 = { 0,0,0,0 };
-Rectangle L3_Zone3 = { 0,0,0,0 };  // unused slot
-Rectangle L3_Zone3L = { 0,0,0,0 };  // NEW: P3 left
-Rectangle L3_Zone3R = { 0,0,0,0 };  // NEW: P3 right
+Rectangle L3_Zone3L = { 0,0,0,0 };
+Rectangle L3_Zone3R = { 0,0,0,0 };
 Rectangle L3_Zone4 = { 0,0,0,0 };
 Rectangle L3_Zone5 = { 0,0,0,0 };
-Rectangle L3_Zone6 = { 0,0,0,0 };  // unused slot
-Rectangle L3_Zone7 = { 0,0,0,0 };  // NEW: upper-left platform
+Rectangle L3_Zone7 = { 0,0,0,0 };
 
-bool level3WinTriggered = false;
+// Win state
+bool  level3WinTriggered = false;
 float level3WinTimer = 0.0f;
 
-Rectangle L3_StarHitbox = { 130, 0, 14, 14 };
+// Star – placed on P4 (upper-right platform), centred
+Rectangle L3_StarHitbox = { 162, 0, 14, 14 };
 
+// -----------------------------------------------------------------------
+//  WIN CONDITION
+// -----------------------------------------------------------------------
 void Level3CheckWinCondition(Entity& entity) {
     if (entity.tag != EntityTag::PLAYER) return;
+
     if (level3WinTriggered) {
         level3WinTimer += GetFrameTime();
         if (level3WinTimer >= 2.0f) {
@@ -76,6 +88,7 @@ void Level3CheckWinCondition(Entity& entity) {
         }
         return;
     }
+
     if (CheckCollisionPointRec(entity.FloorCollider, L3_StarHitbox)) {
         level3WinTriggered = true;
         level3WinTimer = 0.0f;
@@ -88,107 +101,120 @@ void Level3CheckWinCondition(Entity& entity) {
 void Level3RampSetter() {
     Truss::LoadSharedTexture(2);
 
-    // Floor 0 – full width
+    // --- Platform Y positions ---
     L3_Y0 = (int)(SCREEN_HEIGHT - TrussHeight - 1);
+    L3_Y1 = L3_Y0 - 32;   // was -40; reduced gap so Mario can reach P2
+    L3_Y2 = L3_Y0 - 80;
+    L3_Y3 = L3_Y0 - 120;
+    L3_Y4 = L3_Y0 - 160;
+    L3_Y5 = L3_Y0 - 200;   // Top-right (Lady)
+    L3_Y7 = L3_Y0 - 200;   // Upper-left (DK) – same row
+
+    // --- Trusses ---
+    // Floor
     BaseSetter(L3_Base0, 14, 0, L3_Y0, false);
 
-    // Platform 1 LEFT – left side, 7 trusses (x=0..112)
-    L3_Y1 = L3_Y0 - 40;
-    BaseSetter(L3_Base1, 7, 0, L3_Y1, false);
+    // P1L – left side, x=0..96
+    BaseSetter(L3_Base1L, 6, 0, L3_Y1, false);
 
-    // Platform 1 RIGHT – mirror of P1, 7 trusses (x=112..224)  [NEW]
-    BaseSetter(L3_Base1R, 7, 112, L3_Y1, false);
+    // P1R – right side, x=128..224
+    BaseSetter(L3_Base1R, 6, 128, L3_Y1, false);
 
-    // Platform 2 – right portion only, 8 trusses (x=80..208)
-    L3_Y2 = L3_Y0 - 80;
-    BaseSetter(L3_Base2, 8, 80, L3_Y2, false);
+    // P2 – central, x=64..192
+    BaseSetter(L3_Base2, 8, 64, L3_Y2, false);
 
-    // Platform 3 Y reference (ground-120)
-    L3_Y3 = L3_Y0 - 120;
-
-    // Platform 3 LEFT – 5 trusses (x=0..80)  [NEW]
+    // P3L – left, x=0..80
     BaseSetter(L3_Base3L, 5, 0, L3_Y3, false);
 
-    // Platform 3 RIGHT – 6 trusses (x=80..176)  [NEW]
-    BaseSetter(L3_Base3R, 6, 80, L3_Y3, false);
+    // P3R – right, x=96..208
+    BaseSetter(L3_Base3R, 7, 96, L3_Y3, false);
 
-    // Platform 4 – right side, 7 trusses (x=112..224)
-    L3_Y4 = L3_Y0 - 160;
+    // P4 – upper-right, x=112..224  (Star lives here)
     BaseSetter(L3_Base4, 7, 112, L3_Y4, false);
 
-    // Top – right side, 7 trusses (x=112..224), DK + Lady + Star
-    L3_Y5 = L3_Y0 - 200;
+    // Top-right (Lady), x=112..224
     BaseSetter(L3_Base5, 7, 112, L3_Y5, false);
 
-    // Platform 7 – upper-left, 5 trusses (x=0..80)  [NEW]
-    int L3_Y7 = L3_Y0 - 165;
+    // Upper-left (DK), x=0..80
     BaseSetter(L3_Base7, 5, 0, L3_Y7, false);
 
-    // ---- Collision zones ----
-    L3_Zone0 = { 0,   (float)(L3_Y0 - 6),  224,  22 };
-    L3_Zone1 = { 0,   (float)(L3_Y1 - 6),  112,  22 };
-    L3_Zone1R = { 112, (float)(L3_Y1 - 6),  112,  22 };  // right mirror
-    L3_Zone2 = { 80,  (float)(L3_Y2 - 6),  128,  22 };
-    L3_Zone3 = { 0,   0,                    0,    0 };  // unused
-    L3_Zone3L = { 0,   (float)(L3_Y3 - 6),  80,   22 };
-    L3_Zone3R = { 80,  (float)(L3_Y3 - 6),  96,   22 };
-    L3_Zone4 = { 112, (float)(L3_Y4 - 6),  112,  22 };
-    L3_Zone5 = { 112, (float)(L3_Y5 - 6),  112,  22 };
-    L3_Zone6 = { 0,   0,                    0,    0 };  // unused
-    L3_Zone7 = { 0,   (float)(L3_Y7 - 6),  80,   22 };
+    // --- Collision zones (FloorCollider point must land inside these) ---
+    // Zone height = 22: 6px above truss surface + 16px truss body
+    L3_Zone0 = { 0, (float)(L3_Y0 - 6), 224, 22 };
+    L3_Zone1L = { 0, (float)(L3_Y1 - 6),  96, 22 };
+    L3_Zone1R = { 128, (float)(L3_Y1 - 6),  96, 22 };
+    L3_Zone2 = { 64, (float)(L3_Y2 - 6), 128, 22 };
+    L3_Zone3L = { 0, (float)(L3_Y3 - 6),  80, 22 };
+    L3_Zone3R = { 96, (float)(L3_Y3 - 6), 112, 22 };
+    L3_Zone4 = { 112, (float)(L3_Y4 - 6), 112, 22 };
+    L3_Zone5 = { 112, (float)(L3_Y5 - 6), 112, 22 };
+    L3_Zone7 = { 0, (float)(L3_Y7 - 6),  80, 22 };
 
-    // Star sits just above the top platform surface
-    L3_StarHitbox.y = (float)(L3_Y5 - 14);
+    // Star sits on the surface of P4, centred around x=162
+    L3_StarHitbox.y = (float)(L3_Y4 - 14);
+    L3_StarHitbox.x = 162.0f;
 }
 
+// -----------------------------------------------------------------------
+//  RAMP DRAW
+// -----------------------------------------------------------------------
 void Level3RampDraw() {
     RampDrawer(L3_Base0, 14);
-    RampDrawer(L3_Base1, 7);
-    RampDrawer(L3_Base1R, 7);  // right mirror of P1
+    RampDrawer(L3_Base1L, 6);
+    RampDrawer(L3_Base1R, 6);
     RampDrawer(L3_Base2, 8);
-    RampDrawer(L3_Base3L, 5);  // P3 left
-    RampDrawer(L3_Base3R, 6);  // P3 right
+    RampDrawer(L3_Base3L, 5);
+    RampDrawer(L3_Base3R, 7);
     RampDrawer(L3_Base4, 7);
     RampDrawer(L3_Base5, 7);
-    RampDrawer(L3_Base7, 5);  // upper-left
+    RampDrawer(L3_Base7, 5);
 }
 
+// -----------------------------------------------------------------------
+//  RAMP COLLISIONS
+//  Order matters: check lower platforms first to avoid floor grabbing
+//  overriding upper ones when zones overlap vertically.
+// -----------------------------------------------------------------------
 void Level3RampCollisions(Entity& entity) {
+    // Floor first (widest, lowest)
     if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone0))  RampCollision(L3_Base0, 14, entity);
-    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1))  RampCollision(L3_Base1, 7, entity);
-    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1R)) RampCollision(L3_Base1R, 7, entity);
+    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1L)) RampCollision(L3_Base1L, 6, entity);
+    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1R)) RampCollision(L3_Base1R, 6, entity);
     else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone2))  RampCollision(L3_Base2, 8, entity);
     else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3L)) RampCollision(L3_Base3L, 5, entity);
-    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3R)) RampCollision(L3_Base3R, 6, entity);
-    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone7))  RampCollision(L3_Base7, 5, entity);
+    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3R)) RampCollision(L3_Base3R, 7, entity);
     else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone4))  RampCollision(L3_Base4, 7, entity);
     else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone5))  RampCollision(L3_Base5, 7, entity);
+    else if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone7))  RampCollision(L3_Base7, 5, entity);
     else {
         if (entity.tag == EntityTag::PLAYER) Mario.isFalling = true;
     }
 }
 
+// Returns which platform an entity is standing on (-1 = none / air)
 int Level3CheckEntityPlatform(Entity& entity) {
     if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone0))  return 0;
-    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1))  return 1;
-    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1R)) return 11;  // right mirror
+    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1L)) return 1;
+    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone1R)) return 11;
     if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone2))  return 2;
-    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3L)) return 31;  // P3 left
-    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3R)) return 32;  // P3 right
-    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone7))  return 7;
+    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3L)) return 31;
+    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone3R)) return 32;
     if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone4))  return 4;
     if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone5))  return 5;
+    if (CheckCollisionPointRec(entity.FloorCollider, L3_Zone7))  return 7;
     return -1;
 }
 
 // -----------------------------------------------------------------------
-//  LADDERS  (5 active, L5-L7 off-screen)
+//  LADDERS  (6 active, indices 6-7 off-screen dummies)
 // -----------------------------------------------------------------------
 Ladder L3_Ladders[8];
 Ladder L3_Extra0[6], L3_Extra1[6], L3_Extra2[6], L3_Extra3[6];
 Ladder L3_Extra4[6], L3_Extra5[6], L3_Extra6[6], L3_Extra7[6];
 Rectangle L3_DownZone[8];
+static float ladderBottomY[8] = { 0 };  // bottom Y each ladder reaches; set in LadderSetter
 
+// Builds one full ladder column: top rung + 6 inner rungs spaced 3px apart (original style)
 static void SetL3FullLadder(Ladder& ladder, Ladder* extras, float x, float y) {
     ladder.setPos(x, y);
     extras[0].setPos(ladder.Position.x, ladder.Position.y + 15);
@@ -198,7 +224,9 @@ static void SetL3FullLadder(Ladder& ladder, Ladder* extras, float x, float y) {
 
 void Level3LadderSetter() {
     Ladder::LoadSharedTexture();
+
     for (int i = 0; i < 8; i++) L3_Ladders[i].setSprite(4, true);
+
     Ladder* extras[8] = {
         L3_Extra0, L3_Extra1, L3_Extra2, L3_Extra3,
         L3_Extra4, L3_Extra5, L3_Extra6, L3_Extra7
@@ -207,53 +235,85 @@ void Level3LadderSetter() {
         for (int i = 0; i < 6; i++)
             extras[g][i].setSprite(4, false);
 
-    // L0 – far left wall, ground -> P1  (x=8)
+    // L0 – far left: ground -> P1L  (x=8)
     SetL3FullLadder(L3_Ladders[0], L3_Extra0,
         8.0f, (float)L3_Y1 + TrussHeight);
 
-    // L1 – left H: P7 (upper-left) -> P3L  (x=24)  [NEW]
+    // L1 – left: P1L -> P2  (x=64)  [was P1L->P3L, removed per design]
     SetL3FullLadder(L3_Ladders[1], L3_Extra1,
-        24.0f, (float)L3_Y3 + TrussHeight);
+        64.0f, (float)L3_Y2 + TrussHeight);
 
-    // L2 – right top H: Top -> P4  (x=128)  [NEW]
+    // L2 – REMOVED (was P3L->P7); hidden off-screen
     SetL3FullLadder(L3_Ladders[2], L3_Extra2,
-        128.0f, (float)L3_Y4 + TrussHeight);
+        -100.0f, 0.0f);
 
-    // L3 – right mid H: P4 -> P3R  (x=144)  [NEW]
+    // L3 – right low: P1R -> P2  (x=160)
     SetL3FullLadder(L3_Ladders[3], L3_Extra3,
+        160.0f, (float)L3_Y2 + TrussHeight);
+
+    // L4 – right mid: P2 -> P3R  (x=144)
+    SetL3FullLadder(L3_Ladders[4], L3_Extra4,
         144.0f, (float)L3_Y3 + TrussHeight);
 
-    // L4 – right bottom H: P3R -> P2  (x=128)  [NEW]
-    SetL3FullLadder(L3_Ladders[4], L3_Extra4,
-        128.0f, (float)L3_Y2 + TrussHeight);
+    // L5 – right high: P3R -> P4  (x=160)
+    SetL3FullLadder(L3_Ladders[5], L3_Extra5,
+        160.0f, (float)L3_Y4 + TrussHeight);
 
-    // L5, L6, L7 – unused
-    SetL3FullLadder(L3_Ladders[5], L3_Extra5, -100.0f, 0.0f);
+    // L6, L7 – unused (hidden off-screen)
     SetL3FullLadder(L3_Ladders[6], L3_Extra6, -100.0f, 0.0f);
     SetL3FullLadder(L3_Ladders[7], L3_Extra7, -100.0f, 0.0f);
 
-    // Enable hitboxes for active ladders (0..4)
-    for (int i = 0; i < 5; i++) {
-        L3_Ladders[i].Hitbox.y += 1;
-        L3_Ladders[i].Hitbox.height += 16;
-        L3_DownZone[i] = { L3_Ladders[i].Hitbox.x, L3_Ladders[i].Hitbox.y - 2, 10, 4 };
+    // Set bottom Y for each ladder (lower platform surface) and hitbox height
+    // L0: ground(L3_Y0) -> P1L(L3_Y1)
+    ladderBottomY[0] = (float)(L3_Y0 + TrussHeight);
+    // L1: P1L(L3_Y1) -> P2(L3_Y2)
+    ladderBottomY[1] = (float)(L3_Y1 + TrussHeight);
+    // L2: unused
+    ladderBottomY[2] = 0.0f;
+    // L3: P1R(L3_Y1) -> P2(L3_Y2)
+    ladderBottomY[3] = (float)(L3_Y1 + TrussHeight);
+    // L4: P2(L3_Y2) -> P3R(L3_Y3)
+    ladderBottomY[4] = (float)(L3_Y2 + TrussHeight);
+    // L5: P3R(L3_Y3) -> P4(L3_Y4)
+    ladderBottomY[5] = (float)(L3_Y3 + TrussHeight);
+    // L6,L7: unused
+    ladderBottomY[6] = 0.0f;
+    ladderBottomY[7] = 0.0f;
+
+    // Hitboxes: cover full gap so Mario can grab at any point
+    for (int i = 0; i < 6; i++) {
+        float height = ladderBottomY[i] - L3_Ladders[i].Position.y + 16.0f;
+        if (height < 0) height = 0;
+        L3_Ladders[i].Hitbox.y = L3_Ladders[i].Position.y;
+        L3_Ladders[i].Hitbox.height = height;
+        L3_DownZone[i] = {
+            L3_Ladders[i].Hitbox.x,
+            L3_Ladders[i].Position.y - 2,
+            10, 4
+        };
     }
-    // Disable unused
-    for (int i = 5; i < 8; i++) {
+    for (int i = 6; i < 8; i++) {
         L3_Ladders[i].Hitbox = { 0, 0, 0, 0 };
         L3_DownZone[i] = { 0, 0, 0, 0 };
     }
 }
 
 void Level3LadderDraw() {
-    Ladder* extras[8] = {
-        L3_Extra0, L3_Extra1, L3_Extra2, L3_Extra3,
-        L3_Extra4, L3_Extra5, L3_Extra6, L3_Extra7
-    };
+    const float RUNG_STEP = 8.0f;   // pixels between rung draws
+
     for (int i = 0; i < 8; i++) {
-        DrawTextureRec(L3_Ladders[i].texture, L3_Ladders[i].SpriteSelector, L3_Ladders[i].Position, WHITE);
-        for (int j = 0; j < 6; j++)
-            DrawTextureRec(extras[i][j].texture, extras[i][j].SpriteSelector, extras[i][j].Position, WHITE);
+        if (L3_Ladders[i].Hitbox.width == 0) continue;  // off-screen dummy
+
+        float topY = L3_Ladders[i].Position.y;
+        float bottomY = ladderBottomY[i];
+        if (bottomY <= topY) continue;
+
+        for (float ry = topY; ry <= bottomY; ry += RUNG_STEP) {
+            Vector2 pos = { L3_Ladders[i].Position.x, ry };
+            DrawTextureRec(L3_Ladders[i].texture,
+                L3_Ladders[i].SpriteSelector,
+                pos, WHITE);
+        }
     }
 }
 
@@ -268,20 +328,31 @@ bool Level3CheckDownZone(Entity& entity) {
 }
 
 // -----------------------------------------------------------------------
-//  DEBUG DRAW
+//  DEBUG – draw all collision boxes. Call from newscene.cpp when needed.
 // -----------------------------------------------------------------------
 void DrawLevel3Colliders() {
-    DrawRectangle(L3_Zone0.x, L3_Zone0.y, L3_Zone0.width, L3_Zone0.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone1.x, L3_Zone1.y, L3_Zone1.width, L3_Zone1.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone1R.x, L3_Zone1R.y, L3_Zone1R.width, L3_Zone1R.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone2.x, L3_Zone2.y, L3_Zone2.width, L3_Zone2.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone3L.x, L3_Zone3L.y, L3_Zone3L.width, L3_Zone3L.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone3R.x, L3_Zone3R.y, L3_Zone3R.width, L3_Zone3R.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone4.x, L3_Zone4.y, L3_Zone4.width, L3_Zone4.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone5.x, L3_Zone5.y, L3_Zone5.width, L3_Zone5.height, { 255,255,255,60 });
-    DrawRectangle(L3_Zone7.x, L3_Zone7.y, L3_Zone7.width, L3_Zone7.height, { 255,255,255,60 });
-    DrawRectangle(L3_StarHitbox.x, L3_StarHitbox.y, L3_StarHitbox.width, L3_StarHitbox.height, YELLOW);
+    Color zoneCol = { 255, 255, 255, 60 };
+    Color starCol = YELLOW;
+    Color downCol = DARKPURPLE;
+
+    DrawRectangleRec(L3_Zone0, zoneCol);
+    DrawRectangleRec(L3_Zone1L, zoneCol);
+    DrawRectangleRec(L3_Zone1R, zoneCol);
+    DrawRectangleRec(L3_Zone2, zoneCol);
+    DrawRectangleRec(L3_Zone3L, zoneCol);
+    DrawRectangleRec(L3_Zone3R, zoneCol);
+    DrawRectangleRec(L3_Zone4, zoneCol);
+    DrawRectangleRec(L3_Zone5, zoneCol);
+    DrawRectangleRec(L3_Zone7, zoneCol);
+
+    DrawRectangleRec(L3_StarHitbox, starCol);
+
     DrawLadderCollider(L3_Ladders, 8);
+
     for (int i = 0; i < 8; i++)
-        DrawRectangle(L3_DownZone[i].x, L3_DownZone[i].y, L3_DownZone[i].width, L3_DownZone[i].height, DARKPURPLE);
+        DrawRectangle((int)L3_DownZone[i].x, (int)L3_DownZone[i].y,
+            (int)L3_DownZone[i].width, (int)L3_DownZone[i].height, downCol);
+
+    // Mario FloorCollider (magenta dot)
+    DrawCircle((int)Mario.FloorCollider.x, (int)Mario.FloorCollider.y, 2, MAGENTA);
 }

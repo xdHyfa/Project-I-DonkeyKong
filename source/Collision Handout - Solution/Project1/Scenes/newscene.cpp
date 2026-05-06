@@ -10,9 +10,13 @@
 #include "Core/UI.h"
 
 // -----------------------------------------------------------------------
-//  Star sprite  (drawn at the win-condition hitbox position)
-//  "Sprites/Star.png" – 16x16, single frame.
-//  Replace with DrawTextureRec animation if you have a sheet.
+//  Debug overlay toggle – set to true to see all hitboxes / colliders.
+//  Flip to false for release builds.
+// -----------------------------------------------------------------------
+#define LEVEL3_DEBUG false
+
+// -----------------------------------------------------------------------
+//  Star sprite  (16×16 single frame, or 32×16 two-frame sheet)
 // -----------------------------------------------------------------------
 static Texture2D starTexture = { 0 };
 static bool      starLoaded = false;
@@ -31,20 +35,22 @@ static bool  musicLoaded = false;
 static float flashTimer = 0.0f;
 
 // -----------------------------------------------------------------------
-//  runNewScene
+//  runNewScene – called every frame by main.cpp while NEWSCENE is active
 // -----------------------------------------------------------------------
 void runNewScene() {
 
-    // ---- ONE-TIME INIT (runs once each time we enter this scene) ----
+    // ================================================================
+    //  ONE-TIME INIT  (runs once each time we enter this scene)
+    // ================================================================
     if (!Scene_Init) {
         Scene_Init = true;
 
-        // Map
+        // --- Map ---
         Level3RampSetter();
         Level3LadderSetter();
 
-        // Player
-        Mario.Position = { 64.0f, (float)(SCREEN_HEIGHT - 16 - 17) };
+        // --- Player – starts bottom-left of the floor ---
+        Mario.Position = { 32.0f, (float)(SCREEN_HEIGHT - 16 - 17) };
         Mario.marioVelocity = { 0.0f, 0.0f };
         Mario.isAlive = true;
         Mario.isJumping = false;
@@ -54,20 +60,16 @@ void runNewScene() {
         Mario.setGrounded(false);
         Mario.FloorCollider = { Mario.Position.x + 8, Mario.Position.y + 16 };
 
-        // DK + Lady – not used in this level layout yet
-        // donkey.Setup();
-        // lady.Setup();
-
-        // Entities
+        // --- Entities (Goombas + Bills) ---
         Level3EntitiesSetup();
 
-        // Star texture
+        // --- Star texture ---
         if (!starLoaded) {
             starTexture = LoadTexture("Sprites/Star.png");
             starLoaded = true;
         }
 
-        // Music
+        // --- Music ---
         if (!musicLoaded) {
             newSceneMusic = LoadMusicStream("Audio/Level3.wav");
             newSceneMusic.looping = true;
@@ -75,50 +77,82 @@ void runNewScene() {
         }
         PlayMusicStream(newSceneMusic);
 
-        // Reset win state
+        // --- Reset win state ---
         level3WinTriggered = false;
+        flashTimer = 0.0f;
 
-        // Bonus timer
+        // --- Bonus timer ---
         ResetBonus();
-        // NOTE: AddLevel() NOT called here – main.cpp scene flow handles it
     }
 
-    // ---- EVERY FRAME ----
+    // ================================================================
+    //  EVERY FRAME
+    // ================================================================
 
     UpdateMusicStream(newSceneMusic);
 
-    // --- Win flash overlay when Mario touches the Star ---
+    // --- Win flash overlay ---
     if (level3WinTriggered) {
         flashTimer += GetFrameTime();
-        // Alternate white flash every 0.15s for 2 seconds
-        if ((int)(flashTimer / 0.15f) % 2 == 0) {
+        if ((int)(flashTimer / 0.15f) % 2 == 0)
             DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, { 255,255,255,80 });
-        }
     }
 
-    // --- Draw map ---
+    // ----------------------------------------------------------------
+    //  MAP
+    // ----------------------------------------------------------------
     Level3RampDraw();
     Level3LadderDraw();
 
-    // --- Star (win object) – blink gently on top platform ---
-    if (!level3WinTriggered && starLoaded) {
-        starAnimTimer += GetFrameTime();
-        if (starAnimTimer >= 0.3f) { starAnimTimer = 0.0f; starAnimFrame ^= 1; }
-        Rectangle starSrc = { (float)(starAnimFrame * 16), 0.0f, 16.0f, 16.0f };
-        Vector2 starPos = { L3_StarHitbox.x, L3_StarHitbox.y };
-        DrawTextureRec(starTexture, starSrc, starPos, YELLOW);
+    // ----------------------------------------------------------------
+    //  PLACEHOLDERS
+    //  Replace each DrawRectangle/DrawText block with the real sprite
+    //  once assets are ready.
+    // ----------------------------------------------------------------
+
+    // DK – upper-left platform (P7), x=0..80, y=L3_Y7
+    {
+        Vector2 dkPos = { 16.0f, (float)(L3_Y7 - 24) };
+        DrawRectangle((int)dkPos.x, (int)dkPos.y, 24, 24, BROWN);
+        DrawText("DK", (int)dkPos.x + 2, (int)dkPos.y + 6, 8, WHITE);
+        // TODO: donkey.Update(); donkey.Draw();
     }
 
-    // DK + Lady – disabled until properly positioned for this layout
-    // donkey.Update(); donkey.Draw();
-    // lady.Update();   lady.Draw();
+    // Lady – top-right platform (P5), x=112..224, y=L3_Y5
+    {
+        Vector2 ladyPos = { 168.0f, (float)(L3_Y5 - 20) };
+        DrawRectangle((int)ladyPos.x, (int)ladyPos.y, 16, 20, PINK);
+        DrawText("L", (int)ladyPos.x + 4, (int)ladyPos.y + 6, 8, WHITE);
+        // TODO: lady.Update(); lady.Draw();
+    }
 
-    // --- Entities (Goombas + Bills) ---
+    // Star (win object) – blinks on P4 until collected
+    if (!level3WinTriggered) {
+        if (starLoaded && starTexture.id > 0) {
+            starAnimTimer += GetFrameTime();
+            if (starAnimTimer >= 0.3f) { starAnimTimer = 0.0f; starAnimFrame ^= 1; }
+            Rectangle starSrc = { (float)(starAnimFrame * 16), 0.0f, 16.0f, 16.0f };
+            Vector2   starPos = { L3_StarHitbox.x, L3_StarHitbox.y };
+            DrawTextureRec(starTexture, starSrc, starPos, YELLOW);
+        }
+        else {
+            // Fallback placeholder when texture is missing
+            DrawRectangle((int)L3_StarHitbox.x, (int)L3_StarHitbox.y,
+                (int)L3_StarHitbox.width, (int)L3_StarHitbox.height, YELLOW);
+            DrawText("*", (int)L3_StarHitbox.x + 2, (int)L3_StarHitbox.y, 14, GOLD);
+        }
+    }
+
+    // ----------------------------------------------------------------
+    //  ENTITIES  (only when Mario is alive)
+    // ----------------------------------------------------------------
     if (Mario.isAlive) {
         Level3EntitiesRoutine();
     }
 
-    // --- Player ---
+    // ----------------------------------------------------------------
+    //  PLAYER
+    // ----------------------------------------------------------------
     if (Mario.isAlive) {
         Mario.Movement();
         Level3LadderCollisions(Mario);
@@ -127,13 +161,17 @@ void runNewScene() {
         UpdateBonus();
     }
     else {
-        // Death animation – still draw, handle respawn
-        Mario.Movement();
+        Mario.Movement();   // plays death animation
 
-        // Respawn after death animation finishes (deathLoopCount >= 2)
-        if (Mario.deathLoopCount >= 2) {
-            // Reset player to start of scene
-            Mario.Position = { 64.0f, (float)(SCREEN_HEIGHT - 16 - 17) };
+        // Respawn condition: deathLoopCount flag OR fallback 1.5 s timer
+        static float deathRespawnTimer = 0.0f;
+        deathRespawnTimer += GetFrameTime();
+
+        bool shouldRespawn = (Mario.deathLoopCount >= 2) || (deathRespawnTimer >= 1.5f);
+        if (shouldRespawn) {
+            deathRespawnTimer = 0.0f;
+            // Respawn at start position
+            Mario.Position = { 32.0f, (float)(SCREEN_HEIGHT - 16 - 17) };
             Mario.marioVelocity = { 0.0f, 0.0f };
             Mario.isAlive = true;
             Mario.isJumping = false;
@@ -144,10 +182,38 @@ void runNewScene() {
             Mario.FloorCollider = { Mario.Position.x + 8, Mario.Position.y + 16 };
 
             Level3EntitiesReset();
+            flashTimer = 0.0f;
         }
     }
 
     // Draw Mario sprite
     DrawTextureRec(Mario.Texture, frameRec, Mario.Position, WHITE);
-    // NOTE: PrintBonus() and PrintUI() are called by main.cpp – not here
+
+    // ----------------------------------------------------------------
+    //  DEBUG OVERLAY  (hitboxes / colliders / downzones)
+    // ----------------------------------------------------------------
+#if LEVEL3_DEBUG
+    DrawLevel3Colliders();
+
+    // Goomba hitboxes (green)
+    for (int i = 0; i < GOOMBA_COUNT; i++) {
+        if (!Level3Goombas[i].isDead) {
+            Rectangle hb = Level3Goombas[i].getHitbox();
+            DrawRectangleLinesEx(hb, 1, GREEN);
+        }
+    }
+
+    // Bill Bala hitboxes (orange)
+    for (int i = 0; i < BILL_COUNT; i++) {
+        if (Level3Bills[i].active) {
+            Rectangle hb = Level3Bills[i].getHitbox();
+            DrawRectangleLinesEx(hb, 1, ORANGE);
+        }
+    }
+
+    // Mario hitbox (skyblue)
+    DrawRectangleLines((int)Mario.Position.x, (int)Mario.Position.y, 16, 16, SKYBLUE);
+#endif
+
+    // NOTE: PrintBonus() and PrintUI() are called by main.cpp
 }

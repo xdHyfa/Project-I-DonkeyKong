@@ -14,11 +14,12 @@ using namespace std;
 Goomba   Level3Goombas[GOOMBA_COUNT];
 BillBala Level3Bills[BILL_COUNT];
 
-// Two spawners: one on the left wall of platform 2 (fires right),
-//              one on the right wall of platform 3 (fires left).
+// Two Bill Bala spawners:
+//   Spawner 0: left edge of screen, fires RIGHT on P2 height
+//   Spawner 1: right edge of screen, fires LEFT on P3R height
 static BillSpawner spawners[2] = {
-    { 0.0f,   0.0f,  1.0f, 0.0f, 3.5f },   // y filled in Setup
-    { 208.0f, 0.0f, -1.0f, 1.8f, 3.5f },   // stagger spawn times
+    { 0.0f, 0.0f, -1.0f, 0.0f, 3.5f },   // x/y filled in Setup
+    { 0.0f, 0.0f,  1.0f, 1.8f, 3.5f },   // stagger spawn times
 };
 
 // -----------------------------------------------------------------------
@@ -34,29 +35,25 @@ void Goomba::Setup(float x, float y, float leftBound, float rightBound) {
     deathTimer = 0.0f;
     animFrame = 0;
     animTimer = 0.0f;
-    tag = EntityTag::FIRE;   // reuse FIRE tag so map collision works
+    tag = EntityTag::FIRE;   // reuse so RampCollision accepts it
 
-    // Sprites: "Sprites/Goomba.png" – expects a 32x16 sheet: two 16x16 frames side by side.
-    // If you only have one frame, just load the same texture into both.
-    Texture = LoadTexture("Sprites/Goomba.png");
-    texture2 = Texture;   // same sheet, second frame selected via SpriteSelector
+    // "Sprites/GOOMBAS.png" – sheet with two 15x15 walk frames and squished frame
+    Texture = LoadTexture("Sprites/GOOMBAS.png");
+    texture2 = Texture;
 }
 
 void Goomba::Movement() {
     if (isDead) return;
 
-    // Patrol
     Position.x += speed * direction;
     if (Position.x <= patrolLeft) { Position.x = patrolLeft;  direction = 1.0f; }
     if (Position.x >= patrolRight) { Position.x = patrolRight; direction = -1.0f; }
 
-    // Keep on its platform (simple gravity snap – reuse map collision)
     FloorCollider.x = Position.x + 8;
     FloorCollider.y = Position.y + 16;
 
     Level3RampCollisions(*this);
 
-    // Animation (toggle frame every 0.2s)
     animTimer += GetFrameTime();
     if (animTimer >= 0.2f) {
         animTimer = 0.0f;
@@ -66,16 +63,14 @@ void Goomba::Movement() {
 
 void Goomba::Draw() {
     if (isDead) {
-        // Squished frame: draw a flat rectangle as a placeholder until you
-        // have a death sprite. Replace this with a DrawTextureRec call.
-        Rectangle squishRec = { Position.x, Position.y + 8, 16, 8 };
-        DrawRectangleRec(squishRec, RED);
+        // Squished frame: GOOMBA sheet x=26,y=6, w=13,h=8  (4px lower)
+        Rectangle src = { 26.0f, 6.0f, 13.0f, 8.0f };
+        Vector2 squishPos = { Position.x, Position.y + 4.0f };
+        DrawTextureRec(Texture, src, squishPos, WHITE);
         return;
     }
-    // Two-frame walk animation from a 32x16 sprite sheet
-    Rectangle src = { (float)(animFrame * 16), 0.0f, 16.0f, 16.0f };
-    // Flip horizontally when moving left
-    if (direction < 0) src.width = -16.0f;
+    // Single walk frame at x=6,y=4 (no animation)
+    Rectangle src = { 6.0f, 4.0f, direction >= 0 ? 15.0f : -15.0f, 15.0f };
     DrawTextureRec(Texture, src, Position, WHITE);
 }
 
@@ -86,7 +81,6 @@ void Goomba::Die() {
 
 void Goomba::Unload() {
     UnloadTexture(Texture);
-    // texture2 is the same object – no need to unload twice
 }
 
 // -----------------------------------------------------------------------
@@ -95,12 +89,11 @@ void Goomba::Unload() {
 void BillBala::Activate(float x, float y, float dir) {
     Position = { x, y };
     FloorCollider.x = x + 8;
-    FloorCollider.y = y + 16;
+    FloorCollider.y = y + 8;
     direction = dir;
     active = true;
     tag = EntityTag::FIRE;
-
-    Texture = LoadTexture("Sprites/BillBala.png");
+    Texture = LoadTexture("Sprites/BillBala.png");   // 16x13 at offset (4,3)
 }
 
 void BillBala::Movement() {
@@ -109,7 +102,6 @@ void BillBala::Movement() {
     FloorCollider.x = Position.x + 8;
     FloorCollider.y = Position.y + 8;
 
-    // Despawn when off screen
     if (Position.x > SCREEN_WIDTH + 16 || Position.x < -16) {
         active = false;
         UnloadTexture(Texture);
@@ -119,7 +111,8 @@ void BillBala::Movement() {
 
 void BillBala::Draw() {
     if (!active) return;
-    Rectangle src = { 0, 0, direction > 0 ? 16.0f : -16.0f, 16.0f };
+    // BillBala sprite: x=4,y=3, w=16,h=13 – flip when travelling left
+    Rectangle src = { 4.0f, 3.0f, direction >= 0 ? 16.0f : -16.0f, 13.0f };
     DrawTextureRec(Texture, src, Position, WHITE);
 }
 
@@ -128,7 +121,7 @@ void BillBala::Unload() {
 }
 
 // -----------------------------------------------------------------------
-//  STOMP DETECTION  (Mario jumps on top of a Goomba)
+//  STOMP DETECTION
 // -----------------------------------------------------------------------
 static void CheckMarioStompsGoomba(Goomba& goomba) {
     if (goomba.isDead) return;
@@ -138,21 +131,17 @@ static void CheckMarioStompsGoomba(Goomba& goomba) {
 
     if (!CheckCollisionRecs(marioBox, goombaBox)) return;
 
-    // Stomp: Mario must be above the Goomba's centre and moving downward
-    bool marioAbove = Mario.Position.y + 16 <= goomba.Position.y + 10;
+    bool marioAbove = (Mario.Position.y + 16) <= (goomba.Position.y + 10);
     bool marioFalling = Mario.marioVelocity.y > 0;
 
     if (marioAbove && marioFalling) {
         goomba.Die();
-        // Bounce Mario slightly
         Mario.marioVelocity.y = -4.0f;
         Mario.setGrounded(false);
-        // Award points
         ShowScorePopup(goomba.Position, 100);
         AddPoints(100);
     }
     else {
-        // Side collision – Mario takes damage
         if (!GetHammerTime()) {
             StartEntityDeath(Mario);
             Mario.die();
@@ -160,7 +149,6 @@ static void CheckMarioStompsGoomba(Goomba& goomba) {
             CheckLives();
         }
         else {
-            // Hammer kills the Goomba too
             goomba.Die();
             StartEntityDeath(goomba);
             ShowScorePopup(goomba.Position, 100);
@@ -174,6 +162,7 @@ static void CheckMarioStompsGoomba(Goomba& goomba) {
 // -----------------------------------------------------------------------
 static void CheckMarioHitsBill(BillBala& bill) {
     if (!bill.active) return;
+
     Rectangle billBox = bill.getHitbox();
     Rectangle marioBox = { Mario.Position.x + 2, Mario.Position.y + 2, 12, 14 };
 
@@ -184,7 +173,7 @@ static void CheckMarioHitsBill(BillBala& bill) {
             RemoveLife();
             CheckLives();
         }
-        // Bill is indestructible – Mario cannot kill it
+        // Bills are indestructible – Mario can only jump over them
     }
 }
 
@@ -197,7 +186,6 @@ static void UpdateSpawners() {
         if (spawners[s].timer < spawners[s].interval) continue;
         spawners[s].timer = 0.0f;
 
-        // Find an inactive Bill slot
         for (int b = 0; b < BILL_COUNT; b++) {
             if (!Level3Bills[b].active) {
                 Level3Bills[b].Activate(spawners[s].x, spawners[s].y, spawners[s].direction);
@@ -212,23 +200,30 @@ static void UpdateSpawners() {
 // -----------------------------------------------------------------------
 void Level3EntitiesSetup() {
     // --- GOOMBAS ---
-    // Platform heights: P1=ground-40, P2=ground-80, P3=ground-120
-    // Goomba y = SCREEN_HEIGHT - 1 - 16(truss) - Pheight - 16(goomba sprite)
+    // Goomba sprite is 16px tall; surface of platform Yn is at Yn px from top.
+    // Entity y  = Yn - 16  (sprite sits on surface)
+    // Matching whiteboard: one on P1L (left low), one on P2 (central mid)
 
-    // Goomba 0: Platform 1 LEFT (x=0..112)
-    Level3Goombas[0].Setup(32.0f,
-        (float)(SCREEN_HEIGHT - 1 - 16 - 40 - 16),
-        0.0f, 96.0f);
+    // Goomba 0: P1L (x=0..96),  patrols x=4..80
+    Level3Goombas[0].Setup(
+        40.0f,
+        (float)(L3_Y1 - 15),
+        4.0f, 80.0f
+    );
 
-    // Goomba 1: Platform 3 RIGHT (x=80..176)
-    Level3Goombas[1].Setup(112.0f,
-        (float)(SCREEN_HEIGHT - 1 - 16 - 120 - 16),
-        80.0f, 160.0f);
+    // Goomba 1: P2 central (x=64..192), patrols x=80..160
+    Level3Goombas[1].Setup(
+        100.0f,
+        (float)(L3_Y2 - 15),
+        80.0f, 160.0f
+    );
 
-    // Goomba 2: Platform 1 RIGHT mirror (x=112..224)
-    Level3Goombas[2].Setup(160.0f,
-        (float)(SCREEN_HEIGHT - 1 - 16 - 40 - 16),
-        112.0f, 208.0f);
+    // Goomba 2: P3R (x=96..208), patrols x=100..192
+    Level3Goombas[2].Setup(
+        130.0f,
+        (float)(L3_Y3 - 15),
+        100.0f, 192.0f
+    );
 
     // --- BILL BALAS – all start inactive ---
     for (int i = 0; i < BILL_COUNT; i++) {
@@ -236,13 +231,15 @@ void Level3EntitiesSetup() {
         Level3Bills[i].Texture = { 0 };
     }
 
-    // Spawner 0: shoots right from left edge of P2 (x=80 now, y=P2 surface)
-    spawners[0].x = 80.0f;
-    spawners[0].y = (float)(SCREEN_HEIGHT - 1 - 16 - 80 - 16);
+    // Spawner 0: fires RIGHT from LEFT edge of screen, travels on P2 height
+    spawners[0].x = -16.0f;          // off-screen left
+    spawners[0].y = (float)(L3_Y2 - 7);   // 13 = BillBala sprite height
+    spawners[0].direction = 1.0f;
 
-    // Spawner 1: shoots left from right edge of P4 (x=208, y=P4 surface)
-    spawners[1].x = 208.0f;
-    spawners[1].y = (float)(SCREEN_HEIGHT - 1 - 16 - 160 - 16);
+    // Spawner 1: fires LEFT from RIGHT edge of screen, travels on P3R height
+    spawners[1].x = (float)SCREEN_WIDTH;  // off-screen right
+    spawners[1].y = (float)(L3_Y3 - 7);   // 13 = BillBala sprite height
+    spawners[1].direction = -1.0f;
 }
 
 void Level3EntitiesRoutine() {
@@ -252,11 +249,9 @@ void Level3EntitiesRoutine() {
 
         if (g.isDead) {
             g.deathTimer += GetFrameTime();
-            g.Draw();                    // draw squish
+            g.Draw();
             if (g.deathTimer > 0.5f) {
-                // Respawn at its original patrol start after a short delay
-                g.Die();                 // reset timer
-                // Place back at patrol left so it reappears cleanly
+                // Respawn at patrol start
                 g.Position.x = g.patrolLeft;
                 g.isDead = false;
                 g.deathTimer = 0.0f;
@@ -265,7 +260,7 @@ void Level3EntitiesRoutine() {
         }
 
         g.Movement();
-        Level3LadderCollisions(g);       // updates CanClimb (Goomba ignores it)
+        Level3LadderCollisions(g);   // Goomba can't climb but call keeps FloorCollider synced
         g.Draw();
         CheckMarioStompsGoomba(g);
     }
@@ -286,16 +281,15 @@ void Level3EntitiesReset() {
         Level3Goombas[i].animFrame = 0;
     }
     for (int i = 0; i < BILL_COUNT; i++) {
-        if (Level3Bills[i].active) {
-            Level3Bills[i].Unload();
-        }
+        if (Level3Bills[i].active) Level3Bills[i].Unload();
         Level3Bills[i].active = false;
     }
+    // Re-stagger spawners
     spawners[0].timer = 0.0f;
-    spawners[1].timer = 1.8f;   // stagger
+    spawners[1].timer = 1.8f;
 }
 
 void Level3EntitiesUnload() {
     for (int i = 0; i < GOOMBA_COUNT; i++) Level3Goombas[i].Unload();
-    for (int i = 0; i < BILL_COUNT; i++) Level3Bills[i].Unload();
+    for (int i = 0; i < BILL_COUNT; i++)   Level3Bills[i].Unload();
 }
