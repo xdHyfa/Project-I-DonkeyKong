@@ -2,7 +2,7 @@
 #include "Entities/entity.h"
 #include "raylib.h"
 #include "Core/UI.h"
-Scene current_scene = INTRO;
+Scene current_scene = LEVEL1;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;

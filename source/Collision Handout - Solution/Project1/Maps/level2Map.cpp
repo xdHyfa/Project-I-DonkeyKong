@@ -346,7 +346,7 @@ void Level2CheckButtons(Entity& entity) {
 			cout << "BUTTON PRESSED" << endl;
 
 			PlaySound(buttonSound); //PLAY SOUND HERE
-			ShowScorePopup(Mario.Position, 100);
+			ShowScorePopup(entity.Position, 100);
 			AddPoints(100);
 		}
 

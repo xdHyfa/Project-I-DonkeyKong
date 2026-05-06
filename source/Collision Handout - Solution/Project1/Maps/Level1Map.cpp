@@ -20,7 +20,7 @@ bool winTriggered = false;
 float winDelay = 0.0f;
 
 void Level1CheckWinCondition(Entity& entity) {
-	if (entity.tag == EntityTag::PLAYER1 && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
+	if ((entity.tag == EntityTag::PLAYER1 || entity.tag == EntityTag::PLAYER2) && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
 		if (!winTriggered) {
 			StopMusicStream(level1Music);
 			

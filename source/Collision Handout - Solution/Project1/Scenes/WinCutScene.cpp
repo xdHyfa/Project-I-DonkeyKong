@@ -141,6 +141,7 @@ void runWinCutscene() {
 
     // ---- DIBUJAR MARIO ----
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+    if (GetTwoPlayers())     DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
 
     // ---- DIBUJAR LADY ----
     if (!hasLady)

@@ -74,16 +74,12 @@ void runLevel1() {
         deathTimer += GetFrameTime();
         if (!Mario.isAlive) Mario.DeathSequence();
         if (!Luigi.isAlive) Luigi.DeathSequence();
-        donkey.Update();
-        donkey.Draw();
-        lady.Update();
-        lady.Draw();
+
 
         if (deathTimer >= 5.0f) {
             bool bothDead = !Mario.isAlive && !Luigi.isAlive;
             if (GetTwoPlayers() && !bothDead) ResumeMusicStream(level1Music);
             if (!Mario.isAlive && !GetTwoPlayers() || !Mario.isAlive && !Luigi.isAlive) {
-                // Both dead — unload and go to CheckLives
                 UnloadTexture(Mario.Texture);
                 Truss::UnloadSharedTexture();
                 Ladder::UnloadSharedTexture();
@@ -97,16 +93,22 @@ void runLevel1() {
                 Luigi.isAlive = true;
                 Scene_Init = false;
                 isDeathSequence = false;
+                RemoveLife();
                 CheckLives();
                 ResetBonus();
                 barrelSpawner.Init();
                 return;
             }
+   
             // One player still alive — resume
             isDeathSequence = false;
             deathTimer = 0.0f;
         }
 
+        donkey.Update();
+        donkey.Draw();
+        lady.Update();
+        lady.Draw();
         Level1LadderDraw();
         Level1RampDraw();
         barrelSpawner.Draw();
@@ -131,6 +133,9 @@ void runLevel1() {
         UpdateMusicStream(Hammer_Music);
         return;
     }
+
+    if (Mario.isAlive) Level1CheckWinCondition(Mario);
+    if (GetTwoPlayers() && Luigi.isAlive) Level1CheckWinCondition(Luigi);
 
     if (!winTriggered) {
         CheckTwoPlayers();
@@ -218,7 +223,6 @@ void runLevel1() {
                 isDeathSequence = true;
                 deathTimer = 0.0f;
                 Mario.die();
-                RemoveLife();
             }
             if (GetTwoPlayers() && Luigi.isAlive && EntityCollision(Luigi, b)) {
                 StopHammerTime();
@@ -229,7 +233,6 @@ void runLevel1() {
                 isDeathSequence = true;
                 deathTimer = 0.0f;
                 Luigi.die();
-                RemoveLife();
             }
             if (isDeathSequence) { ResetLevel1Entities(); break; }
             if (GetHammerTime()) {
@@ -272,7 +275,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Mario.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
         if (GetTwoPlayers() && Luigi.isAlive && (Fire1.has_Spawned && EntityCollision(Luigi, Fire1) || Fire2.has_Spawned && EntityCollision(Luigi, Fire2))) {
@@ -284,7 +286,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Luigi.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
 
@@ -297,7 +298,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Mario.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
         if (GetTwoPlayers() && Luigi.isAlive && Luigi.marioVelocity.y > 7.0f) {
@@ -309,7 +309,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Luigi.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
         if (Mario.isAlive && CheckCollisionRecs(Mario.getHitbox(), donkey.hitbox)) {
@@ -321,7 +320,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Mario.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
         if (GetTwoPlayers() && Luigi.isAlive && CheckCollisionRecs(Luigi.getHitbox(), donkey.hitbox)) {
@@ -333,7 +331,6 @@ void runLevel1() {
             isDeathSequence = true;
             deathTimer = 0.0f;
             Luigi.die();
-            RemoveLife();
             ResetLevel1Entities();
         }
 
@@ -341,7 +338,17 @@ void runLevel1() {
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
-
+        Mario.isAlive = true;
+        Luigi.isAlive = true;
+        Mario.Position = { 110, 33 };
+        Mario.frameRec.x = 0;
+        Mario.frameRec.y = 0;
+        Mario.frameRec.width = -16;
+        Luigi.Position = { 124, 32 };
+        Luigi.frameRec.x = 0;
+        Luigi.frameRec.y = 0;
+        Luigi.frameRec.width = -16;
+        cout << "we in here? " << endl;
         // siempre dibuja
         Level1LadderDraw();
         Level1RampDraw();
@@ -363,9 +370,6 @@ void runLevel1() {
     if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
     UpdateDrawScorePopup();
     SetCooldown();
-
-    if (Mario.isAlive) Level1CheckWinCondition(Mario);
-    if (GetTwoPlayers() && Luigi.isAlive) Level1CheckWinCondition(Luigi);
 
     if (GetCurrentScene() != LEVEL1) {
         /*UnloadTexture(Mario.Texture);
