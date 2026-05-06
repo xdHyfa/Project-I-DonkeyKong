@@ -212,20 +212,23 @@ static void UpdateSpawners() {
 // -----------------------------------------------------------------------
 void Level3EntitiesSetup() {
     // --- GOOMBAS ---
-    // Goomba 0: platform 1, left section
-    Level3Goombas[0].Setup(40.0f,
-        (float)(SCREEN_HEIGHT - 16 - 36 - 16),
-        0.0f, 80.0f);
+    // Platform heights: P1=ground-40, P2=ground-80, P3=ground-120
+    // Goomba y = SCREEN_HEIGHT - 1 - 16(truss) - Pheight - 16(goomba sprite)
 
-    // Goomba 1: platform 2, middle
-    Level3Goombas[1].Setup(100.0f,
-        (float)(SCREEN_HEIGHT - 16 - 71 - 16),
-        16.0f, 160.0f);
+    // Goomba 0: Platform 1 LEFT (x=0..112)
+    Level3Goombas[0].Setup(32.0f,
+        (float)(SCREEN_HEIGHT - 1 - 16 - 40 - 16),
+        0.0f, 96.0f);
 
-    // Goomba 2: platform 3, right section
-    Level3Goombas[2].Setup(150.0f,
-        (float)(SCREEN_HEIGHT - 16 - 106 - 16),
-        80.0f, 191.0f);
+    // Goomba 1: Platform 3 RIGHT (x=80..176)
+    Level3Goombas[1].Setup(112.0f,
+        (float)(SCREEN_HEIGHT - 1 - 16 - 120 - 16),
+        80.0f, 160.0f);
+
+    // Goomba 2: Platform 1 RIGHT mirror (x=112..224)
+    Level3Goombas[2].Setup(160.0f,
+        (float)(SCREEN_HEIGHT - 1 - 16 - 40 - 16),
+        112.0f, 208.0f);
 
     // --- BILL BALAS – all start inactive ---
     for (int i = 0; i < BILL_COUNT; i++) {
@@ -233,12 +236,13 @@ void Level3EntitiesSetup() {
         Level3Bills[i].Texture = { 0 };
     }
 
-    // Spawner y positions: align to platform surfaces
-    // Spawner 0: shoots right from the left edge of platform 2
-    spawners[0].y = (float)(SCREEN_HEIGHT - 16 - 71 - 16);
+    // Spawner 0: shoots right from left edge of P2 (x=80 now, y=P2 surface)
+    spawners[0].x = 80.0f;
+    spawners[0].y = (float)(SCREEN_HEIGHT - 1 - 16 - 80 - 16);
 
-    // Spawner 1: shoots left from the right edge of platform 3
-    spawners[1].y = (float)(SCREEN_HEIGHT - 16 - 106 - 16);
+    // Spawner 1: shoots left from right edge of P4 (x=208, y=P4 surface)
+    spawners[1].x = 208.0f;
+    spawners[1].y = (float)(SCREEN_HEIGHT - 1 - 16 - 160 - 16);
 }
 
 void Level3EntitiesRoutine() {
