@@ -26,6 +26,21 @@ const float    GROUND_Y = SCREEN_HEIGHT - 16.0f;
 // --- Gamepad index for Player 2 ---
 #define P2_GAMEPAD 0
 
+// --- Helpers: use gamepad when connected, fall back to keyboard otherwise ---
+// IsGamepadAvailable() is checked every call, so hot-plugging works at runtime.
+static bool P2Down(int button, int key)
+{
+    if (IsGamepadAvailable(P2_GAMEPAD))
+        return IsGamepadButtonDown(P2_GAMEPAD, button);
+    return IsKeyDown(key);
+}
+static bool P2Pressed(int button, int key)
+{
+    if (IsGamepadAvailable(P2_GAMEPAD))
+        return IsGamepadButtonPressed(P2_GAMEPAD, button);
+    return IsKeyPressed(key);
+}
+
 bool isTextureValid(const Texture2D& texture)
 {
     return texture.id > 0;
@@ -36,8 +51,8 @@ bool isTextureValid(const Texture2D& texture)
 // ------------------------------------------------------------
 void PlayerLadderMovement(Player& player)
 {
-    bool up   = (player.PlayerNum == 1) ? IsKeyDown(KEY_UP)   : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
-    bool down = (player.PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
+    bool up = (player.PlayerNum == 1) ? IsKeyDown(KEY_UP) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_UP, KEY_W);
+    bool down = (player.PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_DOWN, KEY_S);
 
     if (up) {
         player.OnLadder = true;
@@ -94,42 +109,41 @@ void Player::Setup()
 // ------------------------------------------------------------
 
 void Player::DeathSequence() {
-    
 
-        frameRec.width = abs(frameRec.width);
-        frameRec.y = 4 * SpriteSize;
+    frameRec.width = abs(frameRec.width);
+    frameRec.y = 4 * SpriteSize;
 
-        if (!deathStarted)
+    if (!deathStarted)
+    {
+        frameRec.x = 0.0f;
+        deathStartTimer += GetFrameTime();
+        if (deathStartTimer >= 1.0f)
         {
-            frameRec.x = 0.0f;
-            deathStartTimer += GetFrameTime();
-            if (deathStartTimer >= 1.0f)
-            {
-                deathStarted = true;
-                frameIndex = 1;
-                frameDelayCounter = 0;
-            }
-            return;
-        }
-
-        if (deathLoopCount < 2)
-        {
-            ++frameDelayCounter;
-            if (frameDelayCounter > 6)
-            {
-                frameDelayCounter = 0;
-                frameRec.x = SpriteSize * (float)frameIndex;
-                ++frameIndex %= 4;
-                if (frameIndex == 0) ++deathLoopCount;
-            }
-        }
-        else
-        {
-            frameRec.x = 4 * SpriteSize;
+            deathStarted = true;
+            frameIndex = 1;
+            frameDelayCounter = 0;
         }
         return;
+    }
 
+    if (deathLoopCount < 2)
+    {
+        ++frameDelayCounter;
+        if (frameDelayCounter > 6)
+        {
+            frameDelayCounter = 0;
+            frameRec.x = SpriteSize * (float)frameIndex;
+            ++frameIndex %= 4;
+            if (frameIndex == 0) ++deathLoopCount;
+        }
+    }
+    else
+    {
+        frameRec.x = 4 * SpriteSize;
+    }
+    return;
 }
+
 void Player::Movement()
 {
     if (!isAlive) {
@@ -140,8 +154,8 @@ void Player::Movement()
     // --- Horizontal input ---
     marioVelocity.x = 0.0f;
 
-    bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
-    bool moveLeft  = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT)  : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT);
+    bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_RIGHT, KEY_D);
+    bool moveLeft = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_LEFT, KEY_A);
 
     if (moveRight)
     {
@@ -227,8 +241,8 @@ void Player::Movement()
             cout << "ON LADDER" << endl;
             PlayerLadderMovement(*this);
 
-            bool upHeld   = (PlayerNum == 1) ? IsKeyDown(KEY_UP)   : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
-            bool downHeld = (PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
+            bool upHeld = (PlayerNum == 1) ? IsKeyDown(KEY_UP) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_UP, KEY_W);
+            bool downHeld = (PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_DOWN, KEY_S);
             if (upHeld || downHeld)
             {
                 if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
@@ -243,8 +257,8 @@ void Player::Movement()
 
         if (CanClimb)
         {
-            bool climbUp   = (PlayerNum == 1) ? IsKeyPressed(KEY_UP)   : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
-            bool climbDown = (PlayerNum == 1) ? IsKeyPressed(KEY_DOWN) : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
+            bool climbUp = (PlayerNum == 1) ? IsKeyPressed(KEY_UP) : P2Pressed(GAMEPAD_BUTTON_LEFT_FACE_UP, KEY_W);
+            bool climbDown = (PlayerNum == 1) ? IsKeyPressed(KEY_DOWN) : P2Pressed(GAMEPAD_BUTTON_LEFT_FACE_DOWN, KEY_S);
 
             if (climbUp)
             {
@@ -261,9 +275,9 @@ void Player::Movement()
         }
 
         // --- Jump ---
-        // Player 2 jumps with the Xbox A button (GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+        // Gamepad: A button (GAMEPAD_BUTTON_RIGHT_FACE_DOWN) | Keyboard fallback: LEFT_SHIFT
         bool jumpKey = (PlayerNum == 1) ? IsKeyPressed(KEY_SPACE)
-                                        : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+            : P2Pressed(GAMEPAD_BUTTON_RIGHT_FACE_DOWN, KEY_LEFT_SHIFT);
         if (jumpKey && tryJump())
         {
             PlaySound(jumpSound);
