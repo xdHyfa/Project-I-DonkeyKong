@@ -258,7 +258,7 @@ void Player::Movement()
         }
 
         // --- Jump ---
-        bool jumpKey = (PlayerNum == 1) ? IsKeyPressed(KEY_RIGHT_SHIFT)
+        bool jumpKey = (PlayerNum == 1) ? IsKeyPressed(KEY_SPACE)
             : IsKeyPressed(KEY_LEFT_SHIFT);
         if (jumpKey && tryJump())
         {
