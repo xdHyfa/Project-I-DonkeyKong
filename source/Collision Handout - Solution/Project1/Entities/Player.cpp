@@ -23,6 +23,9 @@ const unsigned NUM_FRAMES = 4;
 const float    FRAME_DELAY = 0.5f;
 const float    GROUND_Y = SCREEN_HEIGHT - 16.0f;
 
+// --- Gamepad index for Player 2 ---
+#define P2_GAMEPAD 0
+
 bool isTextureValid(const Texture2D& texture)
 {
     return texture.id > 0;
@@ -33,8 +36,8 @@ bool isTextureValid(const Texture2D& texture)
 // ------------------------------------------------------------
 void PlayerLadderMovement(Player& player)
 {
-    bool up = (player.PlayerNum == 1) ? IsKeyDown(KEY_UP) : IsKeyDown(KEY_W);
-    bool down = (player.PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsKeyDown(KEY_S);
+    bool up   = (player.PlayerNum == 1) ? IsKeyDown(KEY_UP)   : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
+    bool down = (player.PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
 
     if (up) {
         player.OnLadder = true;
@@ -137,8 +140,8 @@ void Player::Movement()
     // --- Horizontal input ---
     marioVelocity.x = 0.0f;
 
-    bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : IsKeyDown(KEY_D);
-    bool moveLeft = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT) : IsKeyDown(KEY_A);
+    bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
+    bool moveLeft  = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT)  : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT);
 
     if (moveRight)
     {
@@ -224,8 +227,8 @@ void Player::Movement()
             cout << "ON LADDER" << endl;
             PlayerLadderMovement(*this);
 
-            bool upHeld = (PlayerNum == 1) ? IsKeyDown(KEY_UP) : IsKeyDown(KEY_W);
-            bool downHeld = (PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsKeyDown(KEY_S);
+            bool upHeld   = (PlayerNum == 1) ? IsKeyDown(KEY_UP)   : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
+            bool downHeld = (PlayerNum == 1) ? IsKeyDown(KEY_DOWN) : IsGamepadButtonDown(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
             if (upHeld || downHeld)
             {
                 if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
@@ -240,8 +243,8 @@ void Player::Movement()
 
         if (CanClimb)
         {
-            bool climbUp = (PlayerNum == 1) ? IsKeyPressed(KEY_UP) : IsKeyPressed(KEY_W);
-            bool climbDown = (PlayerNum == 1) ? IsKeyPressed(KEY_DOWN) : IsKeyPressed(KEY_S);
+            bool climbUp   = (PlayerNum == 1) ? IsKeyPressed(KEY_UP)   : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP);
+            bool climbDown = (PlayerNum == 1) ? IsKeyPressed(KEY_DOWN) : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
 
             if (climbUp)
             {
@@ -258,8 +261,9 @@ void Player::Movement()
         }
 
         // --- Jump ---
+        // Player 2 jumps with the Xbox A button (GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
         bool jumpKey = (PlayerNum == 1) ? IsKeyPressed(KEY_SPACE)
-            : IsKeyPressed(KEY_LEFT_SHIFT);
+                                        : IsGamepadButtonPressed(P2_GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
         if (jumpKey && tryJump())
         {
             PlaySound(jumpSound);
