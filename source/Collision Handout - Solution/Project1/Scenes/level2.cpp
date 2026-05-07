@@ -204,14 +204,15 @@ void runLevel2() {
         else {
             UpdateMusicStream(Hammer_Music2);
         }
-
+        if (Mario.isAlive){
         if (Mario.CheckHammerHitbox(Fire3) && Fire3.has_Spawned) { Fire3.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire3); return; }
         if (Mario.CheckHammerHitbox(Fire4) && Fire4.has_Spawned) { Fire4.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire4); return; }
         if (Mario.CheckHammerHitbox(Fire5) && Fire5.has_Spawned) { Fire5.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire5); return; }
         if (Mario.CheckHammerHitbox(Fire6) && Fire6.has_Spawned) { Fire6.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire6); return; }
         if (Mario.CheckHammerHitbox(Fire7) && Fire7.has_Spawned) { Fire7.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Mario.Position, 300), StartEntityDeath(Fire7); return; }
-
-        if (GetTwoPlayers()) {
+        }
+        
+        if (GetTwoPlayers() && Luigi.isAlive) {
             if (Luigi.CheckHammerHitbox(Fire3) && Fire3.has_Spawned) { Fire3.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Luigi.Position, 300), StartEntityDeath(Fire3); return; }
             if (Luigi.CheckHammerHitbox(Fire4) && Fire4.has_Spawned) { Fire4.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Luigi.Position, 300), StartEntityDeath(Fire4); return; }
             if (Luigi.CheckHammerHitbox(Fire5) && Fire5.has_Spawned) { Fire5.has_Spawned = false, PlaySound(HammerSound), AddPoints(300), ShowScorePopup(Luigi.Position, 300), StartEntityDeath(Fire5); return; }
