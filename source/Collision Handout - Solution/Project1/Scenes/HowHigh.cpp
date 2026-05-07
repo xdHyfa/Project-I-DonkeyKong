@@ -1,4 +1,4 @@
-#include "Scenes/HowHigh.h"
+﻿#include "Scenes/HowHigh.h"
 #include "raylib.h"
 #include "Scenes/scenes.h"
 #include "include/resource_dir.h"
@@ -34,18 +34,18 @@ void runHowHigh() {
 
     float fontSize = 8.0f;
     float spacing = 1.0f;
+
     int level = GetLevel();
+    int displayLevel = (level % 4 == 0) ? 4 : (level % 4);  // Cycles 1→2→3→4→1→2→3→4
 
     Rectangle dkRec = { 85.0f, 2.0f, 46.0f, 32.0f };
     float gap = 4.0f;
     float spriteH = 32.0f;
 
-    for (int i = 0; i < level; i++) {
-        float offsetY = (level - 1 - i) * (spriteH + gap);
-
+    for (int i = 0; i < displayLevel; i++) {
+        float offsetY = (displayLevel - 1 - i) * (spriteH + gap);
         DrawTexture(howHighDonko, 75, 170 - (int)offsetY, WHITE);
         DrawTextureRec(howHighDonko, dkRec, { (SCREEN_WIDTH - 46.0f) / 2, 58.0f - offsetY }, WHITE);
-
         DrawTextEx(howHighFont, TextFormat("%d m", (level - i) * 25),
             { 45, 200.0f - offsetY }, fontSize, spacing, WHITE);
     }
