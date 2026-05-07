@@ -23,7 +23,7 @@ using namespace std;
 //  Platform3L: x=0..80  ( 5 trusses) left portion            y = ground-120
 //  Platform3R: x=96..208 ( 7 trusses) right portion          y = ground-120
 //  Platform4 : x=112..224( 7 trusses) upper-right, STAR here y = ground-160
-//  Platform7 : x=0..80  ( 5 trusses) upper-left, DK here     y = ground-200
+//  Platform7 : x=0..80  ( 5 trusses) upper-left, DK here     y = ground-160
 //  Top (P5)  : x=112..224( 7 trusses) topmost-right, Lady    y = ground-200
 //
 //  Ladders (matching whiteboard left->right, bottom->top):
@@ -71,7 +71,7 @@ bool  level3WinTriggered = false;
 float level3WinTimer = 0.0f;
 
 // Star – placed on P4 (upper-right platform), centred
-Rectangle L3_StarHitbox = { 162, 0, 14, 14 };
+Rectangle L3_StarHitbox = { 142, 0, 14, 14 };
 
 // -----------------------------------------------------------------------
 //  WIN CONDITION
@@ -108,7 +108,7 @@ void Level3RampSetter() {
     L3_Y3 = L3_Y0 - 120;
     L3_Y4 = L3_Y0 - 160;
     L3_Y5 = L3_Y0 - 200;   // Top-right (Lady)
-    L3_Y7 = L3_Y0 - 200;   // Upper-left (DK) – same row
+    L3_Y7 = L3_Y0 - 160;   // Upper-left (DK) – same row as P4 (star)
 
     // --- Trusses ---
     // Floor
@@ -150,9 +150,9 @@ void Level3RampSetter() {
     L3_Zone5 = { 112, (float)(L3_Y5 - 6), 112, 22 };
     L3_Zone7 = { 0, (float)(L3_Y7 - 6),  80, 22 };
 
-    // Star sits on the surface of P4, centred around x=162
+    // Star sits on the surface of P4, centred around x=142
     L3_StarHitbox.y = (float)(L3_Y4 - 14);
-    L3_StarHitbox.x = 162.0f;
+    L3_StarHitbox.x = 142.0f;
 }
 
 // -----------------------------------------------------------------------
@@ -241,29 +241,29 @@ void Level3LadderSetter() {
     //          → ladder disappears into the top of the lower truss
     // This fills the entire air gap between the two platforms.
 
-    // L0 – far left: P1L -> ground  (x=3)
+    // L0 – far left: P1L -> ground  (x=13)
     SetL3FullLadder(L3_Ladders[0], L3_Extra0,
-        3.0f, (float)L3_Y1 + TrussHeight);
+        13.0f, (float)L3_Y1 + TrussHeight);
 
-    // L1 – left: P2 -> P1L  (x=59)
+    // L1 – left: P2 -> P1L  (x=69)
     SetL3FullLadder(L3_Ladders[1], L3_Extra1,
-        59.0f, (float)L3_Y2 + TrussHeight);
+        69.0f, (float)L3_Y2 + TrussHeight);
 
     // L2 – REMOVED; hidden off-screen
     SetL3FullLadder(L3_Ladders[2], L3_Extra2,
         -100.0f, 0.0f);
 
-    // L3 – right low: P2 -> P1R  (x=155)
+    // L3 – right low: P2 -> P1R  (x=151)
     SetL3FullLadder(L3_Ladders[3], L3_Extra3,
-        155.0f, (float)L3_Y2 + TrussHeight);
+        151.0f, (float)L3_Y2 + TrussHeight);
 
-    // L4 – right mid: P3R -> P2  (x=139)
+    // L4 – right mid: P3R -> P2  (x=132)
     SetL3FullLadder(L3_Ladders[4], L3_Extra4,
-        139.0f, (float)L3_Y3 + TrussHeight);
+        132.0f, (float)L3_Y3 + TrussHeight);
 
-    // L5 – right high: P4 -> P3R  (x=155)
+    // L5 – right high: P4 -> P3R  (x=162)
     SetL3FullLadder(L3_Ladders[5], L3_Extra5,
-        155.0f, (float)L3_Y4 + TrussHeight);
+        162.0f, (float)L3_Y4 + TrussHeight);
 
     // L6, L7 – unused (hidden off-screen)
     SetL3FullLadder(L3_Ladders[6], L3_Extra6, -100.0f, 0.0f);
@@ -310,13 +310,13 @@ void Level3LadderDraw() {
     //   Full rung piece : x=51, y=16, w=10, h=16  – stamp every 16px at natural size
     //   Cap piece       : x=51, y=0,  w=10, h=3   – drawn once at top
     const Rectangle FULL_SRC = { 51.0f, 16.0f, 10.0f, 16.0f };
-    const Rectangle CAP_SRC  = { 51.0f,  0.0f, 10.0f,  3.0f };
+    const Rectangle CAP_SRC = { 51.0f,  0.0f, 10.0f,  3.0f };
 
     for (int i = 0; i < 8; i++) {
         if (L3_Ladders[i].Hitbox.width == 0) continue;  // off-screen dummy
 
-        int x       = (int)L3_Ladders[i].Position.x;
-        int topY    = (int)L3_Ladders[i].Position.y;
+        int x = (int)L3_Ladders[i].Position.x;
+        int topY = (int)L3_Ladders[i].Position.y;
         int bottomY = (int)ladderBottomY[i];
         if (bottomY <= topY) continue;
 

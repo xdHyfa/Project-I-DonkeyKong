@@ -35,8 +35,43 @@ static bool  musicLoaded = false;
 static float flashTimer = 0.0f;
 
 // -----------------------------------------------------------------------
-//  runNewScene – called every frame by main.cpp while NEWSCENE is active
+//  DK animation  (donko_2-0.png)
+//  Frame 0: x=1,   y=2, w=40, h=32  – idle,  4 s
+//  Frame 1: x=42,  y=2, w=40, h=32  – beat,  1 s
+//  Frame 2: x=85,  y=2, w=46, h=32  – beat,  1 s
+//  Frame 3: x=134, y=2, w=46, h=32  – beat,  1 s
 // -----------------------------------------------------------------------
+static Texture2D dkTexture = { 0 };
+static bool      dkLoaded = false;
+static int       dkFrame = 0;
+static float     dkFrameTimer = 0.0f;
+static const float dkDurations[4] = { 4.0f, 1.0f, 1.0f, 1.0f };
+static const Rectangle dkFrames[4] = {
+    {   1.0f, 2.0f, 40.0f, 32.0f },
+    {  42.0f, 2.0f, 40.0f, 32.0f },
+    {  85.0f, 2.0f, 46.0f, 32.0f },
+    { 134.0f, 2.0f, 46.0f, 32.0f },
+};
+
+// -----------------------------------------------------------------------
+//  Lady animation  (Lady.png or similar)
+//  Frame 0: x=1,  y=1, w=14, h=22  – 0.5 s
+//  Frame 1: x=17, y=1, w=15, h=22  – 0.5 s
+//  Pattern: rapid flash (2 cycles) then rest on frame 0 for ~2 s
+// -----------------------------------------------------------------------
+static Texture2D ladyTexture = { 0 };
+static bool      ladyLoaded = false;
+static int       ladyFrame = 0;
+static float     ladyAnimTimer = 0.0f;
+static int       ladyFlashCount = 0;   // how many 0.5 s ticks done in current flash burst
+static float     ladyRestTimer = 0.0f;
+static bool      ladyResting = false;
+static const Rectangle ladyFrames[2] = {
+    {  1.0f, 1.0f, 14.0f, 22.0f },
+    { 17.0f, 1.0f, 15.0f, 22.0f },
+};
+static const int   LADY_FLASH_TICKS = 4;   // 4 half-second ticks = 2 full cycles
+static const float LADY_REST_TIME = 2.0f;
 void runNewScene() {
 
     // ================================================================
@@ -68,6 +103,23 @@ void runNewScene() {
             starTexture = LoadTexture("Sprites/Star.png");
             starLoaded = true;
         }
+
+        // --- DK texture ---
+        if (dkLoaded && dkTexture.id > 0) UnloadTexture(dkTexture);
+        dkTexture = LoadTexture("Sprites/donko_2-0.png");
+        dkLoaded = (dkTexture.id > 0);
+        dkFrame = 0;
+        dkFrameTimer = 0.0f;
+
+        // --- Lady texture ---
+        if (ladyLoaded && ladyTexture.id > 0) UnloadTexture(ladyTexture);
+        ladyTexture = LoadTexture("Sprites/Lady.png");
+        ladyLoaded = (ladyTexture.id > 0);
+        ladyFrame = 0;
+        ladyAnimTimer = 0.0f;
+        ladyFlashCount = 0;
+        ladyRestTimer = 0.0f;
+        ladyResting = true;
 
         // --- Music ---
         if (!musicLoaded) {
@@ -105,25 +157,68 @@ void runNewScene() {
     Level3LadderDraw();
 
     // ----------------------------------------------------------------
-    //  PLACEHOLDERS
-    //  Replace each DrawRectangle/DrawText block with the real sprite
-    //  once assets are ready.
+    //  PLACEHOLDERS replaced with animated sprites
     // ----------------------------------------------------------------
 
-    // DK – upper-left platform (P7), x=0..80, y=L3_Y7
+    // ----------------------------------------------------------------
+    //  DK – animated sprite on P7 platform
+    // ----------------------------------------------------------------
     {
-        Vector2 dkPos = { 16.0f, (float)(L3_Y7 - 24) };
-        DrawRectangle((int)dkPos.x, (int)dkPos.y, 24, 24, BROWN);
-        DrawText("DK", (int)dkPos.x + 2, (int)dkPos.y + 6, 8, WHITE);
-        // TODO: donkey.Update(); donkey.Draw();
+        dkFrameTimer += GetFrameTime();
+        if (dkFrameTimer >= dkDurations[dkFrame]) {
+            dkFrameTimer = 0.0f;
+            dkFrame = (dkFrame + 1) % 4;
+        }
+
+        Vector2 dkPos = { 4.0f, (float)(L3_Y7 - 24) };
+        if (dkLoaded && dkTexture.id > 0) {
+            DrawTextureRec(dkTexture, dkFrames[dkFrame], dkPos, WHITE);
+        }
+        else {
+            DrawRectangle((int)dkPos.x, (int)dkPos.y, 24, 24, BROWN);
+            DrawText("DK", (int)dkPos.x + 2, (int)dkPos.y + 6, 8, WHITE);
+        }
     }
 
-    // Lady – top-right platform (P5), x=112..224, y=L3_Y5
+    // ----------------------------------------------------------------
+    //  Lady – animated sprite on P5 platform
+    //  Pattern: flash (4 x 0.5 s ticks = 2 cycles) then rest 2 s on frame 0
+    // ----------------------------------------------------------------
     {
-        Vector2 ladyPos = { 168.0f, (float)(L3_Y5 - 20) };
-        DrawRectangle((int)ladyPos.x, (int)ladyPos.y, 16, 20, PINK);
-        DrawText("L", (int)ladyPos.x + 4, (int)ladyPos.y + 6, 8, WHITE);
-        // TODO: lady.Update(); lady.Draw();
+        Vector2 ladyPos = { 130.0f, (float)(L3_Y5 - 14) };
+
+        if (ladyResting) {
+            ladyRestTimer += GetFrameTime();
+            ladyFrame = 0;
+            if (ladyRestTimer >= LADY_REST_TIME) {
+                ladyRestTimer = 0.0f;
+                ladyResting = false;
+                ladyFlashCount = 0;
+                ladyAnimTimer = 0.0f;
+            }
+        }
+        else {
+            ladyAnimTimer += GetFrameTime();
+            if (ladyAnimTimer >= 0.5f) {
+                ladyAnimTimer = 0.0f;
+                ladyFrame ^= 1;
+                ladyFlashCount++;
+                if (ladyFlashCount >= LADY_FLASH_TICKS) {
+                    ladyResting = true;
+                    ladyFrame = 0;
+                    ladyFlashCount = 0;
+                    ladyRestTimer = 0.0f;
+                }
+            }
+        }
+
+        if (ladyLoaded && ladyTexture.id > 0) {
+            DrawTextureRec(ladyTexture, ladyFrames[ladyFrame], ladyPos, WHITE);
+        }
+        else {
+            DrawRectangle((int)ladyPos.x, (int)ladyPos.y, 16, 20, PINK);
+            DrawText("L", (int)ladyPos.x + 4, (int)ladyPos.y + 6, 8, WHITE);
+        }
     }
 
     // Star (win object) – blinks on P4 until collected

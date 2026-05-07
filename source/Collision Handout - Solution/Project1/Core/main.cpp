@@ -106,6 +106,7 @@ int main()
 
 		case NEWSCENE:
 			PrintUI();
+			PrintBonus();
 			runNewScene();   // your new scene function
 			break;
 

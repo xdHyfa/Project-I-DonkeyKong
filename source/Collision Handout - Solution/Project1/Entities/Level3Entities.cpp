@@ -203,21 +203,21 @@ void Level3EntitiesSetup() {
     // Goomba 0: P1L (x=0..96),  patrols x=4..80
     Level3Goombas[0].Setup(
         40.0f,
-        (float)(L3_Y1 - 14),
+        (float)(L3_Y1 - 15),
         4.0f, 80.0f
     );
 
     // Goomba 1: P2 central (x=64..192), patrols x=80..160
     Level3Goombas[1].Setup(
         100.0f,
-        (float)(L3_Y2 - 14),
+        (float)(L3_Y2 - 15),
         80.0f, 160.0f
     );
 
     // Goomba 2: P3R (x=96..208), patrols x=100..192
     Level3Goombas[2].Setup(
         130.0f,
-        (float)(L3_Y3 - 14),
+        (float)(L3_Y3 - 15),
         100.0f, 192.0f
     );
 

@@ -1,5 +1,5 @@
 #include "Scenes/scenes.h"
-#include "Scenes/HighScoreScreen.h"   // <-- añadido para HS_SetJustPlayed
+#include "Scenes/HighScoreScreen.h"   // <-- a?adido para HS_SetJustPlayed
 #include "raylib.h"
 #include <iostream>
 #include "UI.h"
@@ -142,7 +142,7 @@ void EndGameOver() {
 	gameOverTimer = 0.0f;
 	// Avisar al highscore que venimos de una partida real
 	HS_SetJustPlayed(true);
-	// El reset de score/lives/level lo hace HighScoreScreen después de leer los valores
+	// El reset de score/lives/level lo hace HighScoreScreen despu?s de leer los valores
 }
 
 // Solo dibuja el panel, no cambia nada
@@ -188,20 +188,25 @@ void PrintBonus() {
 		BonusTexture = LoadTexture("Sprites/REAL BONUS.png");
 		UI.BonusLoaded = true;
 	}
+
+	// Bonus position: left side for NEWSCENE, right side for all other levels
+	Vector2 bonusTexPos = (GetCurrentScene() == NEWSCENE)
+		? Vector2{ 24, 5 }
+	: Vector2{ 170, 35 };
+	Vector2 bonusNumPos = { bonusTexPos.x + 6, bonusTexPos.y + 9 };
+
 	if (GetCurrentScene() == LEVEL1) {
 		BonusRec = { 93,0,45, 21 };
-		DrawTextureRec(BonusTexture, BonusRec, BonusTexturePos, WHITE);
-		DrawRectangle(BonusTexturePos.x + 6, BonusTexturePos.y + 10, 35, 8, BLACK);
-		DrawTextEx(UI_Font, TextFormat("%04d", bonus), BonusPos, 10, 0.5f, SKYBLUE);
+		DrawTextureRec(BonusTexture, BonusRec, bonusTexPos, WHITE);
+		DrawRectangle((int)bonusTexPos.x + 6, (int)bonusTexPos.y + 10, 35, 8, BLACK);
+		DrawTextEx(UI_Font, TextFormat("%04d", bonus), bonusNumPos, 10, 0.5f, SKYBLUE);
 	}
 	else {
 		BonusRec = { 46,0,45, 21 };
-		DrawTextureRec(BonusTexture, BonusRec, BonusTexturePos, WHITE);
-		DrawRectangle(BonusTexturePos.x + 6, BonusTexturePos.y + 10, 35, 8, BLACK);
-		DrawTextEx(UI_Font, TextFormat("%04d", bonus), BonusPos, 10, 0.5f, YELLOW);
+		DrawTextureRec(BonusTexture, BonusRec, bonusTexPos, WHITE);
+		DrawRectangle((int)bonusTexPos.x + 6, (int)bonusTexPos.y + 10, 35, 8, BLACK);
+		DrawTextEx(UI_Font, TextFormat("%04d", bonus), bonusNumPos, 10, 0.5f, YELLOW);
 	};
-
-
 }
 
 void AddBonus() {
