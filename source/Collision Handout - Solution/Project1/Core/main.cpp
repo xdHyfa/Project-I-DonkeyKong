@@ -87,9 +87,11 @@ int main()
 
 		case LEVEL1:
 
+			
 			PrintUI();
 			PrintBonus();
 			runLevel1();
+			CheckPause();
 
 			break;
 

@@ -26,6 +26,8 @@ Texture2D LifeIcon = { 0 };
 bool LifeIconLoaded = false;
 
 
+
+
 Rectangle BonusRec = { 93,0,45, 21 };
 Vector2 BonusTexturePos = { 170, 35 };
 
@@ -37,9 +39,41 @@ Vector2 LevelPos = { 170, 20 };
 Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9 };
 
 
-
-
 ui UI;
+Rectangle rectitle1 = { 0, 0, 180, 88 };
+Rectangle rectitle2 = { 0, 0, 180 +92, 88 };
+Texture PauseTitleBlue;
+Texture PauseTitleRed;
+float PauseTextTimer = 0.0f;
+
+bool isPaused = false;
+
+void CheckPause() {
+	if (IsKeyPressed(KEY_P)) {
+		isPaused = !isPaused;
+		PauseTitleBlue = LoadTexture("SPRITES/Main menu.png");
+		PauseTitleRed = LoadTexture("SPRITES/Main menu Red.png");
+	}
+	if (isPaused) {
+		if (PauseTextTimer < 1.5f) {
+			DrawTextureRec(PauseTitleBlue, rectitle1, { 22.0f, 64.0f }, WHITE);
+			PauseTextTimer += GetFrameTime();
+		}
+		else {
+			if (PauseTextTimer >= 3.0f) {
+				PauseTextTimer = 0;
+			}
+			else {
+				DrawTextureRec(PauseTitleRed, rectitle2, { 22.0f, 64.0f }, WHITE);
+				PauseTextTimer += GetFrameTime();
+			}
+		}
+	}
+}
+
+bool GetPause() {
+	return isPaused;
+}
 
 void ResetUI() {
 	UI.HiScore = UI.score;

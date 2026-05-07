@@ -36,3 +36,7 @@ int GetLevel();
 int GetHiScore();
 int GetScore();
 void ResetAfterGameOver();
+
+void CheckPause();
+
+bool GetPause();
