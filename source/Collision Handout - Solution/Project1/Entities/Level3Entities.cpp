@@ -88,12 +88,30 @@ void BillBala::Activate(float x, float y, float dir) {
     FloorCollider.y = y + 8;
     direction = dir;
     active = true;
+    stomped = false;
+    stompVelY = -5.0f;
     tag = EntityTag::FIRE;
     Texture = LoadTexture("Sprites/BillBala.png");   // 16x13 at offset (4,3)
 }
 
 void BillBala::Movement() {
     if (!active) return;
+
+    if (stomped) {
+        // Vertical-only accelerated arc; no horizontal movement
+        stompVelY += 0.45f;   // gravity acceleration
+        Position.y += stompVelY;
+        FloorCollider.x = Position.x + 8;
+        FloorCollider.y = Position.y + 8;
+        // Despawn once it leaves the screen (up or down)
+        if (Position.y > SCREEN_HEIGHT + 16 || Position.y < -32) {
+            active = false;
+            UnloadTexture(Texture);
+            Texture = { 0 };
+        }
+        return;
+    }
+
     Position.x += speed * direction;
     FloorCollider.x = Position.x + 8;
     FloorCollider.y = Position.y + 8;
@@ -157,19 +175,35 @@ static void CheckMarioStompsGoomba(Goomba& goomba) {
 //  BILL BALA COLLISION WITH MARIO
 // -----------------------------------------------------------------------
 static void CheckMarioHitsBill(BillBala& bill) {
-    if (!bill.active) return;
+    if (!bill.active || bill.stomped) return;
 
     Rectangle billBox = bill.getHitbox();
     Rectangle marioBox = { Mario.Position.x + 2, Mario.Position.y + 2, 12, 14 };
 
-    if (CheckCollisionRecs(marioBox, billBox)) {
+    if (!CheckCollisionRecs(marioBox, billBox)) return;
+
+    // Stomp: Mario is above the bullet and falling down onto it
+    bool marioAbove = (Mario.Position.y + 16) <= (bill.Position.y + 8);
+    bool marioFalling = Mario.marioVelocity.y > 0;
+
+    if (marioAbove && marioFalling) {
+        // Stomp! Bill gets knocked upward then falls with gravity
+        bill.stomped = true;
+        bill.stompVelY = -5.0f;   // initial upward kick
+        // Bounce Mario up slightly
+        Mario.marioVelocity.y = -4.0f;
+        Mario.setGrounded(false);
+        ShowScorePopup(bill.Position, 100);
+        AddPoints(100);
+    }
+    else {
+        // Side / bottom hit – Mario takes damage
         if (!GetHammerTime()) {
             StartEntityDeath(Mario);
             Mario.die();
             RemoveLife();
             CheckLives();
         }
-        // Bills are indestructible – Mario can only jump over them
     }
 }
 
@@ -281,6 +315,7 @@ void Level3EntitiesReset() {
     for (int i = 0; i < BILL_COUNT; i++) {
         if (Level3Bills[i].active) Level3Bills[i].Unload();
         Level3Bills[i].active = false;
+        Level3Bills[i].stomped = false;
     }
     // Re-stagger spawners
     spawners[0].timer = 0.0f;

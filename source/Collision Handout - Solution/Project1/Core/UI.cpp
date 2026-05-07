@@ -191,7 +191,7 @@ void PrintBonus() {
 
 	// Bonus position: left side for NEWSCENE, right side for all other levels
 	Vector2 bonusTexPos = (GetCurrentScene() == NEWSCENE)
-		? Vector2{ 24, 5 }
+		? Vector2{ 29, 25 }
 	: Vector2{ 170, 35 };
 	Vector2 bonusNumPos = { bonusTexPos.x + 6, bonusTexPos.y + 9 };
 

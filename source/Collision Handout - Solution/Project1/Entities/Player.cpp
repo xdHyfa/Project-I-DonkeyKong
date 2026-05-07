@@ -6,6 +6,7 @@
 #include "Core/constants.h"
 #include "Entities/entity.h"
 #include "Scenes/scenes.h"
+#include "Core/UI.h"
 
 
 using namespace std;
@@ -61,7 +62,7 @@ void MarioLadderMovement() {
         if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
         {
             ++frameIndex;
-            frameIndex %= 2;  
+            frameIndex %= 2;
             frameRec.x = marioFrameWidth * (float)frameIndex;
         }
     }
@@ -76,7 +77,7 @@ void Player::Setup()
     marioFrameHeight = (float)Mario.SpriteSize;
     frameRec = { 0.0f, 0.0f, marioFrameWidth, marioFrameHeight };
     Position = { 64, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
-    jumpSound = LoadSound("Audio/Game-Startup.wav"); 
+    jumpSound = LoadSound("Audio/Game-Startup.wav");
     walkMusic = LoadMusicStream("Audio/WalkingDef2.wav");
     walkMusic.looping = true;
     climbMusic = LoadMusicStream("Audio/WalkingDef3.wav");
@@ -115,13 +116,14 @@ void Player::Movement()
                 ++frameIndex %= 4;
                 if (frameIndex == 0) ++deathLoopCount;
             }
-        } else {
+        }
+        else {
             frameRec.x = 4 * SpriteSize;
         }
         return;
     }
     //UNCOMMENT TO CHECK IF TEXTURE WORKS
-    
+
     /*  if (!isTextureValid(Texture))
     {
         while (!WindowShouldClose())
@@ -140,7 +142,7 @@ void Player::Movement()
     {
         marioVelocity.x = (float)Mario.velocity;
         if (frameRec.width < 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
-        
+
         if (Mario.getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
@@ -152,7 +154,7 @@ void Player::Movement()
     {
         marioVelocity.x = -(float)Mario.velocity;
         if (frameRec.width > 0 && Mario.getIsGrounded()) frameRec.width = -frameRec.width;
-       
+
         if (Mario.getIsGrounded())
         {
             if (!IsMusicStreamPlaying(walkMusic)) PlayMusicStream(walkMusic);
@@ -174,11 +176,11 @@ void Player::Movement()
         }
         else {
             if (!GetIsKilling()) HammerTimer += GetFrameTime();
-            if (HammerTick > 0.15f ){
-                if(LooksRight){
+            if (HammerTick > 0.15f) {
+                if (LooksRight) {
                     HammerHitbox.x = Position.x + 16;
                     HammerPos.x = Position.x + 16;
-                    HammerPos.y = Position.y +2;
+                    HammerPos.y = Position.y + 2;
                     HammerSelector.x = 12;
                     HammerSelector.width = 12;
                     DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
@@ -186,7 +188,7 @@ void Player::Movement()
                 else {
                     HammerHitbox.x = Position.x - 16;
                     HammerPos.x = Position.x - 16;
-                    HammerPos.y = Position.y +1;
+                    HammerPos.y = Position.y + 1;
                     HammerSelector.width = -12;
                     HammerSelector.x = 12;
                     DrawTextureRec(HammerTexture, HammerSelector, HammerPos, WHITE);
@@ -212,51 +214,49 @@ void Player::Movement()
         }
     }
 
-    else{
+    else {
 
-    //Ladder Climb
-    if (OnLadder && CanClimb) {
-        cout << "ON LADDER" << endl;
-        MarioLadderMovement();
+        //Ladder Climb
+        if (OnLadder && CanClimb) {
+            cout << "ON LADDER" << endl;
+            MarioLadderMovement();
 
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN))
+            {
+                if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
+                UpdateMusicStream(climbMusic);
+            }
+            else
+            {
+                StopMusicStream(climbMusic);
+            }
+
+            return;
+        }
+        if (CanClimb) {
+            if (IsKeyPressed(KEY_UP)) {
+                Mario.OnLadder = true;
+                Mario.Position.y -= 1.0f;
+                Mario.UpdateCollider();
+            }
+            else if (IsKeyPressed(KEY_DOWN)) {
+                Mario.OnLadder = true;
+                Mario.Position.y += 1.0f;
+                Mario.UpdateCollider();
+            }
+        }
+
+        // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
+        if (IsKeyPressed(KEY_SPACE))
         {
-            if (!IsMusicStreamPlaying(climbMusic)) PlayMusicStream(climbMusic);
-            UpdateMusicStream(climbMusic);
+            if (Mario.tryJump())
+            {
+                PlaySound(jumpSound);
+                lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
+                isJumping = true;
+                marioVelocity.y = -(float)Mario.jumpHeight;
+            }
         }
-        else
-        {
-            StopMusicStream(climbMusic);
-        }
-
-        return;
-    }
-    if (CanClimb) {
-        if (IsKeyPressed(KEY_UP)) {
-            Mario.OnLadder = true;
-            Mario.Position.y -= 1.0f;
-            Mario.UpdateCollider();
-
-
-        }
-        else if (IsKeyPressed(KEY_DOWN)) {
-            Mario.OnLadder = true;
-            Mario.Position.y += 1.0f;
-            Mario.UpdateCollider();
-        }
-    }
-
-    // --- Salto: captura la velocidad X DESPUÉS de leer input -s--
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        if (Mario.tryJump())
-        {
-            PlaySound(jumpSound);
-            lockedVelocityX = marioVelocity.x; // ahora sí tiene la dirección correcta
-            isJumping = true;
-            marioVelocity.y = -(float)Mario.jumpHeight;
-        }
-    }
     }
 
     // --- En el aire: congelar velocidad horizontal ---
@@ -269,6 +269,19 @@ void Player::Movement()
     if (!Mario.getIsGrounded() || isFalling)
     {
         marioVelocity.y += GRAVITY;
+        // Rastrear velocidad de caída máxima para fall damage
+        if (marioVelocity.y > peakFallVelocity) peakFallVelocity = marioVelocity.y;
+    }
+    else
+    {
+        // Acaba de aterrizar en una plataforma (grounded por RampCollision)
+        if (peakFallVelocity > 12.0f && !isJumping) {
+            peakFallVelocity = 0.0f;
+            die();
+            RemoveLife();
+            CheckLives();
+        }
+        peakFallVelocity = 0.0f;
     }
 
     // --- Aplicar velocidad ---
@@ -278,8 +291,13 @@ void Player::Movement()
     if (Position.y >= GROUND_Y)
     {
         Position.y = GROUND_Y;
+        // Fall damage: si venía cayendo muy rápido, muere
+        if (marioVelocity.y > 12.0f) {
+            die();
+            RemoveLife();
+            CheckLives();
+        }
         marioVelocity.y = 0.0f;
-        // FIX: NO reseteamos x aquí, para que la animación funcione correctamente
         lockedVelocityX = 0.0f;
         isJumping = false;
         Mario.setGrounded(true);
@@ -304,9 +322,9 @@ void Player::Movement()
     FloorCollider.y = Position.y + 16;
     // --- Animación ---
     bool marioMoving = marioVelocity.x != 0.0f || marioVelocity.y != 0.0f;
-    
+
     //Check for Animation Check DrawRectangle(Mario.Position.x, Mario.Position.y, (int)SpriteSize, (int)SpriteSize, WHITE);
-    
+
     ++frameDelayCounter;
     if (frameDelayCounter > frameDelay)
     {
@@ -326,7 +344,7 @@ void Player::Movement()
                 frameRec.x = 5 * 16;
             }
         }*/
-        
+
         frameDelayCounter = 0;
         if (Mario.justClimbedLadder)
         {
@@ -351,19 +369,19 @@ void Player::Movement()
         }
         else if (marioMoving && !isJumping)
         {
-            frameRec.y = 0.0f; 
+            frameRec.y = 0.0f;
             ++frameIndex;
             frameIndex %= numFrames;
             frameRec.x = marioFrameWidth * (float)frameIndex;
         }
         else if (isJumping)
         {
-            frameRec.y = 0.0f;  
+            frameRec.y = 0.0f;
             frameRec.x = 3 * SpriteSize;
         }
         else
         {
-            frameRec.y = 0.0f;  
+            frameRec.y = 0.0f;
             frameIndex = 0;
             frameRec.x = 0.0f;
         }
@@ -373,8 +391,8 @@ void Player::Movement()
 void DrawMarioCollider() {
     DrawPixel(Mario.FloorCollider.x, Mario.FloorCollider.y, YELLOW);
     DrawPixel(Mario.Position.x, Mario.Position.y, RED);
-    if (GetHammerTime()){
-    DrawRectangle(Mario.HammerHitbox.x, Mario.HammerHitbox.y, Mario.HammerHitbox.width, Mario.HammerHitbox.height, BROWN);
+    if (GetHammerTime()) {
+        DrawRectangle(Mario.HammerHitbox.x, Mario.HammerHitbox.y, Mario.HammerHitbox.width, Mario.HammerHitbox.height, BROWN);
     }
 }
 

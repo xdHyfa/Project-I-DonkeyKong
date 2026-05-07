@@ -3,12 +3,12 @@
 #include "Entities/entity.h"
 
 class Player : public Entity
-{   
+{
 public:
     const int playerSize = 16;
 
     Vector2 marioVelocity = { 0.0f, 0.0f };
- 
+
     bool  isAlive = true;
     bool isJumping = false;
     bool isFalling = false;
@@ -26,8 +26,10 @@ public:
 
     int deathLoopCount = 0;
 
+    float peakFallVelocity = 0.0f;
+
     Rectangle HammerHitbox = { 0,0, 16,16 };
-    
+
 
     void die();
 

@@ -235,19 +235,16 @@ void Level3LadderSetter() {
         for (int i = 0; i < 6; i++)
             extras[g][i].setSprite(4, false);
 
-    // topY  = bottom edge of upper platform  (L3_YN + TrussHeight)
-    //          → ladder emerges from the underside of the upper truss
-    // bottomY = bottom edge of lower platform (L3_Y(lower) + TrussHeight)
-    //          → ladder disappears into the top of the lower truss
-    // This fills the entire air gap between the two platforms.
+    // topY = surface of the UPPER platform (L3_YN).
+    // The ladder emerges at the platform surface and descends to the lower one.
 
     // L0 – far left: P1L -> ground  (x=13)
     SetL3FullLadder(L3_Ladders[0], L3_Extra0,
-        13.0f, (float)L3_Y1 + TrussHeight);
+        13.0f, (float)L3_Y1);
 
     // L1 – left: P2 -> P1L  (x=69)
     SetL3FullLadder(L3_Ladders[1], L3_Extra1,
-        69.0f, (float)L3_Y2 + TrussHeight);
+        69.0f, (float)L3_Y2);
 
     // L2 – REMOVED; hidden off-screen
     SetL3FullLadder(L3_Ladders[2], L3_Extra2,
@@ -255,41 +252,44 @@ void Level3LadderSetter() {
 
     // L3 – right low: P2 -> P1R  (x=151)
     SetL3FullLadder(L3_Ladders[3], L3_Extra3,
-        151.0f, (float)L3_Y2 + TrussHeight);
+        151.0f, (float)L3_Y2);
 
     // L4 – right mid: P3R -> P2  (x=132)
     SetL3FullLadder(L3_Ladders[4], L3_Extra4,
-        132.0f, (float)L3_Y3 + TrussHeight);
+        132.0f, (float)L3_Y3);
 
     // L5 – right high: P4 -> P3R  (x=162)
     SetL3FullLadder(L3_Ladders[5], L3_Extra5,
-        162.0f, (float)L3_Y4 + TrussHeight);
+        162.0f, (float)L3_Y4);
 
     // L6, L7 – unused (hidden off-screen)
     SetL3FullLadder(L3_Ladders[6], L3_Extra6, -100.0f, 0.0f);
     SetL3FullLadder(L3_Ladders[7], L3_Extra7, -100.0f, 0.0f);
 
-    // bottomY = bottom edge of the LOWER platform (L3_YN + TrussHeight).
-    // Ladder fills the full air gap: from underside of upper truss to top of lower truss.
+    // bottomY = surface Y of the LOWER platform (L3_YN).
+    // The draw loop stamps tiles from topY up to (but not including) bottomY,
+    // so the last tile ends exactly at the platform surface – no gap, no overshoot.
+    // The hitbox height is recomputed below to cover the full climbable gap.
     // L0: P1L(L3_Y1) -> ground(L3_Y0)
-    ladderBottomY[0] = (float)L3_Y0 + TrussHeight;
+    ladderBottomY[0] = (float)L3_Y0;
     // L1: P2(L3_Y2) -> P1L(L3_Y1)
-    ladderBottomY[1] = (float)L3_Y1 + TrussHeight;
+    ladderBottomY[1] = (float)L3_Y1;
     // L2: unused
     ladderBottomY[2] = 0.0f;
     // L3: P2(L3_Y2) -> P1R(L3_Y1)
-    ladderBottomY[3] = (float)L3_Y1 + TrussHeight;
+    ladderBottomY[3] = (float)L3_Y1;
     // L4: P3R(L3_Y3) -> P2(L3_Y2)
-    ladderBottomY[4] = (float)L3_Y2 + TrussHeight;
+    ladderBottomY[4] = (float)L3_Y2;
     // L5: P4(L3_Y4) -> P3R(L3_Y3)
-    ladderBottomY[5] = (float)L3_Y3 + TrussHeight;
+    ladderBottomY[5] = (float)L3_Y3;
     // L6,L7: unused
     ladderBottomY[6] = 0.0f;
     ladderBottomY[7] = 0.0f;
 
-    // Hitboxes: cover full gap so Mario can grab at any point
+    // Hitboxes: cover the full climbable gap from ladder top to platform surface below.
+    // DownZone sits just above the ladder top so Mario can grab it from the platform above.
     for (int i = 0; i < 6; i++) {
-        float height = ladderBottomY[i] - L3_Ladders[i].Position.y + 16.0f;
+        float height = ladderBottomY[i] - L3_Ladders[i].Position.y;
         if (height < 0) height = 0;
         L3_Ladders[i].Hitbox.y = L3_Ladders[i].Position.y;
         L3_Ladders[i].Hitbox.height = height;

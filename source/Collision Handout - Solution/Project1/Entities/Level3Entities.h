@@ -10,17 +10,17 @@
 // -----------------------------------------------------------------------
 class Goomba : public Entity {
 public:
-    float speed      = 0.6f;
-    float direction  = 1.0f;   // +1 right, -1 left
-    float patrolLeft  = 0.0f;
+    float speed = 0.6f;
+    float direction = 1.0f;   // +1 right, -1 left
+    float patrolLeft = 0.0f;
     float patrolRight = 0.0f;
 
-    bool  isDead     = false;
+    bool  isDead = false;
     float deathTimer = 0.0f;
 
     Texture2D texture2 = { 0 };   // second animation frame
-    float animTimer    = 0.0f;
-    int   animFrame    = 0;
+    float animTimer = 0.0f;
+    int   animFrame = 0;
 
     Rectangle getHitbox() { return { Position.x + 1, Position.y + 1, 14.0f, 14.0f }; }
 
@@ -39,9 +39,11 @@ public:
 // -----------------------------------------------------------------------
 class BillBala : public Entity {
 public:
-    float speed     = 1.8f;
+    float speed = 1.8f;
     float direction = 1.0f;   // +1 right, -1 left
-    bool  active    = false;
+    bool  active = false;
+    bool  stomped = false;   // true after Mario jumps on it
+    float stompVelY = -5.0f;  // initial upward kick; gravity pulls it down fast
 
     Rectangle getHitbox() { return { Position.x, Position.y + 2, 16.0f, 12.0f }; }
 
@@ -57,7 +59,7 @@ public:
 struct BillSpawner {
     float x, y;
     float direction;   // which way bullets travel
-    float timer    = 0.0f;
+    float timer = 0.0f;
     float interval = 3.5f;
 };
 

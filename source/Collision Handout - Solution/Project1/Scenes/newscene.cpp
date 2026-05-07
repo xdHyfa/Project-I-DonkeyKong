@@ -35,7 +35,7 @@ static bool  musicLoaded = false;
 static float flashTimer = 0.0f;
 
 // -----------------------------------------------------------------------
-//  DK animation  (donko_2-0.png)
+//  DK animation  (donko 2-0.png)
 //  Frame 0: x=1,   y=2, w=40, h=32  – idle,  4 s
 //  Frame 1: x=42,  y=2, w=40, h=32  – beat,  1 s
 //  Frame 2: x=85,  y=2, w=46, h=32  – beat,  1 s
@@ -43,9 +43,14 @@ static float flashTimer = 0.0f;
 // -----------------------------------------------------------------------
 static Texture2D dkTexture = { 0 };
 static bool      dkLoaded = false;
-static int       dkFrame = 0;
+static int       dkSeqIdx = 0;   // index into dkSequence
 static float     dkFrameTimer = 0.0f;
-static const float dkDurations[4] = { 4.0f, 1.0f, 1.0f, 1.0f };
+
+// Sequence: frame 0 (idle), frame 1, then 2,3 repeated 4 times
+// Sprite indices: 0=idle, 1=beat1, 2=beat2, 3=beat3
+static const int   dkSequence[] = { 0, 1, 2, 3, 2, 3, 2, 3, 2, 3 };
+static const float dkDurations[] = { 1.5f, 2.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
+static const int   DK_SEQ_LEN = 10;
 static const Rectangle dkFrames[4] = {
     {   1.0f, 2.0f, 40.0f, 32.0f },
     {  42.0f, 2.0f, 40.0f, 32.0f },
@@ -105,10 +110,12 @@ void runNewScene() {
         }
 
         // --- DK texture ---
-        if (dkLoaded && dkTexture.id > 0) UnloadTexture(dkTexture);
-        dkTexture = LoadTexture("Sprites/donko_2-0.png");
+        if (dkTexture.id > 0) UnloadTexture(dkTexture);
+        dkTexture = { 0 };
+        dkLoaded = false;
+        dkTexture = LoadTexture("Sprites/donko 2-0.png");
         dkLoaded = (dkTexture.id > 0);
-        dkFrame = 0;
+        dkSeqIdx = 0;
         dkFrameTimer = 0.0f;
 
         // --- Lady texture ---
@@ -165,18 +172,27 @@ void runNewScene() {
     // ----------------------------------------------------------------
     {
         dkFrameTimer += GetFrameTime();
-        if (dkFrameTimer >= dkDurations[dkFrame]) {
+        if (dkFrameTimer >= dkDurations[dkSeqIdx]) {
             dkFrameTimer = 0.0f;
-            dkFrame = (dkFrame + 1) % 4;
+            dkSeqIdx = (dkSeqIdx + 1) % DK_SEQ_LEN;
         }
+        int dkFrame = dkSequence[dkSeqIdx];
 
         Vector2 dkPos = { 4.0f, (float)(L3_Y7 - 24) };
         if (dkLoaded && dkTexture.id > 0) {
             DrawTextureRec(dkTexture, dkFrames[dkFrame], dkPos, WHITE);
         }
         else {
-            DrawRectangle((int)dkPos.x, (int)dkPos.y, 24, 24, BROWN);
-            DrawText("DK", (int)dkPos.x + 2, (int)dkPos.y + 6, 8, WHITE);
+            // Fallback: try reloading once more in case it wasn't ready at init
+            dkTexture = LoadTexture("Sprites/donko 2-0.png");
+            if (dkTexture.id > 0) {
+                dkLoaded = true;
+                DrawTextureRec(dkTexture, dkFrames[dkFrame], dkPos, WHITE);
+            }
+            else {
+                DrawRectangle((int)dkPos.x, (int)dkPos.y, 40, 32, BROWN);
+                DrawText("DK", (int)dkPos.x + 2, (int)dkPos.y + 6, 8, WHITE);
+            }
         }
     }
 
@@ -249,6 +265,19 @@ void runNewScene() {
     //  PLAYER
     // ----------------------------------------------------------------
     if (Mario.isAlive) {
+        // Bajar escalera: si está en el suelo sobre un DownZone y pulsa abajo,
+        // empujar a Mario dentro del hitbox de la escalera
+        if (!Mario.OnLadder && !Mario.CanClimb && Mario.getIsGrounded()
+            && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+            && Level3CheckDownZone(Mario))
+        {
+            Mario.Position.y += 2.0f;
+            Mario.UpdateCollider();
+            Mario.setGrounded(false);
+            Mario.OnLadder = true;
+            Mario.isFalling = false;
+        }
+
         Mario.Movement();
         Level3LadderCollisions(Mario);
         Level3RampCollisions(Mario);
