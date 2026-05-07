@@ -103,7 +103,7 @@ void Level3RampSetter() {
 
     // --- Platform Y positions ---
     L3_Y0 = (int)(SCREEN_HEIGHT - TrussHeight - 1);
-    L3_Y1 = L3_Y0 - 32;   // was -40; reduced gap so Mario can reach P2
+    L3_Y1 = L3_Y0 - 40;
     L3_Y2 = L3_Y0 - 80;
     L3_Y3 = L3_Y0 - 120;
     L3_Y4 = L3_Y0 - 160;
@@ -235,47 +235,54 @@ void Level3LadderSetter() {
         for (int i = 0; i < 6; i++)
             extras[g][i].setSprite(4, false);
 
-    // L0 – far left: ground -> P1L  (x=8)
+    // topY  = bottom edge of upper platform  (L3_YN + TrussHeight)
+    //          → ladder emerges from the underside of the upper truss
+    // bottomY = bottom edge of lower platform (L3_Y(lower) + TrussHeight)
+    //          → ladder disappears into the top of the lower truss
+    // This fills the entire air gap between the two platforms.
+
+    // L0 – far left: P1L -> ground  (x=3)
     SetL3FullLadder(L3_Ladders[0], L3_Extra0,
-        8.0f, (float)L3_Y1 + TrussHeight);
+        3.0f, (float)L3_Y1 + TrussHeight);
 
-    // L1 – left: P1L -> P2  (x=64)  [was P1L->P3L, removed per design]
+    // L1 – left: P2 -> P1L  (x=59)
     SetL3FullLadder(L3_Ladders[1], L3_Extra1,
-        64.0f, (float)L3_Y2 + TrussHeight);
+        59.0f, (float)L3_Y2 + TrussHeight);
 
-    // L2 – REMOVED (was P3L->P7); hidden off-screen
+    // L2 – REMOVED; hidden off-screen
     SetL3FullLadder(L3_Ladders[2], L3_Extra2,
         -100.0f, 0.0f);
 
-    // L3 – right low: P1R -> P2  (x=160)
+    // L3 – right low: P2 -> P1R  (x=155)
     SetL3FullLadder(L3_Ladders[3], L3_Extra3,
-        160.0f, (float)L3_Y2 + TrussHeight);
+        155.0f, (float)L3_Y2 + TrussHeight);
 
-    // L4 – right mid: P2 -> P3R  (x=144)
+    // L4 – right mid: P3R -> P2  (x=139)
     SetL3FullLadder(L3_Ladders[4], L3_Extra4,
-        144.0f, (float)L3_Y3 + TrussHeight);
+        139.0f, (float)L3_Y3 + TrussHeight);
 
-    // L5 – right high: P3R -> P4  (x=160)
+    // L5 – right high: P4 -> P3R  (x=155)
     SetL3FullLadder(L3_Ladders[5], L3_Extra5,
-        160.0f, (float)L3_Y4 + TrussHeight);
+        155.0f, (float)L3_Y4 + TrussHeight);
 
     // L6, L7 – unused (hidden off-screen)
     SetL3FullLadder(L3_Ladders[6], L3_Extra6, -100.0f, 0.0f);
     SetL3FullLadder(L3_Ladders[7], L3_Extra7, -100.0f, 0.0f);
 
-    // Set bottom Y for each ladder (lower platform surface) and hitbox height
-    // L0: ground(L3_Y0) -> P1L(L3_Y1)
-    ladderBottomY[0] = (float)(L3_Y0 + TrussHeight);
-    // L1: P1L(L3_Y1) -> P2(L3_Y2)
-    ladderBottomY[1] = (float)(L3_Y1 + TrussHeight);
+    // bottomY = bottom edge of the LOWER platform (L3_YN + TrussHeight).
+    // Ladder fills the full air gap: from underside of upper truss to top of lower truss.
+    // L0: P1L(L3_Y1) -> ground(L3_Y0)
+    ladderBottomY[0] = (float)L3_Y0 + TrussHeight;
+    // L1: P2(L3_Y2) -> P1L(L3_Y1)
+    ladderBottomY[1] = (float)L3_Y1 + TrussHeight;
     // L2: unused
     ladderBottomY[2] = 0.0f;
-    // L3: P1R(L3_Y1) -> P2(L3_Y2)
-    ladderBottomY[3] = (float)(L3_Y1 + TrussHeight);
-    // L4: P2(L3_Y2) -> P3R(L3_Y3)
-    ladderBottomY[4] = (float)(L3_Y2 + TrussHeight);
-    // L5: P3R(L3_Y3) -> P4(L3_Y4)
-    ladderBottomY[5] = (float)(L3_Y3 + TrussHeight);
+    // L3: P2(L3_Y2) -> P1R(L3_Y1)
+    ladderBottomY[3] = (float)L3_Y1 + TrussHeight;
+    // L4: P3R(L3_Y3) -> P2(L3_Y2)
+    ladderBottomY[4] = (float)L3_Y2 + TrussHeight;
+    // L5: P4(L3_Y4) -> P3R(L3_Y3)
+    ladderBottomY[5] = (float)L3_Y3 + TrussHeight;
     // L6,L7: unused
     ladderBottomY[6] = 0.0f;
     ladderBottomY[7] = 0.0f;
@@ -299,21 +306,28 @@ void Level3LadderSetter() {
 }
 
 void Level3LadderDraw() {
-    const float RUNG_STEP = 8.0f;   // pixels between rung draws
+    // Golden ladder sprite from Stairs.png:
+    //   Full rung piece : x=51, y=16, w=10, h=16  – stamp every 16px at natural size
+    //   Cap piece       : x=51, y=0,  w=10, h=3   – drawn once at top
+    const Rectangle FULL_SRC = { 51.0f, 16.0f, 10.0f, 16.0f };
+    const Rectangle CAP_SRC  = { 51.0f,  0.0f, 10.0f,  3.0f };
 
     for (int i = 0; i < 8; i++) {
         if (L3_Ladders[i].Hitbox.width == 0) continue;  // off-screen dummy
 
-        float topY = L3_Ladders[i].Position.y;
-        float bottomY = ladderBottomY[i];
+        int x       = (int)L3_Ladders[i].Position.x;
+        int topY    = (int)L3_Ladders[i].Position.y;
+        int bottomY = (int)ladderBottomY[i];
         if (bottomY <= topY) continue;
 
-        for (float ry = topY; ry <= bottomY; ry += RUNG_STEP) {
-            Vector2 pos = { L3_Ladders[i].Position.x, ry };
-            DrawTextureRec(L3_Ladders[i].texture,
-                L3_Ladders[i].SpriteSelector,
-                pos, WHITE);
+        for (int ry = topY; ry < bottomY; ry += 16) {
+            int remaining = bottomY - ry;
+            Rectangle src = FULL_SRC;
+            if (remaining < 16) src.height = (float)remaining;
+            DrawTextureRec(L3_Ladders[i].texture, src, { (float)x, (float)ry }, WHITE);
         }
+
+        DrawTextureRec(L3_Ladders[i].texture, CAP_SRC, { (float)x, (float)(topY - 3) }, WHITE);
     }
 }
 

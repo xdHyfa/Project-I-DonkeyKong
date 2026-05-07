@@ -54,24 +54,20 @@ void Goomba::Movement() {
 
     Level3RampCollisions(*this);
 
-    animTimer += GetFrameTime();
-    if (animTimer >= 0.2f) {
-        animTimer = 0.0f;
-        animFrame = 1 - animFrame;
-    }
+    // No walk animation – single frame only. animFrame stays 0.
 }
 
 void Goomba::Draw() {
     if (isDead) {
-        // Squished frame: GOOMBA sheet x=26,y=6, w=13,h=8  (4px lower)
+        // Flat/squished frame: x=26, y=6, w=13, h=8
         Rectangle src = { 26.0f, 6.0f, 13.0f, 8.0f };
-        Vector2 squishPos = { Position.x, Position.y + 4.0f };
-        DrawTextureRec(Texture, src, squishPos, WHITE);
+        DrawTextureRec(Texture, src, { Position.x + 1.0f, Position.y + 7.0f }, WHITE);
         return;
     }
-    // Single walk frame at x=6,y=4 (no animation)
-    Rectangle src = { 6.0f, 4.0f, direction >= 0 ? 15.0f : -15.0f, 15.0f };
-    DrawTextureRec(Texture, src, Position, WHITE);
+    // Normal walk frame: x=6, y=4, w=16, h=15.
+    // Same sprite for both directions – no flipping, no animation.
+    Rectangle src = { 6.0f, 4.0f, 16.0f, 15.0f };
+    DrawTextureRec(Texture, src, { Position.x, Position.y }, WHITE);
 }
 
 void Goomba::Die() {
@@ -207,21 +203,21 @@ void Level3EntitiesSetup() {
     // Goomba 0: P1L (x=0..96),  patrols x=4..80
     Level3Goombas[0].Setup(
         40.0f,
-        (float)(L3_Y1 - 15),
+        (float)(L3_Y1 - 14),
         4.0f, 80.0f
     );
 
     // Goomba 1: P2 central (x=64..192), patrols x=80..160
     Level3Goombas[1].Setup(
         100.0f,
-        (float)(L3_Y2 - 15),
+        (float)(L3_Y2 - 14),
         80.0f, 160.0f
     );
 
     // Goomba 2: P3R (x=96..208), patrols x=100..192
     Level3Goombas[2].Setup(
         130.0f,
-        (float)(L3_Y3 - 15),
+        (float)(L3_Y3 - 14),
         100.0f, 192.0f
     );
 
@@ -249,9 +245,11 @@ void Level3EntitiesRoutine() {
 
         if (g.isDead) {
             g.deathTimer += GetFrameTime();
-            g.Draw();
-            if (g.deathTimer > 0.5f) {
-                // Respawn at patrol start
+            if (g.deathTimer <= 0.5f) {
+                g.Draw();   // show flat sprite for 0.5s
+            }
+            // then invisible for the rest of the 2.5s total wait
+            if (g.deathTimer > 2.5f) {
                 g.Position.x = g.patrolLeft;
                 g.isDead = false;
                 g.deathTimer = 0.0f;
