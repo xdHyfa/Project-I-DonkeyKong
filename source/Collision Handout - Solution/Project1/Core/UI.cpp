@@ -41,30 +41,52 @@ Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9 };
 
 ui UI;
 Rectangle rectitle1 = { 0, 0, 180, 88 };
-Rectangle rectitle2 = { 0, 0, 180 +92, 88 };
+Rectangle rectitle2 = { 0, 92, 180, 88  };
 Texture PauseTitleBlue;
 Texture PauseTitleRed;
 float PauseTextTimer = 0.0f;
+Music PauseMusic = { 0 };
 
 bool isPaused = false;
-
+bool hasLoaded = false;
+bool firstLoop = true;
+Vector2 PauseText = { 87, 180 };
 void CheckPause() {
 	if (IsKeyPressed(KEY_P)) {
 		isPaused = !isPaused;
-		PauseTitleBlue = LoadTexture("SPRITES/Main menu.png");
-		PauseTitleRed = LoadTexture("SPRITES/Main menu Red.png");
 	}
+	if (isPaused && !hasLoaded) {
+		PauseTitleBlue = LoadTexture("SPRITES/Main menu.png");
+		PauseTitleRed = LoadTexture("SPRITES/Main menu.png");
+		PauseMusic.looping = true;
+		if (firstLoop) firstLoop = false, PauseMusic = LoadMusicStream("Audio/MusicScreen1.wav"), PlayMusicStream(PauseMusic);
+		else ResumeMusicStream(PauseMusic);
+		hasLoaded = true;
+	}
+
+	if (hasLoaded && !isPaused){
+		PauseMusicStream(PauseMusic);
+		UnloadTexture(PauseTitleBlue);
+		UnloadTexture(PauseTitleRed);
+		hasLoaded = false;
+	
+	}
+	if (!isPaused) return;
+
 	if (isPaused) {
-		if (PauseTextTimer < 1.5f) {
+		UpdateMusicStream(PauseMusic);
+		DrawRectangle(0,0, 224, 256, Fade(BLACK, 0.8f));
+		DrawTextEx(UI_Font, "PAUSE", PauseText, 10, 0.5f, WHITE);
+		if (PauseTextTimer < 0.025f) {
 			DrawTextureRec(PauseTitleBlue, rectitle1, { 22.0f, 64.0f }, WHITE);
 			PauseTextTimer += GetFrameTime();
 		}
 		else {
-			if (PauseTextTimer >= 3.0f) {
+			DrawTextureRec(PauseTitleRed, rectitle2, { 22.0f, 64.0f }, WHITE);
+			if (PauseTextTimer >= 0.05f) {
 				PauseTextTimer = 0;
 			}
 			else {
-				DrawTextureRec(PauseTitleRed, rectitle2, { 22.0f, 64.0f }, WHITE);
 				PauseTextTimer += GetFrameTime();
 			}
 		}

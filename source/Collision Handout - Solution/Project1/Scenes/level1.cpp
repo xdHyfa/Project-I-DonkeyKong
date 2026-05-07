@@ -32,19 +32,8 @@ Interactable Hammer1, Hammer2;
 
 void runLevel1() {
 
-    if (GetPause()) {
-        Level1LadderDraw();
-        Level1RampDraw();
-        donkey.Draw();
-        lady.Draw();
-        barrelSpawner.Draw();
-        Hammer1.DrawObject();
-        Hammer2.DrawObject();
-        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
-        PlayEntityDeath();
-        return;
-    }
+
+
     if (!Scene_Init) {
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
@@ -81,6 +70,20 @@ void runLevel1() {
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
 
+    }
+
+    if (GetPause()) {
+        Level1LadderDraw();
+        Level1RampDraw();
+        donkey.Draw();
+        lady.Draw();
+        barrelSpawner.Draw();
+        Hammer1.DrawObject();
+        Hammer2.DrawObject();
+        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        PlayEntityDeath();
+        return;
     }
 
     if (isDeathSequence) {

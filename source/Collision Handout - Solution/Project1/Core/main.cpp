@@ -110,7 +110,7 @@ int main()
 			PrintUI();
 			PrintBonus();
 			runLevel2();
-
+			CheckPause();
 			break;
 
 		case WINCUTSCENE2:
