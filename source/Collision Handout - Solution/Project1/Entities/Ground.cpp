@@ -64,16 +64,22 @@ void RampCollision(Truss* Ramp, int size, Entity &entity) {
 					entity.OnLadder = false;
 					entity.Position.y = Ramp[i].TrussPos.y + 8 - entity.SpriteSize;
 
-					if (entity.tag == EntityTag::PLAYER) {
+					if (entity.tag == EntityTag::PLAYER1) {
 						Mario.marioVelocity.y = 0.0f;
 						Mario.isJumping = false;
 						Mario.setGrounded(true);
 						Mario.isFalling = false;
 					}
+					if (entity.tag == EntityTag::PLAYER2) {
+						Luigi.marioVelocity.y = 0.0f;
+						Luigi.isJumping = false;
+						Luigi.setGrounded(true);
+						Luigi.isFalling = false;
+					}
 				}
 			}
 			
-			if (!entity.OnLadder && ((entity.tag == EntityTag::PLAYER && !Mario.isJumping && !Mario.isFalling) || entity.tag != EntityTag::PLAYER)) {
+			if (!entity.OnLadder && ((entity.tag == EntityTag::PLAYER1 && !Mario.isJumping && !Mario.isFalling) || (entity.tag == EntityTag::PLAYER2 && !Luigi.isJumping && !Luigi.isFalling) || entity.tag != EntityTag::PLAYER1 && entity.tag != EntityTag::PLAYER2)) {
 				//Check if higher than the Truss and not Jumping or climbing a ladder
 				if(entity.FloorCollider.y < (Ramp[i].TrussPos.y + 8)){
 				entity.Position.y = Ramp[i].TrussPos.y +8 - entity.SpriteSize;

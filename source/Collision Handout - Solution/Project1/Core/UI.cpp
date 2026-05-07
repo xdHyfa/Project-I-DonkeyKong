@@ -1,5 +1,5 @@
 #include "Scenes/scenes.h"
-#include "Scenes/HighScoreScreen.h"   // <-- añadido para HS_SetJustPlayed
+#include "Scenes/HighScoreScreen.h"   // <-- aÃ±adido para HS_SetJustPlayed
 #include "raylib.h"
 #include <iostream>
 #include "UI.h"
@@ -50,7 +50,7 @@ void ResetUI() {
 }
 
 void AddPoints(int points) {
-	if (UI.PointsCooldown >= 0.5f) {
+	if(UI.PointsCooldown >= 0.5f || GetHammerTime()){
 		cout << "Adding points " << endl;
 		UI.score += points;
 		UI.PointsCooldown = 0;
@@ -142,7 +142,7 @@ void EndGameOver() {
 	gameOverTimer = 0.0f;
 	// Avisar al highscore que venimos de una partida real
 	HS_SetJustPlayed(true);
-	// El reset de score/lives/level lo hace HighScoreScreen después de leer los valores
+	// El reset de score/lives/level lo hace HighScoreScreen despuÃ©s de leer los valores
 }
 
 // Solo dibuja el panel, no cambia nada

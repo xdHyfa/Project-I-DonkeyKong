@@ -38,9 +38,13 @@ void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size) {
             return;
         }
     }
-    if (entity.OnLadder && entity.tag == EntityTag::PLAYER) {
+    if (entity.OnLadder && entity.tag == EntityTag::PLAYER1) {
         Mario.justClimbedLadder = true;
         Mario.climbFinishFrame = 0;
+    }
+    if (entity.OnLadder && entity.tag == EntityTag::PLAYER2) {
+        Luigi.justClimbedLadder = true;
+        Luigi.climbFinishFrame = 0;
     }
     entity.OnLadder = false;
     entity.CanClimb = false;

@@ -30,35 +30,38 @@ private:
 		UnloadTexture(Sprite);
 		UnloadSound(PointSound);
 	}
-	void OnInteraction();
+	void OnInteraction(int playerNum);
 
 public:
 
 	void SetObject(int x, int y, Items tag);
 
 	void DrawObject() {
-		if(!Interacted) DrawTextureRec(Sprite, SpriteSelector, Position, WHITE);
+		if (!Interacted) DrawTextureRec(Sprite, SpriteSelector, Position, WHITE);
 	}
 
-	void CheckInteraction(Entity &entity) {
+	void CheckInteraction(Entity& entity, int playerNum) {
 		if (Interacted) return;
 		if (CheckCollisionRecs(Hitbox, entity.getHitbox())) {
 			Interacted = true;
-			OnInteraction();
-			if (tag != Hammer){
+			OnInteraction(playerNum);
+			if (tag != Hammer) {
 				ShowScorePopup(entity.Position, 300);
 			}
 		}
 	}
-	
+
+	// Overload sin playerNum para items que no sean hammer (Purse, Hat, Umbrella)
+	void CheckInteraction(Entity& entity) {
+		CheckInteraction(entity, 1); // fallback, no importa para non-hammer
+	}
+
 	void ResetObject() {
 		Interacted = false;
 	}
 
 	void DrawCollider() {
 		DrawRectangle(Hitbox.x, Hitbox.y, Hitbox.width, Hitbox.height, PINK);
-	 }
+	}
 
 };
-
-

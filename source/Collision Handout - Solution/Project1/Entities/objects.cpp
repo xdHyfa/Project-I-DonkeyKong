@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-void Interactable :: SetObject(int x, int y, Items Tag) {
+void Interactable::SetObject(int x, int y, Items Tag) {
 	PointSound = LoadSound("Audio/Bonus.wav");
 	Interacted = false;
 	Position.x = x;
@@ -49,19 +49,16 @@ void Interactable :: SetObject(int x, int y, Items Tag) {
 
 }
 
-void Interactable :: OnInteraction()
+void Interactable::OnInteraction(int playerNum)
 {
-		cout << "Interacted With item" << endl;
-		
-		if (tag == Hammer) {
-			StartHammerTime();
-		}
-		else if (tag == Hat || tag == Purse || tag == Umbrella) {
-			AddPoints(300);
-			PlaySound(PointSound);
-			cout << "Added 300 points" << endl;
-		}
-		
+	cout << "Interacted With item" << endl;
 
-
+	if (tag == Hammer) {
+		StartHammerTime(playerNum);
+	}
+	else if (tag == Hat || tag == Purse || tag == Umbrella) {
+		AddPoints(300);
+		PlaySound(PointSound);
+		cout << "Added 300 points" << endl;
+	}
 }

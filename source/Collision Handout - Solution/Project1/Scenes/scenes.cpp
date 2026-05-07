@@ -1,11 +1,14 @@
 #include "Scenes/scenes.h"
 #include "Entities/entity.h"
 #include "raylib.h"
+#include "Core/UI.h"
 
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
 Scene current_scene = INTRO;
 bool Scene_Init = false;
-bool Hammer_time = false;
+bool Hammer_time = false;      // legacy / fallback
+bool Hammer_time_p1 = false;
+bool Hammer_time_p2 = false;
 float DeathTimer = 0.0f;
 bool hasStarted = false;
 Texture2D DeathEffect;
@@ -13,6 +16,28 @@ Rectangle DeathSpriteSelector = { 0,0, 16, 16 };
 Vector2 SavedPosition = { 0,0 };
 Sound DeathSFX = { 0 };
 bool SoundPlayed = false;
+bool TwoPlayerMode = false;
+bool Start2PTextTimer = false;
+float TextTimer = 0;
+Vector2 Text2PlayerPos = { 50, 100 };
+
+void CheckTwoPlayers() {
+	if (IsKeyPressed(KEY_RIGHT_BRACKET))
+	{
+		if (!TwoPlayerMode) TwoPlayerMode = true, Start2PTextTimer = true;
+		else TwoPlayerMode = false, Start2PTextTimer = false, TextTimer = 0;
+	}
+	if (Start2PTextTimer) {
+		if (TextTimer < 1.5f) {
+			TextTimer += GetFrameTime();
+			DrawTextEx(UI_Font, "2 PLAYER MODE ON", Text2PlayerPos, 10, 0.5f, YELLOW);
+		}
+	}
+}
+
+bool GetTwoPlayers() {
+	return TwoPlayerMode;
+}
 
 void StartEntityDeath(Entity& entity) {
 	DeathTimer = 0.0f;
@@ -61,22 +86,28 @@ void PlayEntityDeath() {
 	EndEntityDeath();
 }
 
-void StartHammerTime() {
-	Hammer_time = true;
+// Per-player hammer
+void StartHammerTime(int playerNum) {
+	if (playerNum == 1) Hammer_time_p1 = true;
+	else                Hammer_time_p2 = true;
+}
+bool GetHammerTime(int playerNum) {
+	if (playerNum == 1) return Hammer_time_p1;
+	else                return Hammer_time_p2;
+}
+void StopHammerTime(int playerNum) {
+	if (playerNum == 1) Hammer_time_p1 = false;
+	else                Hammer_time_p2 = false;
 }
 
-bool GetHammerTime() {
-	return Hammer_time;
-}
-
-void StopHammerTime() {
-	Hammer_time = false;
-}
-
+// Legacy (used by Player.cpp internamente via PlayerNum)
+void StartHammerTime() { Hammer_time_p1 = true; Hammer_time_p2 = true; }
+bool GetHammerTime() { return Hammer_time_p1 || Hammer_time_p2; }
+void StopHammerTime() { Hammer_time_p1 = false; Hammer_time_p2 = false; }
 void ChangeScene() {
 	Scene_Init = false;
 
-	// Al arrancar, INTRO salta directo al highscore (solo visualización)
+	// Al arrancar, INTRO salta directo al highscore (solo visualizaciÃ³n)
 	if (current_scene == INTRO) {
 		current_scene = HIGHSCORE;
 		return;
