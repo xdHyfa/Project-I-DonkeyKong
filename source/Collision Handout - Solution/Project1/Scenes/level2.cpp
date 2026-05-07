@@ -62,7 +62,7 @@ void runLevel2() {
         Mario.Texture = LoadTexture("sprites/MARIO.png");
         Mario.Setup();
         Mario.PlayerNum = 1;
-        Luigi.Texture = LoadTexture("sprites/Mario.png");  
+        Luigi.Texture = LoadTexture("sprites/luigi.png");  
         Luigi.Setup();                                     
         Luigi.PlayerNum = 2;                               
         Luigi.Position = { 96, SCREEN_HEIGHT - (float)Luigi.SpriteSize - 17 };
@@ -149,7 +149,7 @@ void runLevel2() {
         DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
         DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         return;
     }
 
@@ -170,7 +170,7 @@ void runLevel2() {
         Umbrella1.DrawObject();
         Hat1.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
         UpdateMusicStream(Hammer_Music2);
         return;
@@ -192,7 +192,7 @@ void runLevel2() {
     DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
     DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
     Hammer3.DrawObject();
     Hammer4.DrawObject();
     Purse1.DrawObject();
@@ -373,7 +373,7 @@ void runLevel2() {
     DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
     DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
     Level2EntitiesRoutine();
     Hammer3.DrawObject();
     Hammer4.DrawObject();

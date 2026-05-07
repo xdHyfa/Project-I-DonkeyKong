@@ -85,9 +85,18 @@ void WinCutsceneInit() {
     Vector2 savedPos = Mario.Position; // guarda posici�n
     Mario.Setup();
     Mario.Position = savedPos; // restaura posici�n
+    Mario.Position = { 110, 33};
     Mario.Position.y -= 1.0f;
     Mario.frameRec.width = -abs(Mario.frameRec.width); // mira a la izquierda
 
+    if (GetTwoPlayers()) {
+        Luigi.Position.x = Mario.Position.x + 14;
+        Luigi.Position.y = Mario.Position.y;
+        Luigi.frameRec.x = 0;
+        Luigi.frameRec.y = 0;
+        Luigi.frameRec.width = -abs(Luigi.frameRec.width); // mira a la izquierda
+
+    }
 
 
     winRamp5Y = SCREEN_HEIGHT - 16.0f - 169;
@@ -141,7 +150,7 @@ void runWinCutscene() {
 
     // ---- DIBUJAR MARIO ----
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    if (GetTwoPlayers())     DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+    if (GetTwoPlayers())     DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
 
     // ---- DIBUJAR LADY ----
     if (!hasLady)

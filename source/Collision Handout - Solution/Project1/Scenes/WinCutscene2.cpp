@@ -82,7 +82,6 @@ static void DrawTextureRecFlippedH(Texture2D tex, Rectangle src, Vector2 pos, Co
 
 void WinCutscene2Init() {
     SearchAndSetResourceDir("resources");
-
     dkTexture = LoadTexture("Sprites/donko 2-0.png");
     ladyTexture = LoadTexture("sprites/LADY.png");
     heartTexture = LoadTexture("sprites/HEARTS.png");
@@ -151,6 +150,7 @@ void runWinCutscene2() {
         DrawTextureRec(dkTexture, dkShakeFrames[shakeFrameIdx], donkey.Position, WHITE);
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+        if (GetTwoPlayers())DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
 
         if (shakeCount >= 24) {
             winPhase2 = WPHASE_FALL;
@@ -183,6 +183,7 @@ void runWinCutscene2() {
         DrawTextureRec(dkTexture, dkFallFrame, donkey.Position, WHITE);
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+        if (GetTwoPlayers())DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
     }
 
     // ---- FASE 2b: ANIMACION DE IMPACTO DE DK (loop ~4s, 0.5s por frame) ----
@@ -209,6 +210,7 @@ void runWinCutscene2() {
 
         DrawTextureRec(ladyTexture, ladyFrameRec, lady.Position, WHITE);
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+        if (GetTwoPlayers())DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
     }
 
     // ---- FASE 3: REUNION, CORAZON, Y PASA ----
@@ -221,6 +223,16 @@ void runWinCutscene2() {
 
         // Mario flipeado horizontalmente, posicionado a la derecha de Lady (y mas abajo)
         DrawTextureRecFlippedH(Mario.Texture, marioReunionFrame, reunionMarioPos, WHITE);
+
+
+        if (GetTwoPlayers()) {
+            Luigi.Position.x = reunionMarioPos.x + 25;
+            Luigi.Position.y = reunionMarioPos.y;
+            Luigi.frameRec.x = 0;
+            Luigi.frameRec.y = 0;
+            Luigi.frameRec.width = -abs(Luigi.frameRec.width); // mira a la izquierda
+            DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
+        }
 
         // Corazon aparece tras 2 segundos
         if (heartTimer >= 1.0f && !heartVisible) {

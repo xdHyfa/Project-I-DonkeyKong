@@ -35,7 +35,7 @@ void runLevel1() {
     if (!Scene_Init) {
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
-        Luigi.Texture = LoadTexture("sprites/Mario.png");
+        Luigi.Texture = LoadTexture("sprites/luigi.png");
         Mario.Setup();
         Mario.PlayerNum = 1;
         Luigi.Setup();
@@ -113,7 +113,7 @@ void runLevel1() {
         Level1RampDraw();
         barrelSpawner.Draw();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         return;
     }
 
@@ -128,7 +128,7 @@ void runLevel1() {
         Hammer1.DrawObject();
         Hammer2.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
         UpdateMusicStream(Hammer_Music);
         return;
@@ -346,11 +346,10 @@ void runLevel1() {
     }
 
     DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
     UpdateDrawScorePopup();
     SetCooldown();
 
-    Level1CheckWinCondition(Mario);
 
     if (GetCurrentScene() != LEVEL1) {
         /*UnloadTexture(Mario.Texture);
