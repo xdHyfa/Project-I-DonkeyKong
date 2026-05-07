@@ -12,15 +12,16 @@
 #include "Scenes/WinCutscene.h"
 #include "Core/UI.h"
 #include "Scenes/WinCutscene2.h"
+#include "Scenes/HighScoreScreen.h"
 
 
 int main()
 {
-		
+
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(SCALED_WIDTH, SCALED_HEIGHT, "Donkey Code");
-	InitAudioDevice(); // <-- Añade esto después de InitWindow
+	InitAudioDevice(); // <-- A?ade esto despu?s de InitWindow
 	Camera2D camera = { 0 };
 	camera.offset = { SCALED_WIDTH / 2.0f, SCALED_HEIGHT / 2.0f };
 	camera.target = { SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
@@ -34,6 +35,22 @@ int main()
 		BeginDrawing();
 		ClearBackground(BLACK);
 		BeginMode2D(camera);
+
+		// --- GAME OVER ---
+		// Bloquea el switch entero mientras esta activo.
+		// Cuando llega a 3s llama ChangeScene(true) -> HIGHSCORE.
+		if (IsGameOver()) {
+			TickGameOver();
+			PrintUI();
+			UpdateDrawGameOver();
+			if (GetGameOverTimer() >= 3.0f) {
+				EndGameOver();
+				ChangeScene(true);   // -> HIGHSCORE
+			}
+			EndMode2D();
+			EndDrawing();
+			continue;
+		}
 
 		switch (GetCurrentScene()) {
 		case INTRO:
@@ -83,7 +100,7 @@ int main()
 
 		case HOWHIGH2:
 			PrintUI();
-			runHowHigh(); 
+			runHowHigh();
 			break;
 
 		case LEVEL2:
@@ -97,6 +114,10 @@ int main()
 		case WINCUTSCENE2:
 			PrintUI();
 			runWinCutscene2();
+			break;
+
+		case HIGHSCORE:
+			runHighScoreScreen();
 			break;
 		}
 

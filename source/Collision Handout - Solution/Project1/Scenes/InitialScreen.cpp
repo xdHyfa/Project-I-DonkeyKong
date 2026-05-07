@@ -3,6 +3,8 @@
 #include "include/resource_dir.h"
 #include "core/constants.h"
 #include "scenes.h"
+#include <iostream>
+
 
 //DEFINE TEXTURES
 
@@ -27,22 +29,31 @@ Sound DonkeyMotif = { 0 };
 void runInitialScreen() {
 
     if (!Scene_Init) {
-        // TO DO: RUN INITIAL SETTINGS (SET START POSITION, LOAD STUFF...)
-        DonkeyMotif = LoadSound("Audio/DonkeyMotif.wav");
         SearchAndSetResourceDir("resources");
+        DonkeyMotif = LoadSound("Audio/DonkeyMotif.wav");
+
+        // DEBUG
+        if (DonkeyMotif.frameCount == 0) {
+            std::cout << "SOUND FAILED TO LOAD - frameCount is 0" << std::endl;
+        }
+        else {
+            std::cout << "Sound loaded OK - frameCount: " << DonkeyMotif.frameCount << std::endl;
+        }
+
         LogoGrupo = LoadTexture("SPRITES/LOGOGRUPO.png");
         Names = LoadTexture("Sprites/nombre2.png");
         Scene_Init = true;
-
     }
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         ChangeScene();
-        
+        if (!IsSoundPlaying(DonkeyMotif)) {
+            PlaySound(DonkeyMotif);
+        }
 
     }
     DrawTextureRec(LogoGrupo, LOGO, { 22.0f, 34.0f }, WHITE);
 
     DrawTexturePro(Names, sourceRec, NameRec, origin, 0.0f, WHITE);
-    PlaySound(DonkeyMotif);
+
    
 }

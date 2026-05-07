@@ -1,4 +1,5 @@
 #include "Scenes/scenes.h"
+#include "Scenes/HighScoreScreen.h"   // <-- añadido para HS_SetJustPlayed
 #include "raylib.h"
 #include <iostream>
 #include "UI.h"
@@ -33,7 +34,7 @@ Vector2 scorePos = { 4,8 };
 Vector2 HiScorePos = { 75, 0 };
 Vector2 HiScoreNumPos = { HiScorePos.x + 16, HiScorePos.y + 8 };
 Vector2 LevelPos = { 170, 20 };
-Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9};
+Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9 };
 
 
 
@@ -45,7 +46,7 @@ void ResetUI() {
 	UI.score = 0;
 	UI.Lives = 2;
 	UI.Level = 1;
-	
+
 }
 
 void AddPoints(int points) {
@@ -56,9 +57,9 @@ void AddPoints(int points) {
 	}
 }
 void AddPoints(int points, bool isBonus) {
-		cout << "Adding points " << endl;
-		UI.score += points;
-		UI.PointsCooldown = 0;
+	cout << "Adding points " << endl;
+	UI.score += points;
+	UI.PointsCooldown = 0;
 }
 
 void SetCooldown() {
@@ -102,12 +103,60 @@ void RemoveLife() {
 
 void CheckLives() {
 	if (UI.Lives < 0) {
-		UI.Lives = 2;
-		ChangeScene(true);
-		UI.Level = 1;
-		if (UI.HiScore < UI.score) UI.HiScore = UI.score;
-			UI.score = 0;
+		TriggerGameOver();
 	}
+}
+
+// --- GAME OVER ---
+bool gameOverActive = false;
+float gameOverTimer = 0.0f;
+
+// Score/Level guardados antes del reset, para que HighScoreScreen los lea
+static int savedScoreForHS = 0;
+static int savedLevelForHS = 0;
+
+void TriggerGameOver() {
+	gameOverActive = true;
+	gameOverTimer = 0.0f;
+	// Guardar valores ahora, antes de cualquier reset
+	savedScoreForHS = UI.score;
+	savedLevelForHS = UI.Level;
+}
+
+bool IsGameOver() {
+	return gameOverActive;
+}
+
+void TickGameOver() {
+	if (!gameOverActive) return;
+	gameOverTimer += GetFrameTime();
+}
+
+float GetGameOverTimer() {
+	return gameOverTimer;
+}
+
+// Llamado desde main cuando el timer acaba: resetea estado y va a HIGHSCORE
+void EndGameOver() {
+	gameOverActive = false;
+	gameOverTimer = 0.0f;
+	// Avisar al highscore que venimos de una partida real
+	HS_SetJustPlayed(true);
+	// El reset de score/lives/level lo hace HighScoreScreen después de leer los valores
+}
+
+// Solo dibuja el panel, no cambia nada
+void UpdateDrawGameOver() {
+	if (!gameOverActive) return;
+	const int rectW = 100;
+	const int rectH = 20;
+	const int screenW = 224;
+	const int screenH = 256;
+	int rectX = (screenW - rectW) / 2;
+	int rectY = (screenH - rectH) / 2;
+	DrawRectangle(rectX, rectY, rectW, rectH, BLACK);
+	Vector2 textPos = { (float)rectX + 10, (float)rectY + 6 };
+	DrawTextEx(UI_Font, "GAME  OVER", textPos, 10, 0.5f, WHITE);
 }
 
 
@@ -187,4 +236,22 @@ void UpdateDrawScorePopup() {
 int GetLevel()
 {
 	return UI.Level;
+}
+
+int GetHiScore()
+{
+	return UI.HiScore;
+}
+
+int GetScore()
+{
+	return UI.score;
+}
+
+void ResetAfterGameOver()
+{
+	if (UI.HiScore < UI.score) UI.HiScore = UI.score;
+	UI.score = 0;
+	UI.Lives = 2;
+	UI.Level = 1;
 }

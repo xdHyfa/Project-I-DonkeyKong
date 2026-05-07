@@ -2,6 +2,8 @@
 #include "Entities/entity.h"
 #include "raylib.h"
 #include "Core/UI.h"
+
+// INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
 Scene current_scene = INTRO;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
@@ -44,7 +46,6 @@ void StartEntityDeath(Entity& entity) {
 	SavedPosition = entity.Position;
 	DeathSFX = LoadSound("Audio/Hammer-kill crop.wav");
 }
-
 
 bool GetIsKilling() {
 	return hasStarted;
@@ -105,12 +106,14 @@ bool GetHammerTime() { return Hammer_time_p1 || Hammer_time_p2; }
 void StopHammerTime() { Hammer_time_p1 = false; Hammer_time_p2 = false; }
 void ChangeScene() {
 	Scene_Init = false;
+
+	// Al arrancar, INTRO salta directo al highscore (solo visualización)
 	if (current_scene == INTRO) {
-		current_scene = TITLE;
+		current_scene = HIGHSCORE;
 		return;
 	}
 	if (current_scene == TITLE) {
-		current_scene = CUTSCENE;;
+		current_scene = CUTSCENE;
 		return;
 	}
 	if (current_scene == CUTSCENE) {
@@ -120,7 +123,6 @@ void ChangeScene() {
 	if (current_scene == HOWHIGH) {
 		current_scene = LEVEL1;
 		return;
-
 	}
 	if (current_scene == LEVEL1) {
 		current_scene = WINCUTSCENE;
@@ -142,37 +144,27 @@ void ChangeScene() {
 		current_scene = HOWHIGH;
 		return;
 	}
+	if (current_scene == HIGHSCORE) {
+		current_scene = TITLE;
+		return;
+	}
 }
+
 void ChangeScene(bool NoLives) {
-	current_scene = TITLE;
+	Scene_Init = false;
+	current_scene = HIGHSCORE;
 }
 
 Scene GetCurrentScene() {
-	if (current_scene == INTRO) {
-		return INTRO;
-	}
-	if (current_scene == TITLE) {
-		return TITLE;
-	}
-	if (current_scene == CUTSCENE) {
-		return CUTSCENE;
-	}
-	if (current_scene == HOWHIGH) {
-		return HOWHIGH;
-	}
-	if (current_scene == LEVEL1) {
-		return LEVEL1;
-	}
-	if (current_scene == WINCUTSCENE) {
-		return WINCUTSCENE;
-	}
-	if (current_scene == HOWHIGH2) {
-		return HOWHIGH2;
-	}
-	if (current_scene == LEVEL2) {
-		return LEVEL2;
-	}
-	if (current_scene == WINCUTSCENE2) {
-		return WINCUTSCENE2;
-	}
+	if (current_scene == INTRO)       return INTRO;
+	if (current_scene == TITLE)       return TITLE;
+	if (current_scene == CUTSCENE)    return CUTSCENE;
+	if (current_scene == HOWHIGH)     return HOWHIGH;
+	if (current_scene == LEVEL1)      return LEVEL1;
+	if (current_scene == WINCUTSCENE) return WINCUTSCENE;
+	if (current_scene == HOWHIGH2)    return HOWHIGH2;
+	if (current_scene == LEVEL2)      return LEVEL2;
+	if (current_scene == WINCUTSCENE2)return WINCUTSCENE2;
+	if (current_scene == HIGHSCORE)   return HIGHSCORE;
+	return INTRO;
 }

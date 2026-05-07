@@ -163,6 +163,7 @@
     <ClCompile Include="Maps\Level1Map.cpp" />
     <ClCompile Include="Maps\level2Map.cpp" />
     <ClCompile Include="Scenes\CutScene.cpp" />
+    <ClCompile Include="Scenes\Highscorescreen.cpp" />
     <ClCompile Include="Scenes\HowHigh.cpp" />
     <ClCompile Include="Scenes\InitialScreen.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Maps\Level1Map.h" />
     <ClInclude Include="Maps\level2Map.h" />
     <ClInclude Include="Scenes\CutScene.h" />
+    <ClInclude Include="Scenes\Highscorescreen.h" />
     <ClInclude Include="Scenes\HowHigh.h" />
     <ClInclude Include="Scenes\InitialScreen.h" />
     <ClInclude Include="Scenes\level1.h" />
