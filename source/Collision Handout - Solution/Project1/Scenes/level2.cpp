@@ -102,6 +102,23 @@ void runLevel2() {
         donkey.hitbox = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 16.0f, 45.0f, 32.0f };
     }
 
+    if (GetPause()) {
+        Level2LadderDraw();
+        Level2RampDraw();
+        DrawTextureRec(donkey.Texture, dk2Frames[dk2FrameIdx], donkey.Position, WHITE);
+        DrawTextureRec(lady.Texture, ladyFrames[ladyFrameIdx], lady.Position, WHITE);
+        Hammer3.DrawObject();
+        Hammer4.DrawObject();
+        Hammer3.DrawObject();
+        Hammer4.DrawObject();
+        Purse1.DrawObject();
+        Umbrella1.DrawObject();
+        Hat1.DrawObject();
+        DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        return;
+    }
+
     /* UPDATE STARTS HERE */
 
     if (isDeathSequence2) {

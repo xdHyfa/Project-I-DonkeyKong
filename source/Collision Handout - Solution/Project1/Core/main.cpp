@@ -87,9 +87,11 @@ int main()
 
 		case LEVEL1:
 
+			
 			PrintUI();
 			PrintBonus();
 			runLevel1();
+			CheckPause();
 
 			break;
 
@@ -108,7 +110,7 @@ int main()
 			PrintUI();
 			PrintBonus();
 			runLevel2();
-
+			CheckPause();
 			break;
 
 		case WINCUTSCENE2:

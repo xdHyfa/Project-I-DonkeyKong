@@ -4,7 +4,7 @@
 #include "Core/UI.h"
 
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = INTRO;
+Scene current_scene = LEVEL1;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
