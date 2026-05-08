@@ -154,12 +154,14 @@
     <ClCompile Include="Entities\Ground.cpp" />
     <ClCompile Include="Entities\Ladders.cpp" />
     <ClCompile Include="Entities\Lady.cpp" />
+    <ClCompile Include="Entities\Level15Entities.cpp" />
     <ClCompile Include="Entities\Level1Entities.cpp" />
     <ClCompile Include="Entities\Level2Entities.cpp" />
     <ClCompile Include="Entities\objects.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
+    <ClCompile Include="Maps\Level15Map.cpp" />
     <ClCompile Include="Maps\Level1Map.cpp" />
     <ClCompile Include="Maps\level2Map.cpp" />
     <ClCompile Include="Scenes\CutScene.cpp" />
@@ -167,6 +169,7 @@
     <ClCompile Include="Scenes\HowHigh.cpp" />
     <ClCompile Include="Scenes\InitialScreen.cpp" />
     <ClCompile Include="Scenes\level1.cpp" />
+    <ClCompile Include="Scenes\level15.cpp" />
     <ClCompile Include="Scenes\level2.cpp" />
     <ClCompile Include="Scenes\scenes.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
@@ -184,6 +187,7 @@
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Ladders.h" />
     <ClInclude Include="Entities\Lady.h" />
+    <ClInclude Include="Entities\Level15Entities.h" />
     <ClInclude Include="Entities\Level1Entities.h" />
     <ClInclude Include="Entities\Level2Entities.h" />
     <ClInclude Include="Entities\objects.h" />
@@ -193,6 +197,7 @@
     <ClInclude Include="libraries\raylib\include\raylib.h" />
     <ClInclude Include="libraries\raylib\include\raymath.h" />
     <ClInclude Include="libraries\raylib\include\rlgl.h" />
+    <ClInclude Include="Maps\Level15Map.h" />
     <ClInclude Include="Maps\Level1Map.h" />
     <ClInclude Include="Maps\level2Map.h" />
     <ClInclude Include="Scenes\CutScene.h" />
@@ -200,6 +205,7 @@
     <ClInclude Include="Scenes\HowHigh.h" />
     <ClInclude Include="Scenes\InitialScreen.h" />
     <ClInclude Include="Scenes\level1.h" />
+    <ClInclude Include="Scenes\level15.h" />
     <ClInclude Include="Scenes\level2.h" />
     <ClInclude Include="Scenes\scenes.h" />
     <ClInclude Include="Scenes\TitleScreen.h" />
