@@ -29,7 +29,7 @@ bool LifeIconLoaded = false;
 
 
 Rectangle BonusRec = { 93,0,45, 21 };
-Vector2 BonusTexturePos = { 9, 35 };
+Vector2 BonusTexturePos = { 170, 35 };
 
 Vector2 OneUpPos = { 18, 0 };
 Vector2 scorePos = { 4,8 };
@@ -141,7 +141,9 @@ void PrintUI() {
 	DrawTextEx(UI_Font, TextFormat("%06d", UI.score), scorePos, 10, 0.5f, WHITE);
 	DrawTextEx(UI_Font, "HIGH SCORE", HiScorePos, 10, 0.5f, RED);
 	DrawTextEx(UI_Font, TextFormat("%06d", UI.HiScore), HiScoreNumPos, 10, 0.5f, WHITE);
-	DrawTextEx(UI_Font, TextFormat("L=%02d", UI.Level), LevelPos, 7.5, 0.5f, BLUE);
+	// En LEVEL15 el L=02 baja para no solaparse con el bonus
+	Vector2 DrawLevelPos = (GetCurrentScene() == LEVEL15) ? Vector2{ 170, 22 } : LevelPos;
+	DrawTextEx(UI_Font, TextFormat("L=%02d", UI.Level), DrawLevelPos, 7.5, 0.5f, BLUE);
 	UpdateDrawScorePopup();
 
 	// Draw life icons below 1UP/score
@@ -244,17 +246,20 @@ void PrintBonus() {
 		BonusTexture = LoadTexture("Sprites/REAL BONUS.png");
 		UI.BonusLoaded = true;
 	}
+	// En LEVEL15 el bonus va a la derecha al nivel del HIGH SCORE
+	Vector2 DrawBonusPos = (GetCurrentScene() == LEVEL15) ? Vector2{ 170, 0 } : BonusTexturePos;
+	Vector2 DrawBonusNumPos = { DrawBonusPos.x + 6, DrawBonusPos.y + 9 };
 	if (GetCurrentScene() == LEVEL1) {
 		BonusRec = { 93,0,45, 21 };
-		DrawTextureRec(BonusTexture, BonusRec, BonusTexturePos, WHITE);
-		DrawRectangle(BonusTexturePos.x + 6, BonusTexturePos.y + 10, 35, 8, BLACK);
-		DrawTextEx(UI_Font, TextFormat("%04d", bonus), BonusPos, 10, 0.5f, SKYBLUE);
+		DrawTextureRec(BonusTexture, BonusRec, DrawBonusPos, WHITE);
+		DrawRectangle(DrawBonusPos.x + 6, DrawBonusPos.y + 10, 35, 8, BLACK);
+		DrawTextEx(UI_Font, TextFormat("%04d", bonus), DrawBonusNumPos, 10, 0.5f, SKYBLUE);
 	}
 	else {
 		BonusRec = { 46,0,45, 21 };
-		DrawTextureRec(BonusTexture, BonusRec, BonusTexturePos, WHITE);
-		DrawRectangle(BonusTexturePos.x + 6, BonusTexturePos.y + 10, 35, 8, BLACK);
-		DrawTextEx(UI_Font, TextFormat("%04d", bonus), BonusPos, 10, 0.5f, YELLOW);
+		DrawTextureRec(BonusTexture, BonusRec, DrawBonusPos, WHITE);
+		DrawRectangle(DrawBonusPos.x + 6, DrawBonusPos.y + 10, 35, 8, BLACK);
+		DrawTextEx(UI_Font, TextFormat("%04d", bonus), DrawBonusNumPos, 10, 0.5f, YELLOW);
 	};
 
 

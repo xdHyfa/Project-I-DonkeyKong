@@ -87,52 +87,61 @@ static void SetFlatRamp(Truss* ramp, int size, int startX, int yPos) {
 }
 
 void Level15RampSetter() {
+    // Usar Yellow truss sprite (nivel 3 en LoadSharedTexture podria no tenerla, lo cargamos manualmente)
+    // Cargamos la textura amarilla directamente en el campo compartido
     Truss::truss = LoadTexture("sprites/Yellow truss.png");
 
-    // Suelo subido 10px respecto a la posicion original
-    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 - 5;  // -5 en vez de +5 -> 10px mas arriba
+    // Alturas (de abajo a arriba), con separacion de ~40px entre plataformas
+    // Todo bajado ~15px respecto a la version anterior para dar mas espacio visual
+    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 + 5;  // suelo subido 5px (mas abajo en pantalla)
     P15_Ramp1L_YPos = P15_Ramp0_YPos - 44;
     P15_Ramp1R_YPos = P15_Ramp1L_YPos;
+    // Nivel 2 y nivel 3 intercambiados:
+    // El que antes era nivel 3 (centrado) ahora es nivel 2
     P15_Ramp2L_YPos = P15_Ramp1L_YPos - 44;
     P15_Ramp2R_YPos = P15_Ramp2L_YPos;
+    // El que antes era nivel 2 (dos mitades separadas) ahora es nivel 3 (centrada)
     P15_Ramp3_YPos = P15_Ramp2L_YPos - 44;
     P15_Ramp4L_YPos = P15_Ramp3_YPos - 44;
     P15_Ramp4R_YPos = P15_Ramp4L_YPos;
     P15_Ramp5_YPos = P15_Ramp4L_YPos - 40;
 
-    // Suelo: 14 tiles completo
+    // Suelo: 14 tiles completo, subido 5px
     SetFlatRamp(Ramp15_0, 14, 0, (int)P15_Ramp0_YPos);
 
-    // Nivel 1: izq+der
+    // Nivel 1: izq+der, metidas 5px hacia dentro cada lado
+    // Izq: antes X=0, ahora X=5. Der: antes X=144, ahora X=139 -> pero alineamos a tile (8px): X=8 izq, X=136 der
     SetFlatRamp(Ramp15_1L, 5, 8, (int)P15_Ramp1L_YPos);
     SetFlatRamp(Ramp15_1R, 5, 136, (int)P15_Ramp1R_YPos);
 
-    // Nivel 2: centrada
+    // Nivel 2: lo que antes era nivel 3 (centrada), estirada un poco hacia dentro
+    // Antes 5 tiles en X=72, ahora 6 tiles en X=64 para que sea mas ancha hacia dentro
     SetFlatRamp(Ramp15_2L, 6, 64, (int)P15_Ramp2L_YPos);
+    // Ramp15_2R no se usa en nivel 2 ahora (plataforma unica centrada)
 
-    // Nivel 3: izq+der separadas
-    SetFlatRamp(Ramp15_3, 5, 0, (int)P15_Ramp3_YPos);
-    SetFlatRamp(Ramp15_4L, 5, 144, (int)P15_Ramp3_YPos);
+    // Nivel 3: metidas hacia dentro para que se pueda saltar entre ellas
+    // Izq: X=16 (1 tile desde borde), Der: X=128 (5 tiles=80px, borde der en 208, 1 tile dentro)
+    SetFlatRamp(Ramp15_3, 5, 16, (int)P15_Ramp3_YPos);   // mitad izquierda
+    SetFlatRamp(Ramp15_4L, 5, 128, (int)P15_Ramp3_YPos);   // mitad derecha
 
-    // Nivel 4 (superior): izq+der
-    SetFlatRamp(Ramp15_4R, 4, 16, (int)P15_Ramp4L_YPos);
-    SetFlatRamp(Ramp15_5, 4, 128, (int)P15_Ramp5_YPos);
-
-    // Plataforma intermedia: debajo de la de arriba del todo (Ramp15_5/Ramp15_4R),
-    // permite saltar hacia la izquierda desde ella a la plataforma izquierda superior.
-    // Se coloca a mitad de altura entre nivel 3 der y nivel 4, centrada-derecha.
-    float P15_RampMid_YPos = P15_Ramp3_YPos - 22;  // a medio camino entre nivel 3 y nivel 4
-    SetFlatRamp(Ramp15_2R, 1, 112, (int)P15_RampMid_YPos);  // plataforma puente (1 tile en X=112)
+    // Nivel 4: izq+der separadas, separadas de bordes y estiradas hacia dentro
+    // Antes X=0 y X=160, ahora X=16 y X=128 para separar de borde y estirar hacia centro
+    SetFlatRamp(Ramp15_4R, 4, 16, (int)P15_Ramp4L_YPos);  // izq
+    SetFlatRamp(Ramp15_5, 4, 128, (int)P15_Ramp5_YPos);   // der  (reutilizamos Ramp15_5)
 
     // Active zones
     float zoneH = 22.0f;
     Ramp15_0_Zone = { 0,   P15_Ramp0_YPos - 6,  (float)SCREEN_WIDTH, zoneH };
+    // Nivel 1
     Ramp15_1L_Zone = { 0,   P15_Ramp1L_YPos - 6,  100.0f, zoneH };
     Ramp15_1R_Zone = { 124, P15_Ramp1R_YPos - 6,  100.0f, zoneH };
+    // Nivel 2 (centrada)
     Ramp15_2L_Zone = { 52,  P15_Ramp2L_YPos - 6,  120.0f, zoneH };
-    Ramp15_2R_Zone = { 100, P15_RampMid_YPos - 6,  24.0f,  zoneH };  // plataforma puente
-    Ramp15_3_Zone = { 0,   P15_Ramp3_YPos - 6,  92.0f,  zoneH };
-    Ramp15_4L_Zone = { 132, P15_Ramp3_YPos - 6,  92.0f,  zoneH };
+    Ramp15_2R_Zone = { 0,   0, 0, 0 };  // no usada
+    // Nivel 3 izq y der (metidas hacia dentro)
+    Ramp15_3_Zone = { 4,   P15_Ramp3_YPos - 6,  96.0f,  zoneH };  // X=16, 5 tiles=80px
+    Ramp15_4L_Zone = { 116, P15_Ramp3_YPos - 6,  96.0f,  zoneH };  // X=128, 5 tiles=80px
+    // Nivel 4 izq y der (separadas de borde, estiradas hacia centro)
     Ramp15_4R_Zone = { 4,   P15_Ramp4L_YPos - 6,  84.0f,  zoneH };
     Ramp15_5_Zone = { 116, P15_Ramp5_YPos - 6,  108.0f, zoneH };
 }
@@ -142,7 +151,7 @@ void Level15RampDraw() {
     RampDrawer(Ramp15_1L, 5);  // nivel 1 izq
     RampDrawer(Ramp15_1R, 5);  // nivel 1 der
     RampDrawer(Ramp15_2L, 6);  // nivel 2 centrada (6 tiles)
-    RampDrawer(Ramp15_2R, 1);  // plataforma puente (1 tile entre nivel 3 der y nivel 4)
+    // Ramp15_2R no se dibuja (no usada)
     RampDrawer(Ramp15_3, 5);  // nivel 3 mitad izq
     RampDrawer(Ramp15_4L, 5);  // nivel 3 mitad der
     RampDrawer(Ramp15_4R, 4);  // nivel 4 izq
