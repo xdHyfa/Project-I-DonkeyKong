@@ -29,7 +29,7 @@ bool LifeIconLoaded = false;
 
 
 Rectangle BonusRec = { 93,0,45, 21 };
-Vector2 BonusTexturePos = { 170, 35 };
+Vector2 BonusTexturePos = { 9, 35 };
 
 Vector2 OneUpPos = { 18, 0 };
 Vector2 scorePos = { 4,8 };
@@ -41,7 +41,7 @@ Vector2 BonusPos = { BonusTexturePos.x + 6, BonusTexturePos.y + 9 };
 
 ui UI;
 Rectangle rectitle1 = { 0, 0, 180, 88 };
-Rectangle rectitle2 = { 0, 92, 180, 88  };
+Rectangle rectitle2 = { 0, 92, 180, 88 };
 Texture PauseTitleBlue;
 Texture PauseTitleRed;
 float PauseTextTimer = 0.0f;
@@ -64,18 +64,18 @@ void CheckPause() {
 		hasLoaded = true;
 	}
 
-	if (hasLoaded && !isPaused){
+	if (hasLoaded && !isPaused) {
 		PauseMusicStream(PauseMusic);
 		UnloadTexture(PauseTitleBlue);
 		UnloadTexture(PauseTitleRed);
 		hasLoaded = false;
-	
+
 	}
 	if (!isPaused) return;
 
 	if (isPaused) {
 		UpdateMusicStream(PauseMusic);
-		DrawRectangle(0,0, 224, 256, Fade(BLACK, 0.8f));
+		DrawRectangle(0, 0, 224, 256, Fade(BLACK, 0.8f));
 		DrawTextEx(UI_Font, "PAUSE", PauseText, 10, 0.5f, WHITE);
 		if (PauseTextTimer < 0.025f) {
 			DrawTextureRec(PauseTitleBlue, rectitle1, { 22.0f, 64.0f }, WHITE);
@@ -106,7 +106,7 @@ void ResetUI() {
 }
 
 void AddPoints(int points) {
-	if(UI.PointsCooldown >= 0.5f || GetHammerTime()){
+	if (UI.PointsCooldown >= 0.5f || GetHammerTime()) {
 		cout << "Adding points " << endl;
 		UI.score += points;
 		UI.PointsCooldown = 0;

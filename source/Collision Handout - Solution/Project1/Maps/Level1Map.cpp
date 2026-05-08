@@ -14,7 +14,7 @@ using namespace std;
 
 //---WIN CONDITION HITBOX:
 
-Rectangle WinHitbox = { SCREEN_WIDTH/2,40, SCREEN_WIDTH / 8 , 10 };
+Rectangle WinHitbox = { SCREEN_WIDTH / 2,40, SCREEN_WIDTH / 8 , 10 };
 
 bool winTriggered = false;
 float winDelay = 0.0f;
@@ -23,11 +23,11 @@ void Level1CheckWinCondition(Entity& entity) {
 	if ((entity.tag == EntityTag::PLAYER1 || entity.tag == EntityTag::PLAYER2) && CheckCollisionPointRec(entity.FloorCollider, WinHitbox)) {
 		if (!winTriggered) {
 			StopMusicStream(level1Music);
-			
+			PlaySound(stageClearedSound);
 			winTriggered = true;
 		}
 		if (winTriggered && !IsSoundPlaying(stageClearedSound)) {
-			ChangeScene(); // no resetees winTriggered aquí
+			ChangeScene(); // no resetees winTriggered aqu?
 		}
 	}
 }
@@ -155,11 +155,11 @@ void BarrelGroundCollisions(Barrel& barrel) {
 		if (onGround) return;
 
 		for (int i = 0; i < size; i++) {
-			float trussLeft    = Ramp[i].TrussPos.x;
-			float trussRight   = Ramp[i].TrussPos.x + 16;
+			float trussLeft = Ramp[i].TrussPos.x;
+			float trussRight = Ramp[i].TrussPos.x + 16;
 			float trussSurface = Ramp[i].TrussPos.y + 8;
 
-			bool inRangeX   = (col.x >= trussLeft && col.x < trussRight);
+			bool inRangeX = (col.x >= trussLeft && col.x < trussRight);
 			bool hitSurface = (col.y >= trussSurface && col.y <= trussSurface + barrel.velocityY + 2);
 
 			if (inRangeX && hitSurface) {
@@ -167,12 +167,12 @@ void BarrelGroundCollisions(Barrel& barrel) {
 					pos.y = trussSurface - BARRELSIZE;
 					barrel.velocityY = 0.0f;
 					onGround = true;
-				
+
 					if (isBottom) onRamp0 = true;
 					barrel.justFlipped = false;
 					return;
 				}
-				else{
+				else {
 					if (barrel.groundCooldown >= 0.1f) {
 						barrel.groundCooldown = 0.0f;
 						barrel.isLaddering = false;
@@ -203,7 +203,7 @@ void BarrelGroundCollisions(Barrel& barrel) {
 	// Solo en Ramp_0: si llega al borde, lo marcamos para reciclar
 	if (onRamp0) {
 		if (pos.x + BARRELSIZE >= SCREEN_WIDTH || pos.x <= 0) {
-			barrel.has_Spawned = false; // el spawner lo reciclará
+			barrel.has_Spawned = false; // el spawner lo reciclar?
 		}
 	}
 	// En el resto de plataformas: rebote normal en bordes
@@ -336,7 +336,7 @@ void Level1LadderSetter() {
 	BrokenLadders[3].setPos(Ramp_5[5].TrussPos.x + 6, Ramp_5[5].TrussPos.y + Ramp_5[4].TrussBox.height * 2);
 	ExtraBroken[9].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 3);
 	ExtraBroken[10].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 6);
-	ExtraBroken[11	].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 23);
+	ExtraBroken[11].setPos(BrokenLadders[3].Position.x, BrokenLadders[3].Position.y + 23);
 
 	for (int i = 0; i < 4; i++) {
 		BrokenLadders[i].Hitbox.height += 26;
@@ -375,12 +375,12 @@ void BrokenLadderCollisions(Entity& entity) {
 }
 
 void Level1LadderCollisions(Entity& entity) {
-	if (entity.tag == EntityTag::PLAYER1 || entity.tag == EntityTag::PLAYER2 ){
-	LadderCollisions(entity, Level1Ladders, 9);
+	if (entity.tag == EntityTag::PLAYER1 || entity.tag == EntityTag::PLAYER2) {
+		LadderCollisions(entity, Level1Ladders, 9);
 	}
 	else {
 		LadderCollisions(entity, Level1Ladders, BrokenLadders, 8, 4);
-	
+
 	}
 }
 
@@ -393,7 +393,7 @@ void DrawDownZone(Rectangle* DownZone, int size) {
 	}
 }
 
-bool CheckDownZone(Entity &entity) {
+bool CheckDownZone(Entity& entity) {
 	for (int i = 0; i < 9; i++) {
 		if (CheckCollisionPointRec(entity.FloorCollider, Level1DownZone[i])) {
 			return true;

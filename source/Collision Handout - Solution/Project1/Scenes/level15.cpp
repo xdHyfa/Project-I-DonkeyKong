@@ -67,8 +67,7 @@ void runLevel15() {
 
         if (deathTimer15 >= 5.0f) {
             bool bothDead = !Mario.isAlive && !Luigi.isAlive;
-            if (GetTwoPlayers() && !bothDead) ResumeMusicStream(level15Music);
-            if (!Mario.isAlive && !GetTwoPlayers() || !Mario.isAlive && !Luigi.isAlive) {
+            if (!Mario.isAlive && !GetTwoPlayers() || bothDead) {
                 UnloadTexture(Mario.Texture);
                 Truss::UnloadSharedTexture();
                 Ladder::UnloadSharedTexture();
@@ -79,13 +78,27 @@ void runLevel15() {
                 ResetLevel15Entities();
                 Mario.isAlive = true;
                 Luigi.isAlive = true;
-                Scene_Init = false;
                 isDeathSequence15 = false;
+                deathTimer15 = 0.0f;
+                Scene_Init = false;
                 RemoveLife();
                 CheckLives();
                 ResetBonus();
                 return;
             }
+            // Un jugador sigue vivo: reseteamos solo el muerto y continuamos
+            if (!Mario.isAlive) {
+                Mario.isAlive = true;
+                Mario.Setup();
+                Mario.PlayerNum = 1;
+            }
+            if (!Luigi.isAlive) {
+                Luigi.isAlive = true;
+                Luigi.Setup();
+                Luigi.PlayerNum = 2;
+                Luigi.Position = { 96, SCREEN_HEIGHT - (float)Luigi.SpriteSize - 17 };
+            }
+            ResumeMusicStream(level15Music);
             isDeathSequence15 = false;
             deathTimer15 = 0.0f;
         }
