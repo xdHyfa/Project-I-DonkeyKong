@@ -46,6 +46,11 @@ float P15_Ramp4L_YPos;
 float P15_Ramp4R_YPos;
 float P15_Ramp5_YPos;
 
+// --- LADDER DECLARATIONS ---
+Ladder Level15_Ladders[4];
+Ladder ExtraPieces15[28];
+Rectangle Level15_DownZone[4];
+
 // Plataforma 0: suelo completo
 Truss Ramp15_0[14];
 
@@ -207,6 +212,8 @@ void DrawLevel15Colliders() {
     DrawRectangleLines((int)Ramp15_4R_Zone.x, (int)Ramp15_4R_Zone.y, (int)Ramp15_4R_Zone.width, (int)Ramp15_4R_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_BlueNew_Zone.x, (int)Ramp15_BlueNew_Zone.y, (int)Ramp15_BlueNew_Zone.width, (int)Ramp15_BlueNew_Zone.height, BLUE);
 
+    DrawLadderCollider(Level15_Ladders, 4);
+
     // Player collider
     DrawCircle((int)Mario.FloorCollider.x, (int)Mario.FloorCollider.y, 2, RED);
 }
@@ -228,21 +235,83 @@ bool Level15CheckDownZone(Entity& entity) {
 }
 
 // --- LADDERS ---
-// Sin escaleras por ahora (el usuario las agregara en pasos futuros)
-Ladder Level15_Ladders[1]; // placeholder
-int Level15_LadderCount = 0;
+// Each ladder starts at its platform and is extended downward with full
+// sprite pieces to reach the platform below, making it climbable end-to-end.
 
 void Level15LadderSetter() {
     Ladder::LoadSharedTexture();
-    // Sin escaleras todavia
+
+    // All pieces full-height (16px each)
+    for (int i = 0; i < 4; i++)  Level15_Ladders[i].setSprite(1, true);
+    for (int i = 0; i < 28; i++) ExtraPieces15[i].setSprite(1, true);
+
+    // Gap between consecutive platforms is ~44px -> needs ~3 extra full pieces (3x16=48px)
+
+    // --- L0: Ramp1L left end (x=12), extends down to Ramp0 (floor) ---
+    {
+        float lx = Ramp15_1L[0].TrussPos.x + 4;
+        float ly = Ramp15_1L[0].TrussPos.y + Ramp15_1L[0].TrussBox.height * 2;
+        Level15_Ladders[0].setPos(lx, ly);
+        Level15_Ladders[0].Hitbox.y += 1;
+        Level15_Ladders[0].Hitbox.height += (int)(P15_Ramp1L_YPos - P15_Ramp0_YPos) + 10;
+        // Extra pieces stacked below the main piece to fill down to floor
+        ExtraPieces15[0].setPos(lx, ly + 16);
+        ExtraPieces15[1].setPos(lx, ly + 32);
+        ExtraPieces15[2].setPos(lx, ly + 48);
+    }
+
+    // --- L1: Ramp2L left (x=68), extends down to Ramp1L ---
+    {
+        float lx = Ramp15_2L[0].TrussPos.x + 4;
+        float ly = Ramp15_2L[0].TrussPos.y + Ramp15_2L[0].TrussBox.height * 2;
+        Level15_Ladders[1].setPos(lx, ly);
+        Level15_Ladders[1].Hitbox.y += 1;
+        Level15_Ladders[1].Hitbox.height += (int)(P15_Ramp2L_YPos - P15_Ramp1L_YPos) + 10;
+        ExtraPieces15[3].setPos(lx, ly + 16);
+        ExtraPieces15[4].setPos(lx, ly + 32);
+        ExtraPieces15[5].setPos(lx, ly + 48);
+    }
+
+    // --- L2: Ramp2L right (x=148), extends down to Ramp1R ---
+    {
+        float lx = Ramp15_2L[5].TrussPos.x + 4;
+        float ly = Ramp15_2L[5].TrussPos.y + Ramp15_2L[5].TrussBox.height * 2;
+        Level15_Ladders[2].setPos(lx, ly);
+        Level15_Ladders[2].Hitbox.y += 1;
+        Level15_Ladders[2].Hitbox.height += (int)(P15_Ramp2L_YPos - P15_Ramp1R_YPos) + 10;
+        ExtraPieces15[6].setPos(lx, ly + 16);
+        ExtraPieces15[7].setPos(lx, ly + 32);
+        ExtraPieces15[8].setPos(lx, ly + 48);
+    }
+
+    // --- L3: Ramp4R right end (x=80), extends down to Ramp3 ---
+    {
+        float lx = Ramp15_4R[3].TrussPos.x + 4;
+        float ly = Ramp15_4R[3].TrussPos.y + Ramp15_4R[3].TrussBox.height * 2;
+        Level15_Ladders[3].setPos(lx, ly);
+        Level15_Ladders[3].Hitbox.y += 1;
+        Level15_Ladders[3].Hitbox.height += (int)(P15_Ramp4L_YPos - P15_Ramp3_YPos) + 10;
+        ExtraPieces15[9].setPos(lx, ly + 16);
+        ExtraPieces15[10].setPos(lx, ly + 32);
+        ExtraPieces15[11].setPos(lx, ly + 48);
+    }
+
+    // Down zones
+    for (int i = 0; i < 4; i++) {
+        Level15_DownZone[i] = { Level15_Ladders[i].Hitbox.x, Level15_Ladders[i].Hitbox.y - 2, 10, 4 };
+    }
 }
 
 void Level15LadderDraw() {
-    for (int i = 0; i < Level15_LadderCount; i++) {
+    for (int i = 0; i < 4; i++) {
         DrawTextureRec(Ladder::texture, Level15_Ladders[i].SpriteSelector, Level15_Ladders[i].Position, WHITE);
+    }
+    // Draw the 12 extension pieces (3 per ladder)
+    for (int i = 0; i < 12; i++) {
+        DrawTextureRec(Ladder::texture, ExtraPieces15[i].SpriteSelector, ExtraPieces15[i].Position, WHITE);
     }
 }
 
 void Level15LadderCollisions(Entity& entity) {
-    LadderCollisions(entity, Level15_Ladders, Level15_LadderCount);
+    LadderCollisions(entity, Level15_Ladders, 4);
 }
