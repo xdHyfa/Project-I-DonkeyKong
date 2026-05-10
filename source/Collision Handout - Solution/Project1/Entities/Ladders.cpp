@@ -11,21 +11,21 @@ Texture Ladder::texture;
 
 bool Ladder::CheckEntityOnLadder(Entity& entity) {
 
-	if (CheckCollisionPointRec(entity.FloorCollider, Hitbox) && entity.getIsGrounded()) {
-   
-		return true;
-	}
-	else {
+    if (CheckCollisionPointRec(entity.FloorCollider, Hitbox) && entity.getIsGrounded()) {
 
-		return false;
-	}
+        return true;
+    }
+    else {
+
+        return false;
+    }
 }
 
 
 void DrawLadderCollider(Ladder* Map_Ladders, int size) {
-	for (int i = 0; i < size; i ++){
-	DrawRectangle(Map_Ladders[i].Hitbox.x, Map_Ladders[i].Hitbox.y, Map_Ladders[i].Hitbox.width, Map_Ladders[i].Hitbox.height, SKYBLUE);
-	}
+    for (int i = 0; i < size; i++) {
+        DrawRectangle(Map_Ladders[i].Hitbox.x, Map_Ladders[i].Hitbox.y, Map_Ladders[i].Hitbox.width, Map_Ladders[i].Hitbox.height, SKYBLUE);
+    }
 }
 
 
@@ -50,7 +50,7 @@ void LadderCollisions(Entity& entity, Ladder* Map_Ladders, int size) {
     entity.CanClimb = false;
 }
 
-void LadderCollisions(Entity& entity, Ladder* Map_Ladders, Ladder*Map_Ladders2 ,int size1, int size2) {
+void LadderCollisions(Entity& entity, Ladder* Map_Ladders, Ladder* Map_Ladders2, int size1, int size2) {
 
     for (int i = 0; i < size1; i++) {
         if (Map_Ladders[i].CheckEntityOnLadder(entity)) {
