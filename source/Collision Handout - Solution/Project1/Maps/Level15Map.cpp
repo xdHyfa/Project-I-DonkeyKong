@@ -93,7 +93,7 @@ void Level15RampSetter() {
 
     // Alturas (de abajo a arriba), con separacion de ~40px entre plataformas
     // Todo bajado ~15px respecto a la version anterior para dar mas espacio visual
-    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 + 5;
+    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 + 5 - 10;
     P15_Ramp1L_YPos = P15_Ramp0_YPos - 54;
     P15_Ramp1R_YPos = P15_Ramp1L_YPos;
     P15_Ramp2L_YPos = P15_Ramp1L_YPos - 44;

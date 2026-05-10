@@ -345,19 +345,13 @@ void runLevel1() {
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
-        // Win: dibujar, reproducir sonido una sola vez, esperar a que termine y cambiar escena
+        // Win: dibujar y cambiar escena directamente sin reproducir sonido
         Level1LadderDraw();
         Level1RampDraw();
         donkey.Draw();
         lady.Draw();
         barrelSpawner.Draw();
-        if (!winSoundPlayed) {
-            PlaySound(stageClearedSound);
-            winSoundPlayed = true;
-        }
-        if (winSoundPlayed && !IsSoundPlaying(stageClearedSound)) {
-            ChangeScene();
-        }
+        ChangeScene();
     }
     if (IsKeyPressed(KEY_H)) {
         Hitboxes_On = !Hitboxes_On;
