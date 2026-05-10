@@ -72,43 +72,36 @@ void WinCutsceneInit() {
     heartTexture = LoadTexture("sprites/HEARTS.png");
     winDKTexture = LoadTexture("Sprites/donko 2-0.png");
     winStairsTexture = LoadTexture("sprites/Stairs.png");
-    Mario.Texture = LoadTexture("sprites/MARIO.png"); // Mario necesita textura
+    Mario.Texture = LoadTexture("sprites/MARIO.png");
     lady.Setup();
 
     winSound = LoadSound("Audio/Stage-Cleared-1.wav");
-    PlaySound(winSound);
 
+    // Ramp/ladder textures are still loaded (unload was commented out in level1)
+    // Re-run setters so positions are valid for drawing
     Level1RampSetter();
     Level1LadderSetter();
 
-
-    Vector2 savedPos = Mario.Position; // guarda posici�n
     Mario.Setup();
-    Mario.Position = savedPos; // restaura posici�n
-    Mario.Position = { 110, 33};
+    Mario.Position = { 110, 33 };
     Mario.Position.y -= 1.0f;
-    Mario.frameRec.width = -abs(Mario.frameRec.width); // mira a la izquierda
+    Mario.frameRec.width = -abs(Mario.frameRec.width);
 
     if (GetTwoPlayers()) {
         Luigi.Position.x = Mario.Position.x + 14;
         Luigi.Position.y = Mario.Position.y;
         Luigi.frameRec.x = 0;
         Luigi.frameRec.y = 0;
-        Luigi.frameRec.width = -abs(Luigi.frameRec.width); // mira a la izquierda
-
+        Luigi.frameRec.width = -abs(Luigi.frameRec.width);
     }
-
 
     winRamp5Y = SCREEN_HEIGHT - 16.0f - 169;
     winRamp6Y = SCREEN_HEIGHT - 16.0f - 200;
 
-    // DK empieza en su posici�n normal
-    winDKPos = donkey.Position;
+    // DK hardcoded - donkey was unloaded after level1
+    winDKPos = { 21.0f, 47.0f };
 
-    // Lady en su posici�n normal
     ladyWinY = lady.Position.y;
-
-    // Coraz�n entre Mario y Lady
     heartPos = { (Mario.Position.x + lady.Position.x) / 2.0f + 2.0f, lady.Position.y - 10.0f };
     winTriggered = false;
     winPhase = WIN_HEART;
@@ -137,6 +130,7 @@ void runWinCutscene() {
     if (!Scene_Init) {
         WinCutsceneInit();
         Scene_Init = true;
+        PlaySound(winSound);
     }
     if (winPhase == WIN_END && winTimer >= 1.0f) return;
     Level1RampDraw();

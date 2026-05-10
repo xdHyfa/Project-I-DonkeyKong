@@ -28,6 +28,7 @@ void runLevel15() {
         Luigi.Texture = LoadTexture("sprites/luigi.png");
         Mario.Setup();
         Mario.PlayerNum = 1;
+        Mario.Position = { 80, SCREEN_HEIGHT - (float)Mario.SpriteSize - 17 };
         Luigi.Setup();
         Luigi.PlayerNum = 2;
         Luigi.Position = { 96, SCREEN_HEIGHT - (float)Luigi.SpriteSize - 17 };
@@ -86,7 +87,6 @@ void runLevel15() {
                 ResetBonus();
                 return;
             }
-            // Un jugador sigue vivo: reseteamos solo el muerto y continuamos
             if (!Mario.isAlive) {
                 Mario.isAlive = true;
                 Mario.Setup();
@@ -160,15 +160,13 @@ void runLevel15() {
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
-        // Win: primero parar musica y reproducir sonido, luego esperar a que termine
         Level15LadderDraw();
         Level15RampDraw();
         if (!win15SoundPlayed) {
             StopMusicStream(level15Music);
-            PlaySound(stageCleared15Sound);
             win15SoundPlayed = true;
         }
-        if (!IsSoundPlaying(stageCleared15Sound)) {
+        if (win15SoundPlayed) {
             ChangeScene();
         }
     }

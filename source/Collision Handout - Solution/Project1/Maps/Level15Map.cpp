@@ -23,10 +23,6 @@ void Level15CheckWinCondition(Entity& entity) {
             StopMusicStream(level15Music);
             win15Triggered = true;
         }
-        if (win15Triggered && !IsSoundPlaying(stageCleared15Sound)) {
-            PlaySound(stageCleared15Sound);
-            ChangeScene();
-        }
     }
 }
 
@@ -67,7 +63,10 @@ Truss Ramp15_4L[5]; // mitad derecha
 
 // Nivel 4: izq+der separadas de borde, estiradas hacia centro, 4 tiles
 Truss Ramp15_4R[4]; // izquierda
-Truss Ramp15_5[4];  // derecha
+Truss Ramp15_5[4];  // derecha  (nivel 6 - destruida, ya no se usa)
+
+// Nivel 5: nueva plataforma azul (lado derecho)
+Truss Ramp15_BlueNew[5];
 
 // Active zones para colisiones (usando el eje Y de cada plataforma)
 Rectangle Ramp15_0_Zone;
@@ -79,6 +78,7 @@ Rectangle Ramp15_3_Zone;
 Rectangle Ramp15_4L_Zone;
 Rectangle Ramp15_4R_Zone;
 Rectangle Ramp15_5_Zone;
+Rectangle Ramp15_BlueNew_Zone;
 
 static void SetFlatRamp(Truss* ramp, int size, int startX, int yPos) {
     for (int i = 0; i < size; i++) {
@@ -93,41 +93,37 @@ void Level15RampSetter() {
 
     // Alturas (de abajo a arriba), con separacion de ~40px entre plataformas
     // Todo bajado ~15px respecto a la version anterior para dar mas espacio visual
-    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 + 5;  // suelo subido 5px (mas abajo en pantalla)
-    P15_Ramp1L_YPos = P15_Ramp0_YPos - 44;
+    P15_Ramp0_YPos = SCREEN_HEIGHT - TrussHeight - 1 + 5;
+    P15_Ramp1L_YPos = P15_Ramp0_YPos - 54;
     P15_Ramp1R_YPos = P15_Ramp1L_YPos;
-    // Nivel 2 y nivel 3 intercambiados:
-    // El que antes era nivel 3 (centrado) ahora es nivel 2
     P15_Ramp2L_YPos = P15_Ramp1L_YPos - 44;
     P15_Ramp2R_YPos = P15_Ramp2L_YPos;
-    // El que antes era nivel 2 (dos mitades separadas) ahora es nivel 3 (centrada)
     P15_Ramp3_YPos = P15_Ramp2L_YPos - 44;
     P15_Ramp4L_YPos = P15_Ramp3_YPos - 44;
     P15_Ramp4R_YPos = P15_Ramp4L_YPos;
     P15_Ramp5_YPos = P15_Ramp4L_YPos - 40;
 
-    // Suelo: 14 tiles completo, subido 5px
     SetFlatRamp(Ramp15_0, 14, 0, (int)P15_Ramp0_YPos);
 
-    // Nivel 1: izq+der, metidas 5px hacia dentro cada lado
-    // Izq: antes X=0, ahora X=5. Der: antes X=144, ahora X=139 -> pero alineamos a tile (8px): X=8 izq, X=136 der
+    // Nivel 1: 10px up already via -54
     SetFlatRamp(Ramp15_1L, 5, 8, (int)P15_Ramp1L_YPos);
     SetFlatRamp(Ramp15_1R, 5, 136, (int)P15_Ramp1R_YPos);
 
-    // Nivel 2: lo que antes era nivel 3 (centrada), estirada un poco hacia dentro
-    // Antes 5 tiles en X=72, ahora 6 tiles en X=64 para que sea mas ancha hacia dentro
     SetFlatRamp(Ramp15_2L, 6, 64, (int)P15_Ramp2L_YPos);
-    // Ramp15_2R no se usa en nivel 2 ahora (plataforma unica centrada)
 
-    // Nivel 3: metidas hacia dentro para que se pueda saltar entre ellas
-    // Izq: X=16 (1 tile desde borde), Der: X=128 (5 tiles=80px, borde der en 208, 1 tile dentro)
-    SetFlatRamp(Ramp15_3, 5, 16, (int)P15_Ramp3_YPos);   // mitad izquierda
-    SetFlatRamp(Ramp15_4L, 5, 128, (int)P15_Ramp3_YPos);   // mitad derecha
+    // Nivel 3: gap cerrado mucho mas - plataformas empujadas hacia el centro
+    SetFlatRamp(Ramp15_3, 5, 16, (int)P15_Ramp3_YPos);  // izq: termina en X=96
+    SetFlatRamp(Ramp15_4L, 5, 112, (int)P15_Ramp3_YPos);  // der: empieza en X=112, gap=16px
 
-    // Nivel 4: izq+der separadas, separadas de bordes y estiradas hacia dentro
-    // Antes X=0 y X=160, ahora X=16 y X=128 para separar de borde y estirar hacia centro
-    SetFlatRamp(Ramp15_4R, 4, 16, (int)P15_Ramp4L_YPos);  // izq
-    SetFlatRamp(Ramp15_5, 4, 128, (int)P15_Ramp5_YPos);   // der  (reutilizamos Ramp15_5)
+    // Nivel 4: gap cerrado
+    SetFlatRamp(Ramp15_4R, 4, 28, (int)P15_Ramp4L_YPos);
+    SetFlatRamp(Ramp15_5, 4, 116, (int)P15_Ramp5_YPos);
+
+    // Nivel 5: nueva plataforma, misma Y que izquierda
+    float blueY = P15_Ramp4L_YPos;
+    SetFlatRamp(Ramp15_BlueNew, 5, 128, (int)blueY);
+
+    // Nivel 6 (Ramp15_5 original) ha sido destruido - ya no se inicializa ni dibuja
 
     // Active zones
     float zoneH = 22.0f;
@@ -138,12 +134,14 @@ void Level15RampSetter() {
     // Nivel 2 (centrada)
     Ramp15_2L_Zone = { 52,  P15_Ramp2L_YPos - 6,  120.0f, zoneH };
     Ramp15_2R_Zone = { 0,   0, 0, 0 };  // no usada
-    // Nivel 3 izq y der (metidas hacia dentro)
-    Ramp15_3_Zone = { 4,   P15_Ramp3_YPos - 6,  96.0f,  zoneH };  // X=16, 5 tiles=80px
-    Ramp15_4L_Zone = { 116, P15_Ramp3_YPos - 6,  96.0f,  zoneH };  // X=128, 5 tiles=80px
-    // Nivel 4 izq y der (separadas de borde, estiradas hacia centro)
-    Ramp15_4R_Zone = { 4,   P15_Ramp4L_YPos - 6,  84.0f,  zoneH };
-    Ramp15_5_Zone = { 116, P15_Ramp5_YPos - 6,  108.0f, zoneH };
+    // Nivel 3 izq y der (gap cerrado)
+    Ramp15_3_Zone = { 4,   P15_Ramp3_YPos - 6,  96.0f, zoneH };   // X=16, 5t=80px
+    Ramp15_4L_Zone = { 100, P15_Ramp3_YPos - 6,  96.0f, zoneH };   // X=112, 5t=80px
+    // Nivel 4 izq y der (gap cerrado)
+    Ramp15_4R_Zone = { 16,  P15_Ramp4L_YPos - 6,  84.0f,  zoneH };
+    Ramp15_5_Zone = { 0,   0, 0, 0 };  // nivel 6 destruido - zona desactivada
+    // Nivel 5: nueva plataforma azul
+    Ramp15_BlueNew_Zone = { 116, blueY - 6, 96.0f, zoneH };
 }
 
 void Level15RampDraw() {
@@ -152,10 +150,14 @@ void Level15RampDraw() {
     RampDrawer(Ramp15_1R, 5);  // nivel 1 der
     RampDrawer(Ramp15_2L, 6);  // nivel 2 centrada (6 tiles)
     // Ramp15_2R no se dibuja (no usada)
-    RampDrawer(Ramp15_3, 5);  // nivel 3 mitad izq
+    RampDrawer(Ramp15_3, 5);   // nivel 3 mitad izq
     RampDrawer(Ramp15_4L, 5);  // nivel 3 mitad der
     RampDrawer(Ramp15_4R, 4);  // nivel 4 izq
-    RampDrawer(Ramp15_5, 4);  // nivel 4 der
+    // Ramp15_5 (nivel 6) destruido - ya no se dibuja
+    // Nivel 5: nueva plataforma (misma textura y color que el resto)
+    for (int i = 0; i < 5; i++) {
+        DrawTexture(Ramp15_BlueNew[i].truss, (int)Ramp15_BlueNew[i].TrussPos.x, (int)Ramp15_BlueNew[i].TrussPos.y, WHITE);
+    }
 }
 
 void Level15RampCollisions(Entity& entity) {
@@ -180,9 +182,10 @@ void Level15RampCollisions(Entity& entity) {
     else if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_4R_Zone)) {
         RampCollision(Ramp15_4R, 4, entity);   // nivel 4 izq
     }
-    else if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_5_Zone)) {
-        RampCollision(Ramp15_5, 4, entity);    // nivel 4 der
+    else if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_BlueNew_Zone)) {
+        RampCollision(Ramp15_BlueNew, 5, entity);  // nivel 5 azul (nuevo)
     }
+    // Ramp15_5_Zone (nivel 6) destruido - sin colision
     else {
         // Fuera de cualquier plataforma -> falling
         if (entity.tag == EntityTag::PLAYER1) {
@@ -199,26 +202,24 @@ void DrawLevel15Colliders() {
     DrawRectangleLines((int)Ramp15_1L_Zone.x, (int)Ramp15_1L_Zone.y, (int)Ramp15_1L_Zone.width, (int)Ramp15_1L_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_1R_Zone.x, (int)Ramp15_1R_Zone.y, (int)Ramp15_1R_Zone.width, (int)Ramp15_1R_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_2L_Zone.x, (int)Ramp15_2L_Zone.y, (int)Ramp15_2L_Zone.width, (int)Ramp15_2L_Zone.height, GREEN);
-    DrawRectangleLines((int)Ramp15_2R_Zone.x, (int)Ramp15_2R_Zone.y, (int)Ramp15_2R_Zone.width, (int)Ramp15_2R_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_3_Zone.x, (int)Ramp15_3_Zone.y, (int)Ramp15_3_Zone.width, (int)Ramp15_3_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_4L_Zone.x, (int)Ramp15_4L_Zone.y, (int)Ramp15_4L_Zone.width, (int)Ramp15_4L_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_4R_Zone.x, (int)Ramp15_4R_Zone.y, (int)Ramp15_4R_Zone.width, (int)Ramp15_4R_Zone.height, GREEN);
-    DrawRectangleLines((int)Ramp15_5_Zone.x, (int)Ramp15_5_Zone.y, (int)Ramp15_5_Zone.width, (int)Ramp15_5_Zone.height, GREEN);
+    DrawRectangleLines((int)Ramp15_BlueNew_Zone.x, (int)Ramp15_BlueNew_Zone.y, (int)Ramp15_BlueNew_Zone.width, (int)Ramp15_BlueNew_Zone.height, BLUE);
 
     // Player collider
     DrawCircle((int)Mario.FloorCollider.x, (int)Mario.FloorCollider.y, 2, RED);
 }
 
 int Level15CheckEntityPlatform(Entity& entity) {
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_0_Zone))  return 0;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_1L_Zone)) return 1;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_1R_Zone)) return 2;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_2L_Zone)) return 3;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_2R_Zone)) return 4;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_3_Zone))  return 5;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_4L_Zone)) return 6;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_4R_Zone)) return 7;
-    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_5_Zone))  return 8;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_0_Zone))       return 0;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_1L_Zone))      return 1;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_1R_Zone))      return 2;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_2L_Zone))      return 3;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_3_Zone))       return 5;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_4L_Zone))      return 6;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_4R_Zone))      return 7;
+    if (CheckCollisionPointRec(entity.FloorCollider, Ramp15_BlueNew_Zone)) return 8;
     return -1;
 }
 
