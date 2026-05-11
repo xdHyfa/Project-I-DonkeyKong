@@ -81,10 +81,13 @@ void runLevel1() {
         Hammer1.DrawObject();
         Hammer2.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
         return;
     }
+
+
+
 
     if (isDeathSequence) {
         deathTimer += GetFrameTime();
@@ -391,4 +394,12 @@ void runLevel1() {
         barrelSpawner.Init();
         AddLevel();
     }
+}
+
+bool CheckLevel1Players() {
+    if (isDeathSequence) return false;
+    if (Mario.isAlive || Luigi.isAlive) {
+        return true;
+    }
+    else return false;
 }

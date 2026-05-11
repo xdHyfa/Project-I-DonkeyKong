@@ -115,9 +115,11 @@ void runLevel2() {
         Umbrella1.DrawObject();
         Hat1.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         return;
     }
+
+
 
     /* UPDATE STARTS HERE */
 
@@ -441,4 +443,12 @@ void runLevel2() {
         Scene_Init = false;
         return;
     }
+}
+
+bool CheckLevel2Players() {
+    if (isDeathSequence2) return false;
+    if (Mario.isAlive || Luigi.isAlive) {
+        return true;
+    }
+    else return false;
 }

@@ -91,8 +91,7 @@ int main()
 			PrintUI();
 			PrintBonus();
 			runLevel1();
-			CheckPause();
-
+			if(CheckLevel1Players()) CheckPause();
 			break;
 
 		case WINCUTSCENE:
@@ -110,7 +109,7 @@ int main()
 			PrintUI();
 			PrintBonus();
 			runLevel2();
-			CheckPause();
+			if (CheckLevel2Players()) CheckPause();
 			break;
 
 		case WINCUTSCENE2:
