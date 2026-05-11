@@ -7,13 +7,13 @@
 #include "Core/UI.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // ---------------------------------------------------------------
 //  Constantes
 // ---------------------------------------------------------------
 #define MAX_SCORES  5
-#define SAVE_FILE   "scores.dat"
-#define FILE_MAGIC  0xD4201u          // cambia si cambias la struct
+#define SAVE_FILE   "scores.json"
 
 // ---------------------------------------------------------------
 //  Estructura de entrada (con nombre de 3 letras)
@@ -27,49 +27,95 @@ struct ScoreEntry {
 static ScoreEntry scores[MAX_SCORES];
 
 // ---------------------------------------------------------------
-//  Persistencia
+//  Persistencia JSON (sin librerías externas)
 // ---------------------------------------------------------------
 static void LoadScores() {
     for (int i = 0; i < MAX_SCORES; i++) {
         scores[i] = { 0, 0, "---" };
     }
-    FILE* f = fopen(SAVE_FILE, "rb");
+
+    FILE* f = fopen(SAVE_FILE, "r");
     if (!f) return;
 
-    // Cabecera mágica para detectar formato viejo
-    unsigned int magic = 0;
-    fread(&magic, sizeof(magic), 1, f);
-    if (magic != FILE_MAGIC) {
-        fclose(f);
-        return; // archivo viejo / corrupto ? empezar vacío
-    }
-    fread(scores, sizeof(ScoreEntry), MAX_SCORES, f);
+    // Leer todo el archivo en un buffer
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    rewind(f);
+
+    char* buf = (char*)malloc(size + 1);
+    if (!buf) { fclose(f); return; }
+    fread(buf, 1, size, f);
+    buf[size] = '\0';
     fclose(f);
+
+    // Parser minimalista: busca los objetos { "score":X, "level":Y, "name":"ZZZ" }
+    int idx = 0;
+    char* p = buf;
+    while (idx < MAX_SCORES && (p = strstr(p, "\"score\"")) != NULL) {
+        int sc = 0, lv = 0;
+        char nm[4] = "---";
+
+        // score
+        p = strchr(p, ':');
+        if (!p) break;
+        sc = atoi(++p);
+
+        // level
+        p = strstr(p, "\"level\"");
+        if (!p) break;
+        p = strchr(p, ':');
+        if (!p) break;
+        lv = atoi(++p);
+
+        // name
+        p = strstr(p, "\"name\"");
+        if (!p) break;
+        p = strchr(p, ':');
+        if (!p) break;
+        p = strchr(p, '"');
+        if (!p) break;
+        p++; // saltar la comilla de apertura
+        for (int i = 0; i < 3 && *p && *p != '"'; i++, p++)
+            nm[i] = *p;
+        nm[3] = '\0';
+
+        scores[idx].score = sc;
+        scores[idx].level = lv;
+        memcpy(scores[idx].name, nm, 4);
+        idx++;
+    }
+
+    free(buf);
 }
 
 static void SaveScores() {
-    FILE* f = fopen(SAVE_FILE, "wb");
+    FILE* f = fopen(SAVE_FILE, "w");
     if (!f) return;
-    unsigned int magic = FILE_MAGIC;
-    fwrite(&magic, sizeof(magic), 1, f);
-    fwrite(scores, sizeof(ScoreEntry), MAX_SCORES, f);
+
+    fprintf(f, "[\n");
+    for (int i = 0; i < MAX_SCORES; i++) {
+        fprintf(f, "  { \"score\": %d, \"level\": %d, \"name\": \"%s\" }%s\n",
+            scores[i].score,
+            scores[i].level,
+            scores[i].name,
+            (i < MAX_SCORES - 1) ? "," : "");
+    }
+    fprintf(f, "]\n");
     fclose(f);
 }
 
 // Inserta newEntry y reordena de mayor a menor puntuación.
 // Devuelve el índice final de la entrada insertada (-1 si no entró).
 static int InsertAndSort(ScoreEntry newEntry) {
-    // ¿Supera al mínimo actual?
-    // Buscamos el último slot con puntuación menor o igual para reemplazarlo
     int replaceIdx = -1;
-    int minScore = newEntry.score; // solo entra si mejora algo
+    int minScore = newEntry.score;
     for (int i = MAX_SCORES - 1; i >= 0; i--) {
         if (scores[i].score <= minScore) {
             replaceIdx = i;
             break;
         }
     }
-    if (replaceIdx == -1) return -1; // no entró en el top
+    if (replaceIdx == -1) return -1;
 
     scores[replaceIdx] = newEntry;
 
@@ -85,7 +131,6 @@ static int InsertAndSort(ScoreEntry newEntry) {
     }
     SaveScores();
 
-    // Devuelve la posición final de la entrada que acaba de entrar
     for (int i = 0; i < MAX_SCORES; i++) {
         if (scores[i].score == newEntry.score &&
             strcmp(scores[i].name, newEntry.name) == 0)
@@ -103,22 +148,18 @@ static float blinkTimer = 0.0f;
 static bool  blinkOn = true;
 static int   playerRank = -1;
 
-// Fases internas
 typedef enum HsPhase { HS_NAME_ENTRY, HS_SHOW_TABLE } HsPhase;
 static HsPhase hsPhase;
 
-// Entrada de nombre
 static char  nameInput[4] = "AAA";
-static int   nameCursor = 0;  // 0..2
+static int   nameCursor = 0;
 static float repeatTimer = 0.0f;
 static float repeatDelay = 0.15f;
 
-// Flag: ¿venimos de una partida real?  Lo pone UI a true en EndGameOver.
-// Si es false solo mostramos la tabla (arranque / demo).
 static bool  hsJustPlayed = false;
 
 // ---------------------------------------------------------------
-//  API pública: llamar desde EndGameOver() en UI.cpp
+//  API pública
 // ---------------------------------------------------------------
 void HS_SetJustPlayed(bool v) { hsJustPlayed = v; }
 
@@ -163,17 +204,14 @@ static void DrawTable() {
 static void UpdateDrawNameEntry() {
     const float cx = SCREEN_WIDTH / 2.0f;
 
-    // Título
     const char* title = "GAME  OVER";
     Vector2 ts = MeasureTextEx(hsFont, title, 12, 0.5f);
     DrawTextEx(hsFont, title, { cx - ts.x / 2.0f, 16 }, 12, 0.5f, RED);
 
-    // Instrucción
     const char* instr = "ENTER YOUR NAME";
     Vector2 is = MeasureTextEx(hsFont, instr, 8, 0.5f);
     DrawTextEx(hsFont, instr, { cx - is.x / 2.0f, 50 }, 8, 0.5f, YELLOW);
 
-    // Las tres letras
     float startX = cx - 16.0f;
     for (int i = 0; i < 3; i++) {
         Color c = (i == nameCursor) ? SKYBLUE : WHITE;
@@ -181,20 +219,14 @@ static void UpdateDrawNameEntry() {
         DrawTextEx(hsFont, buf, { startX + i * 14.0f, 74 }, 14, 0.5f, c);
     }
 
-    // Cursor parpadeante bajo la letra activa
     if (blinkOn) {
         float cx2 = startX + nameCursor * 14.0f;
         DrawRectangle((int)cx2, 90, 11, 2, SKYBLUE);
     }
 
-    // Instrucciones de controles
     DrawTextEx(hsFont, "UP/DOWN: change letter", { 14, 120 }, 7, 0.5f, GRAY);
     DrawTextEx(hsFont, "RIGHT/ENTER: confirm", { 14, 132 }, 7, 0.5f, GRAY);
 
-    // ---- Input ----
-    // IsKeyPressed = primer frame del press (dispara UNA vez).
-    // IsKeyDown    = frames siguientes mientras se mantiene (repeat).
-    // Nunca los dos juntos: evita saltar 2 letras por press.
     auto changeChar = [&](int dir) {
         nameInput[nameCursor] = 'A' + (nameInput[nameCursor] - 'A' + dir + 26) % 26;
         };
@@ -217,21 +249,16 @@ static void UpdateDrawNameEntry() {
         if (repeatTimer >= repeatDelay) { changeChar(-1); repeatTimer = 0.0f; }
     }
 
-    // Avanzar / confirmar
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         nameCursor++;
         repeatTimer = repeatDelay;
         if (nameCursor >= 3) {
-            // Nombre completado ? insertar en tabla
             ScoreEntry entry;
             entry.score = GetScore();
             entry.level = GetLevel();
             memcpy(entry.name, nameInput, 4);
 
-            ResetAfterGameOver();       // resetea score/lives/level ANTES de insertar
-            // (GetScore ya devolvía el valor guardado)
-// Reinsertar con el score que teníamos guardado antes del reset
-// (necesitamos haberlo leído antes — ver init)
+            ResetAfterGameOver();
             playerRank = InsertAndSort(entry);
             hsPhase = HS_SHOW_TABLE;
             hsTimer = 0.0f;
@@ -257,17 +284,13 @@ void runHighScoreScreen() {
         LoadScores();
 
         if (hsJustPlayed) {
-            // Viene de una partida ? pedir nombre primero
             hsPhase = HS_NAME_ENTRY;
             nameCursor = 0;
             nameInput[0] = nameInput[1] = nameInput[2] = 'A';
             nameInput[3] = '\0';
             repeatTimer = repeatDelay;
-            // Guardamos score/level ANTES de que ResetAfterGameOver los borre
-            // (ya los guardará UpdateDrawNameEntry al confirmar)
         }
         else {
-            // Arranque o demo: solo mostrar tabla
             hsPhase = HS_SHOW_TABLE;
             playerRank = -1;
         }
@@ -278,18 +301,15 @@ void runHighScoreScreen() {
     blinkTimer += GetFrameTime();
     if (blinkTimer >= 0.5f) { blinkOn = !blinkOn; blinkTimer = 0.0f; }
 
-    // ---- Fase: entrada de nombre ----
     if (hsPhase == HS_NAME_ENTRY) {
         UpdateDrawNameEntry();
         return;
     }
 
-    // ---- Fase: mostrar tabla ----
     hsTimer += GetFrameTime();
 
     DrawTable();
 
-    // "PRESS START" parpadeante
     if (blinkOn) {
         const char* ps = "PRESS START";
         Vector2 psSize = MeasureTextEx(hsFont, ps, 8, 0.5f);
@@ -297,13 +317,12 @@ void runHighScoreScreen() {
             { SCREEN_WIDTH / 2.0f - psSize.x / 2.0f, 220 }, 8, 0.5f, WHITE);
     }
 
-    // Salir a TITLE
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || hsTimer >= 15.0f) {
         UnloadFont(hsFont);
         hsFont = { 0 };
         Scene_Init = false;
         hsTimer = 0.0f;
         hsJustPlayed = false;
-        ChangeScene();   // HIGHSCORE -> TITLE
+        ChangeScene();
     }
 }
