@@ -8,3 +8,5 @@ void Level15EntitiesRoutine();
 void UnloadLevel15Entities();
 
 void ResetLevel15Entities();
+
+bool GoombaKilledPlayer();

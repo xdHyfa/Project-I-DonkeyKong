@@ -103,6 +103,9 @@
     <ClCompile Include="Scenes\level15.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Goomba.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libraries\raylib\include\raylib.h">
@@ -206,6 +209,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\level15.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Goomba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
