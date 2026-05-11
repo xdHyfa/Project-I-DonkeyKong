@@ -160,6 +160,7 @@
     <ClCompile Include="Entities\objects.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
+    <ClCompile Include="Entities\Star.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
     <ClCompile Include="Maps\Level15Map.cpp" />
     <ClCompile Include="Maps\Level1Map.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Entities\Level2Entities.h" />
     <ClInclude Include="Entities\objects.h" />
     <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\Star.h" />
     <ClInclude Include="EntityCollision.hpp" />
     <ClInclude Include="include\resource_dir.h" />
     <ClInclude Include="libraries\raylib\include\raylib.h" />
