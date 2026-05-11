@@ -47,12 +47,13 @@ float P15_Ramp4R_YPos;
 float P15_Ramp5_YPos;
 
 // --- LADDER DECLARATIONS ---
-Ladder Level15_Ladders[4];
+Ladder Level15_Ladders[5];
 Ladder ExtraLadder15_0[6];
 Ladder ExtraLadder15_1[6];
 Ladder ExtraLadder15_2[6];
 Ladder ExtraLadder15_3[6];
-Rectangle Level15_DownZone[4];
+Ladder ExtraLadder15_4[6]; // L4: floor3 -> floor1R (two floors, 88px gap)
+Rectangle Level15_DownZone[5];
 
 // Plataforma 0: suelo completo
 Truss Ramp15_0[14];
@@ -140,6 +141,8 @@ void Level15RampSetter() {
     Ramp15_2L[5].hasLadderBelow = true;
     // L3: derecho de Ramp4R (tile [3]) -> baja a Ramp3
     Ramp15_4R[3].hasLadderBelow = true;
+    // L4: derecho de Ramp4L (tile [4]) -> baja a Ramp1R (dos pisos)
+    Ramp15_4L[4].hasLadderBelow = true;
 
     // Nivel 6 (Ramp15_5 original) ha sido destruido - ya no se inicializa ni dibuja
 
@@ -167,15 +170,16 @@ void Level15RampDraw() {
     RampDrawer(Ramp15_1L, 5);  // nivel 1 izq
     RampDrawer(Ramp15_1R, 5);  // nivel 1 der
     RampDrawer(Ramp15_2L, 6);  // nivel 2 centrada (6 tiles)
-    // Ramp15_2R no se dibuja (no usada)
     RampDrawer(Ramp15_3, 5);   // nivel 3 mitad izq
     RampDrawer(Ramp15_4L, 5);  // nivel 3 mitad der
     RampDrawer(Ramp15_4R, 4);  // nivel 4 izq
-    // Ramp15_5 (nivel 6) destruido - ya no se dibuja
-    // Nivel 5: nueva plataforma (misma textura y color que el resto)
     for (int i = 0; i < 5; i++) {
         DrawTexture(Ramp15_BlueNew[i].truss, (int)Ramp15_BlueNew[i].TrussPos.x, (int)Ramp15_BlueNew[i].TrussPos.y, WHITE);
     }
+}
+
+void Level15TrussOverLadderDraw() {
+    // No-op: black rect approach removed, ladders simply draw over trusses
 }
 
 void Level15RampCollisions(Entity& entity) {
@@ -225,7 +229,7 @@ void DrawLevel15Colliders() {
     DrawRectangleLines((int)Ramp15_4R_Zone.x, (int)Ramp15_4R_Zone.y, (int)Ramp15_4R_Zone.width, (int)Ramp15_4R_Zone.height, GREEN);
     DrawRectangleLines((int)Ramp15_BlueNew_Zone.x, (int)Ramp15_BlueNew_Zone.y, (int)Ramp15_BlueNew_Zone.width, (int)Ramp15_BlueNew_Zone.height, BLUE);
 
-    DrawLadderCollider(Level15_Ladders, 4);
+    DrawLadderCollider(Level15_Ladders, 5);
 
     // Player collider
     DrawCircle((int)Mario.FloorCollider.x, (int)Mario.FloorCollider.y, 2, RED);
@@ -248,14 +252,40 @@ bool Level15CheckDownZone(Entity& entity) {
 }
 
 // --- LADDERS ---
-// Each ladder starts at its platform and is extended downward with full
-// sprite pieces to reach the platform below, making it climbable end-to-end.
+// Each ladder spans exactly from the upper platform's surface (TrussPos.y + 8)
+// down to the lower platform's surface, so it can be used to go both UP and DOWN.
+//
+// Platform surface Y = TrussPos.y + 8  (from RampCollision logic)
+// Piece height = 16px (full sprite)
+//
+// Gap Ramp1->Ramp0 : 54px  -> 1 main + 3 extras = 64px (clips into lower platform)
+// Gap Ramp2->Ramp1 : 44px  -> 1 main + 2 extras = 48px (clips into lower platform)
+// Gap Ramp4->Ramp3 : 44px  -> 1 main + 2 extras = 48px
 
-void SetFullLadder15(Ladder& ladder, Ladder* Extras, float X, float Y) {
-    ladder.setPos(X, Y);
-    for (int i = 0; i < 6; i++) {
-        Extras[i].setPos(ladder.Position.x, ladder.Position.y + (float)((i + 1) * 16));
+// Helper: place ladder at upper platform surface and fill down with extras.
+// upperSurfaceY = upper platform TrussPos.y + 8
+// numExtras     = number of extra 16px pieces to draw below the first piece
+static void SetLadder15(Ladder& ladder, Ladder* Extras, int numExtras,
+    float X, float upperSurfaceY, float totalHeight)
+{
+    // Position the first sprite piece so its TOP is at the upper platform surface
+    ladder.setPos(X, upperSurfaceY);
+
+    // Extend extra pieces downward, each 16px below the previous
+    for (int i = 0; i < numExtras; i++) {
+        Extras[i].setPos(ladder.Position.x, ladder.Position.y + (float)((i + 1) * 15));
     }
+
+    // Set hitbox: starts at upper platform surface, spans full gap height
+    // so the player can enter the ladder from BOTH the top (going down)
+    // and the bottom (going up).
+    // We add +1 at the bottom so a player whose feet are exactly at the
+    // lower platform surface is still inside the hitbox (CheckCollisionPointRec
+    // uses strict < for the bottom edge).
+    ladder.Hitbox.x = ladder.Position.x;
+    ladder.Hitbox.y = upperSurfaceY;        // top of ladder = upper platform surface
+    ladder.Hitbox.width = ladder.SpriteSelector.width;
+    ladder.Hitbox.height = totalHeight + 1.0f;   // +1 to catch player standing at bottom
 }
 
 void Level15LadderSetter() {
@@ -264,38 +294,54 @@ void Level15LadderSetter() {
     for (int i = 0; i < 4; i++) {
         Level15_Ladders[i].setSprite(1, true);
     }
+    Level15_Ladders[4].setSprite(1, true); // same sprite as other ladders
     for (int i = 0; i < 6; i++) {
         ExtraLadder15_0[i].setSprite(1, true);
         ExtraLadder15_1[i].setSprite(1, true);
         ExtraLadder15_2[i].setSprite(1, true);
         ExtraLadder15_3[i].setSprite(1, true);
+        ExtraLadder15_4[i].setSprite(1, true); // same sprite as other ladders
     }
 
-    // L0: Ramp1L (piso 1) -> Ramp0 (suelo). extra=29
-    SetFullLadder15(Level15_Ladders[0], ExtraLadder15_0,
+    // Platform surface Y = TrussPos.y + 8
+    float surf0 = P15_Ramp0_YPos + 8.0f;  // floor surface
+    float surf1L = P15_Ramp1L_YPos + 8.0f;  // ramp1 surface
+    float surf1R = P15_Ramp1R_YPos + 8.0f;  // same as surf1L
+    float surf2 = P15_Ramp2L_YPos + 8.0f;  // ramp2 surface
+    float surf3 = P15_Ramp3_YPos + 8.0f;  // ramp3 surface
+    float surf4 = P15_Ramp4L_YPos + 8.0f;  // ramp4 surface
+
+    // L0: Ramp1L (upper) -> Ramp0 floor (lower).
+    SetLadder15(Level15_Ladders[0], ExtraLadder15_0, 3,
         Ramp15_1L[0].TrussPos.x + 4,
-        Ramp15_1L[0].TrussPos.y + Ramp15_1L[0].TrussBox.height * 2);
-    Level15_Ladders[0].Hitbox.height += 29;
+        surf1L,
+        surf0 - surf1L + 8);   // +8 to reach bottom of lower truss
 
-    // L1: Ramp2L (piso 2) -> Ramp1L (piso 1). extra=19
-    SetFullLadder15(Level15_Ladders[1], ExtraLadder15_1,
+    // L1: Ramp2L (upper) -> Ramp1L (lower).
+    SetLadder15(Level15_Ladders[1], ExtraLadder15_1, 2,
         Ramp15_2L[0].TrussPos.x + 4,
-        Ramp15_2L[0].TrussPos.y + Ramp15_2L[0].TrussBox.height * 2);
-    Level15_Ladders[1].Hitbox.height += 19;
+        surf2,
+        surf1L - surf2 + 8);   // +8 to reach bottom of lower truss
 
-    // L2: Ramp2L (piso 2) -> Ramp1R (piso 1). extra=19
-    SetFullLadder15(Level15_Ladders[2], ExtraLadder15_2,
+    // L2: Ramp2L right edge (upper) -> Ramp1R (lower).
+    SetLadder15(Level15_Ladders[2], ExtraLadder15_2, 2,
         Ramp15_2L[5].TrussPos.x + 4,
-        Ramp15_2L[5].TrussPos.y + Ramp15_2L[5].TrussBox.height * 2);
-    Level15_Ladders[2].Hitbox.height += 19;
+        surf2,
+        surf1R - surf2 + 8);   // +8
 
-    // L3: Ramp4R (piso 4) -> Ramp3 (piso 3). extra=19
-    SetFullLadder15(Level15_Ladders[3], ExtraLadder15_3,
+    // L3: Ramp4R (upper) -> Ramp3 (lower).
+    SetLadder15(Level15_Ladders[3], ExtraLadder15_3, 2,
         Ramp15_4R[3].TrussPos.x + 4,
-        Ramp15_4R[3].TrussPos.y + Ramp15_4R[3].TrussBox.height * 2);
-    Level15_Ladders[3].Hitbox.height += 19;
+        surf4,
+        surf3 - surf4 + 8);    // +8
 
-    for (int i = 0; i < 4; i++) {
+    // L4: Ramp4L right edge (floor3 upper) -> Ramp1R (floor1 lower).
+    SetLadder15(Level15_Ladders[4], ExtraLadder15_4, 6,
+        Ramp15_4L[4].TrussPos.x + 4,
+        P15_Ramp3_YPos,
+        surf1R - P15_Ramp3_YPos + 8); // +8
+
+    for (int i = 0; i < 5; i++) {
         Level15_DownZone[i] = { Level15_Ladders[i].Hitbox.x, Level15_Ladders[i].Hitbox.y - 2, 10, 4 };
     }
 }
@@ -304,19 +350,27 @@ void Level15LadderDraw() {
     for (int i = 0; i < 4; i++) {
         DrawTextureRec(Ladder::texture, Level15_Ladders[i].SpriteSelector, Level15_Ladders[i].Position, WHITE);
     }
-    // L0 needs 3 extra pieces (gap=38px -> piece0+piece1+piece2)
+    // L0: 3 extra pieces
     DrawTextureRec(ExtraLadder15_0[0].texture, ExtraLadder15_0[0].SpriteSelector, ExtraLadder15_0[0].Position, WHITE);
     DrawTextureRec(ExtraLadder15_0[1].texture, ExtraLadder15_0[1].SpriteSelector, ExtraLadder15_0[1].Position, WHITE);
     DrawTextureRec(ExtraLadder15_0[2].texture, ExtraLadder15_0[2].SpriteSelector, ExtraLadder15_0[2].Position, WHITE);
-    // L1, L2, L3 need 2 extra pieces each (gap=28px)
+    // L1: 2 extra pieces
     DrawTextureRec(ExtraLadder15_1[0].texture, ExtraLadder15_1[0].SpriteSelector, ExtraLadder15_1[0].Position, WHITE);
     DrawTextureRec(ExtraLadder15_1[1].texture, ExtraLadder15_1[1].SpriteSelector, ExtraLadder15_1[1].Position, WHITE);
+    // L2: 2 extra pieces
     DrawTextureRec(ExtraLadder15_2[0].texture, ExtraLadder15_2[0].SpriteSelector, ExtraLadder15_2[0].Position, WHITE);
     DrawTextureRec(ExtraLadder15_2[1].texture, ExtraLadder15_2[1].SpriteSelector, ExtraLadder15_2[1].Position, WHITE);
+    // L3: 2 extra pieces
     DrawTextureRec(ExtraLadder15_3[0].texture, ExtraLadder15_3[0].SpriteSelector, ExtraLadder15_3[0].Position, WHITE);
     DrawTextureRec(ExtraLadder15_3[1].texture, ExtraLadder15_3[1].SpriteSelector, ExtraLadder15_3[1].Position, WHITE);
+    // L4 (pink): 5 extra pieces
+    DrawTextureRec(ExtraLadder15_4[0].texture, ExtraLadder15_4[0].SpriteSelector, ExtraLadder15_4[0].Position, WHITE);
+    DrawTextureRec(ExtraLadder15_4[1].texture, ExtraLadder15_4[1].SpriteSelector, ExtraLadder15_4[1].Position, WHITE);
+    DrawTextureRec(ExtraLadder15_4[2].texture, ExtraLadder15_4[2].SpriteSelector, ExtraLadder15_4[2].Position, WHITE);
+    DrawTextureRec(ExtraLadder15_4[3].texture, ExtraLadder15_4[3].SpriteSelector, ExtraLadder15_4[3].Position, WHITE);
+    DrawTextureRec(ExtraLadder15_4[4].texture, ExtraLadder15_4[4].SpriteSelector, ExtraLadder15_4[4].Position, WHITE);
 }
 
 void Level15LadderCollisions(Entity& entity) {
-    LadderCollisions(entity, Level15_Ladders, 4);
+    LadderCollisions(entity, Level15_Ladders, 5);
 }

@@ -14,6 +14,8 @@ void Level15RampSetter();
 
 void Level15RampDraw();
 
+void Level15TrussOverLadderDraw();
+
 void Level15RampCollisions(Entity& entity);
 
 void DrawLevel15Colliders();

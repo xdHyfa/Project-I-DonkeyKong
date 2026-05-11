@@ -55,6 +55,7 @@ void runLevel15() {
     if (GetPause()) {
         Level15LadderDraw();
         Level15RampDraw();
+        Level15TrussOverLadderDraw();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
         if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
         PlayEntityDeath();
@@ -105,6 +106,7 @@ void runLevel15() {
 
         Level15LadderDraw();
         Level15RampDraw();
+        Level15TrussOverLadderDraw();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
         if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         return;
@@ -113,6 +115,7 @@ void runLevel15() {
     if (GetIsKilling()) {
         Level15LadderDraw();
         Level15RampDraw();
+        Level15TrussOverLadderDraw();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
         if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
@@ -136,6 +139,7 @@ void runLevel15() {
 
         Level15LadderDraw();
         Level15RampDraw();
+        Level15TrussOverLadderDraw();
 
         Level15EntitiesRoutine();
         UpdateBonus();
@@ -162,6 +166,7 @@ void runLevel15() {
     else {
         Level15LadderDraw();
         Level15RampDraw();
+        Level15TrussOverLadderDraw();
         if (!win15SoundPlayed) {
             StopMusicStream(level15Music);
             win15SoundPlayed = true;
