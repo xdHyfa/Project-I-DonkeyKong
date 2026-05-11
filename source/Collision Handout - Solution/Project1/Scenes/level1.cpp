@@ -28,6 +28,7 @@ bool  isDeathSequence = false;
 bool Hitboxes_On = false;
 Music Hammer_Music = { 0 };
 bool isHammerPlaying = false;
+bool winSoundPlayed = false;
 Sound HammerSound1 = { 0 };
 Interactable Hammer1, Hammer2, Star1;
 
@@ -64,6 +65,7 @@ void runLevel1() {
         jumpBarrelSound = LoadSound("Audio/Bonus.wav");
         stageClearedSound = LoadSound("Audio/Stage-Cleared-1.wav");
         winTriggered = false;
+        winSoundPlayed = false;
         donkey.Position = { 21.0f, 47.0f };
         donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f }; //RESET DE LA HITBOX?
         Hammer1.SetObject(16, 90, Hammer);
@@ -84,10 +86,13 @@ void runLevel1() {
         Hammer2.DrawObject();
         Star1.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
         return;
     }
+
+
+
 
     if (isDeathSequence) {
         deathTimer += GetFrameTime();
@@ -383,13 +388,13 @@ void runLevel1() {
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
-
-        // siempre dibuja
+        // Win: dibujar y cambiar escena directamente sin reproducir sonido
         Level1LadderDraw();
         Level1RampDraw();
         donkey.Draw();
         lady.Draw();
         barrelSpawner.Draw();
+        ChangeScene();
     }
     if (IsKeyPressed(KEY_H)) {
         Hitboxes_On = !Hitboxes_On;
@@ -434,4 +439,12 @@ void runLevel1() {
         barrelSpawner.Init();
         AddLevel();
     }
+}
+
+bool CheckLevel1Players() {
+    if (isDeathSequence) return false;
+    if (Mario.isAlive || Luigi.isAlive) {
+        return true;
+    }
+    else return false;
 }

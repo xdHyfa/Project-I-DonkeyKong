@@ -94,6 +94,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Entities\Star.cpp">
+    <ClCompile Include="Maps\Level15Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Level15Entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\level15.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -192,6 +199,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Entities\Star.h">
+    <ClInclude Include="Maps\Level15Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Level15Entities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\level15.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

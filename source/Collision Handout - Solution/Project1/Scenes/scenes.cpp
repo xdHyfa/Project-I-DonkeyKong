@@ -128,8 +128,12 @@ void ChangeScene() {
 		current_scene = WINCUTSCENE;
 		return;
 	}
-	if (current_scene == WINCUTSCENE) {
+	if (current_scene == LEVEL15) {
 		current_scene = HOWHIGH2;
+		return;
+	}
+	if (current_scene == WINCUTSCENE) {
+		current_scene = LEVEL15;
 		return;
 	}
 	if (current_scene == HOWHIGH2) {
@@ -161,6 +165,7 @@ Scene GetCurrentScene() {
 	if (current_scene == CUTSCENE)    return CUTSCENE;
 	if (current_scene == HOWHIGH)     return HOWHIGH;
 	if (current_scene == LEVEL1)      return LEVEL1;
+	if (current_scene == LEVEL15)     return LEVEL15;
 	if (current_scene == WINCUTSCENE) return WINCUTSCENE;
 	if (current_scene == HOWHIGH2)    return HOWHIGH2;
 	if (current_scene == LEVEL2)      return LEVEL2;

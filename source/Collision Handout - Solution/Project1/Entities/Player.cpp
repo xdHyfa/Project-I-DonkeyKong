@@ -410,6 +410,9 @@ void Player::die()
     isGrounded = false;
     isJumping = false;
     isAlive = false;
+    marioVelocity = { 0.0f, 0.0f };
+    lockedVelocityX = 0.0f;
+    isFalling = false;
     deathLoopCount = 0;
     frameIndex = 0;
     frameDelayCounter = 0;
