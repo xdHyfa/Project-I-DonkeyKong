@@ -3,6 +3,7 @@
 #include "Scenes/scenes.h"
 #include "Scenes/level1.h"
 #include "Scenes/level2.h"
+#include "Scenes/level15.h"
 #include "Core/constants.h"
 #include "Scenes/TitleScreen.h"
 #include "Scenes/InitialScreen.h"
@@ -91,6 +92,15 @@ int main()
 			PrintUI();
 			PrintBonus();
 			runLevel1();
+			CheckPause();
+
+			break;
+
+		case LEVEL15:
+
+			PrintUI();
+			PrintBonus();
+			runLevel15();
 			CheckPause();
 
 			break;
