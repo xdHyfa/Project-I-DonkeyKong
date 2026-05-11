@@ -55,6 +55,8 @@ void Interactable::SetObject(int x, int y, Items Tag) {
 		SpriteSelector.y = 0;
 		Sprite = LoadTexture("Sprites/Star.png");  // <-- añade Star.png a Sprites/
 		UpdateHitbox();
+		Hitbox.width = 15;
+		Hitbox.height = 15;
 	}
 
 }

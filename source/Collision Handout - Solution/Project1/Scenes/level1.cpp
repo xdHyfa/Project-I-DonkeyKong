@@ -70,7 +70,7 @@ void runLevel1() {
         donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f }; //RESET DE LA HITBOX?
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
-        Star1.SetObject(96, SCREEN_HEIGHT - 16 - 17, StarItem);
+        Star1.SetObject(16, 150, StarItem);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
 
@@ -350,7 +350,7 @@ void runLevel1() {
             }
         }
 
-        if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
+        if (Mario.isAlive && Mario.marioVelocity.y > 7.0f && !Mario.StarActive) {
             StopHammerTime();
             isHammerPlaying = false;
             StopMusicStream(Hammer_Music);
@@ -372,6 +372,20 @@ void runLevel1() {
             Mario.die();
             ResetLevel1Entities();
         }
+
+        if (Luigi.isAlive && Luigi.marioVelocity.y > 7.0f && !Luigi.StarActive)
+        {
+            StopHammerTime();
+            isHammerPlaying = false;
+            StopMusicStream(Hammer_Music);
+            PauseMusicStream(level1Music);
+            PlaySound(deathSound2);
+            isDeathSequence = true;
+            deathTimer = 0.0f;
+            Luigi.die();
+            ResetLevel1Entities();
+        }
+
         if (GetTwoPlayers() && Luigi.isAlive && CheckCollisionRecs(Luigi.getHitbox(), donkey.hitbox)) {
             StopHammerTime();
             isHammerPlaying = false;
