@@ -46,6 +46,28 @@ public:
     Rectangle HammerSelector = { 0, 0, 12, 16 };
     Texture2D HammerTexture = { 0 };
 
+    // --- Star state (per-player) ---
+    bool  StarActive = false;
+    float StarTimer = 0.0f;
+    float StarBlinkTimer = 0.0f;
+    bool  StarBlink = false;   // true = draw tinted, false = normal
+
+    // Returns the tint to use when drawing Mario this frame
+    Color GetStarTint() const {
+        if (!StarActive) return WHITE;
+        // Cycle through rainbow colors based on timer (~6 colors, 0.1s each)
+        int step = (int)(StarTimer / 0.1f) % 6;
+        switch (step) {
+        case 0: return Color{ 255, 50,  50,  255 }; // red
+        case 1: return Color{ 255, 165, 0,   255 }; // orange
+        case 2: return Color{ 255, 255, 50,  255 }; // yellow
+        case 3: return Color{ 50,  255, 50,  255 }; // green
+        case 4: return Color{ 50,  50,  255, 255 }; // blue
+        case 5: return Color{ 180, 50,  255, 255 }; // violet
+        default: return WHITE;
+        }
+    }
+
     // --- Audio (static: one instance shared, loaded once) ---
     static Sound jumpSound;
     static Music walkMusic;

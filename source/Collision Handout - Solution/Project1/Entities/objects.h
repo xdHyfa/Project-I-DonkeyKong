@@ -6,7 +6,8 @@ enum Items {
 	Hammer = 0,
 	Hat = 1,
 	Purse = 2,
-	Umbrella = 3
+	Umbrella = 3,
+	StarItem = 4
 };
 
 class Interactable {

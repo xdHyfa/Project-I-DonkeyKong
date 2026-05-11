@@ -14,6 +14,7 @@
 #include "Entities/Lady.h"
 #include "Core/UI.h"
 #include "Entities/objects.h"
+#include "Entities/Star.h"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ bool Hitboxes_On = false;
 Music Hammer_Music = { 0 };
 bool isHammerPlaying = false;
 Sound HammerSound1 = { 0 };
-Interactable Hammer1, Hammer2;
+Interactable Hammer1, Hammer2, Star1;
 
 void runLevel1() {
 
@@ -67,6 +68,7 @@ void runLevel1() {
         donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f }; //RESET DE LA HITBOX?
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
+        Star1.SetObject(96, SCREEN_HEIGHT - 16 - 17, StarItem);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
 
@@ -80,6 +82,7 @@ void runLevel1() {
         barrelSpawner.Draw();
         Hammer1.DrawObject();
         Hammer2.DrawObject();
+        Star1.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
         if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
         PlayEntityDeath();
@@ -109,13 +112,16 @@ void runLevel1() {
                 Luigi.isAlive = true;
                 Scene_Init = false;
                 isDeathSequence = false;
+                Star1.ResetObject();
+                StopStarTime(1);
+                StopStarTime(2);
                 RemoveLife();
                 CheckLives();
                 ResetBonus();
                 barrelSpawner.Init();
                 return;
             }
-   
+
             // One player still alive � resume
             isDeathSequence = false;
             deathTimer = 0.0f;
@@ -143,6 +149,7 @@ void runLevel1() {
         barrelSpawner.Draw();
         Hammer1.DrawObject();
         Hammer2.DrawObject();
+        Star1.DrawObject();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
         if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
@@ -172,12 +179,17 @@ void runLevel1() {
         barrelSpawner.Draw();
         Hammer1.DrawObject();
         Hammer2.DrawObject();
+        Star1.DrawObject();
         Level1EntitiesRoutine();
         UpdateBonus();
+        UpdateStar(Mario);
+        if (GetTwoPlayers()) UpdateStar(Luigi);
         Hammer1.CheckInteraction(Mario, 1);
         Hammer2.CheckInteraction(Mario, 1);
         if (GetTwoPlayers()) Hammer1.CheckInteraction(Luigi, 2);
         if (GetTwoPlayers()) Hammer2.CheckInteraction(Luigi, 2);
+        Star1.CheckInteraction(Mario, 1);
+        if (GetTwoPlayers()) Star1.CheckInteraction(Luigi, 2);
 
         if (GetHammerTime()) {
             if (!isHammerPlaying) PlayMusicStream(Hammer_Music), isHammerPlaying = true;
@@ -231,6 +243,14 @@ void runLevel1() {
             float Luigi_diffY = Luigi.Position.y - b.Position.y;
 
             if (Mario.isAlive && EntityCollision(Mario, b)) {
+                if (Mario.StarActive) {
+                    b.has_Spawned = false;
+                    AddPoints(300);
+                    ShowScorePopup(Mario.Position, 300);
+                    PlaySound(HammerSound1);
+                    StartEntityDeath(b);
+                    return;
+                }
                 StopHammerTime();
                 isHammerPlaying = false;
                 StopMusicStream(Hammer_Music);
@@ -241,6 +261,14 @@ void runLevel1() {
                 Mario.die();
             }
             if (GetTwoPlayers() && Luigi.isAlive && EntityCollision(Luigi, b)) {
+                if (Luigi.StarActive) {
+                    b.has_Spawned = false;
+                    AddPoints(300);
+                    ShowScorePopup(Luigi.Position, 300);
+                    PlaySound(HammerSound1);
+                    StartEntityDeath(b);
+                    return;
+                }
                 StopHammerTime();
                 isHammerPlaying = false;
                 StopMusicStream(Hammer_Music);
@@ -283,26 +311,38 @@ void runLevel1() {
         }
 
         if (Mario.isAlive && (Fire1.has_Spawned && EntityCollision(Mario, Fire1) || Fire2.has_Spawned && EntityCollision(Mario, Fire2))) {
-            StopHammerTime();
-            isHammerPlaying = false;
-            StopMusicStream(Hammer_Music);
-            PauseMusicStream(level1Music);
-            PlaySound(deathSound2);
-            isDeathSequence = true;
-            deathTimer = 0.0f;
-            Mario.die();
-            ResetLevel1Entities();
+            if (Mario.StarActive) {
+                if (Fire1.has_Spawned && EntityCollision(Mario, Fire1)) { Fire1.has_Spawned = false; AddPoints(300); ShowScorePopup(Mario.Position, 300); PlaySound(HammerSound1); StartEntityDeath(Fire1); return; }
+                if (Fire2.has_Spawned && EntityCollision(Mario, Fire2)) { Fire2.has_Spawned = false; AddPoints(300); ShowScorePopup(Mario.Position, 300); PlaySound(HammerSound1); StartEntityDeath(Fire2); return; }
+            }
+            else {
+                StopHammerTime();
+                isHammerPlaying = false;
+                StopMusicStream(Hammer_Music);
+                PauseMusicStream(level1Music);
+                PlaySound(deathSound2);
+                isDeathSequence = true;
+                deathTimer = 0.0f;
+                Mario.die();
+                ResetLevel1Entities();
+            }
         }
         if (GetTwoPlayers() && Luigi.isAlive && (Fire1.has_Spawned && EntityCollision(Luigi, Fire1) || Fire2.has_Spawned && EntityCollision(Luigi, Fire2))) {
-            StopHammerTime();
-            isHammerPlaying = false;
-            StopMusicStream(Hammer_Music);
-            PauseMusicStream(level1Music);
-            PlaySound(deathSound2);
-            isDeathSequence = true;
-            deathTimer = 0.0f;
-            Luigi.die();
-            ResetLevel1Entities();
+            if (Luigi.StarActive) {
+                if (Fire1.has_Spawned && EntityCollision(Luigi, Fire1)) { Fire1.has_Spawned = false; AddPoints(300); ShowScorePopup(Luigi.Position, 300); PlaySound(HammerSound1); StartEntityDeath(Fire1); return; }
+                if (Fire2.has_Spawned && EntityCollision(Luigi, Fire2)) { Fire2.has_Spawned = false; AddPoints(300); ShowScorePopup(Luigi.Position, 300); PlaySound(HammerSound1); StartEntityDeath(Fire2); return; }
+            }
+            else {
+                StopHammerTime();
+                isHammerPlaying = false;
+                StopMusicStream(Hammer_Music);
+                PauseMusicStream(level1Music);
+                PlaySound(deathSound2);
+                isDeathSequence = true;
+                deathTimer = 0.0f;
+                Luigi.die();
+                ResetLevel1Entities();
+            }
         }
 
         if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
@@ -361,8 +401,8 @@ void runLevel1() {
         DrawMarioCollider();
     }
 
-    DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
+    DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, Mario.GetStarTint());
+    if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, Luigi.GetStarTint());
     UpdateDrawScorePopup();
     SetCooldown();
 
@@ -386,6 +426,9 @@ void runLevel1() {
         lady.Unload();
         UnloadSound(stageClearedSound);
         ResetLevel1Entities();
+        Star1.ResetObject();
+        StopStarTime(1);
+        StopStarTime(2);
         AddBonus();
         Scene_Init = false;
         barrelSpawner.Init();

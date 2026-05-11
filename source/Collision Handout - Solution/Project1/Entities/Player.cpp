@@ -157,9 +157,11 @@ void Player::Movement()
     bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_RIGHT, KEY_D);
     bool moveLeft = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_LEFT, KEY_A);
 
+    float speedMult = StarActive ? 3.0f : 1.0f;
+
     if (moveRight)
     {
-        marioVelocity.x = (float)velocity;
+        marioVelocity.x = (float)velocity * speedMult;
         if (frameRec.width < 0 && getIsGrounded()) frameRec.width = -frameRec.width;
         if (getIsGrounded())
         {
@@ -170,7 +172,7 @@ void Player::Movement()
     }
     else if (moveLeft)
     {
-        marioVelocity.x = -(float)velocity;
+        marioVelocity.x = -(float)velocity * speedMult;
         if (frameRec.width > 0 && getIsGrounded()) frameRec.width = -frameRec.width;
         if (getIsGrounded())
         {
@@ -403,6 +405,8 @@ void Player::Unload()
 // ------------------------------------------------------------
 void Player::die()
 {
+    // NOTE: callers should guard with (!player.StarActive) before calling die()
+    // so the star power-up grants invincibility against barrels and enemies.
     isGrounded = false;
     isJumping = false;
     isAlive = false;
