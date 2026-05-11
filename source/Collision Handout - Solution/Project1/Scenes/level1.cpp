@@ -34,8 +34,6 @@ Interactable Hammer1, Hammer2, Star1;
 
 void runLevel1() {
 
-
-
     if (!Scene_Init) {
         SearchAndSetResourceDir("resources");
         Mario.Texture = LoadTexture("sprites/MARIO.png");
@@ -67,13 +65,12 @@ void runLevel1() {
         winTriggered = false;
         winSoundPlayed = false;
         donkey.Position = { 21.0f, 47.0f };
-        donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f }; //RESET DE LA HITBOX?
+        donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f };
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
-        Star1.SetObject(16, 150, StarItem);
+        if (GetRandomValue(1, 10) == 1) Star1.SetObject(16, 150, StarItem);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
-
     }
 
     if (GetPause()) {
@@ -91,14 +88,10 @@ void runLevel1() {
         return;
     }
 
-
-
-
     if (isDeathSequence) {
         deathTimer += GetFrameTime();
         if (!Mario.isAlive) Mario.DeathSequence();
         if (!Luigi.isAlive) Luigi.DeathSequence();
-
 
         if (deathTimer >= 5.0f) {
             bool bothDead = !Mario.isAlive && !Luigi.isAlive;
@@ -127,7 +120,7 @@ void runLevel1() {
                 return;
             }
 
-            // One player still alive � resume
+            // One player still alive - resume
             isDeathSequence = false;
             deathTimer = 0.0f;
         }
@@ -373,8 +366,7 @@ void runLevel1() {
             ResetLevel1Entities();
         }
 
-        if (Luigi.isAlive && Luigi.marioVelocity.y > 7.0f && !Luigi.StarActive)
-        {
+        if (Luigi.isAlive && Luigi.marioVelocity.y > 7.0f && !Luigi.StarActive) {
             StopHammerTime();
             isHammerPlaying = false;
             StopMusicStream(Hammer_Music);
@@ -398,11 +390,9 @@ void runLevel1() {
             ResetLevel1Entities();
         }
 
-
         if (IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
-        // Win: dibujar y cambiar escena directamente sin reproducir sonido
         Level1LadderDraw();
         Level1RampDraw();
         donkey.Draw();
@@ -425,12 +415,7 @@ void runLevel1() {
     UpdateDrawScorePopup();
     SetCooldown();
 
-
     if (GetCurrentScene() != LEVEL1) {
-        /*UnloadTexture(Mario.Texture);
-        Truss::UnloadSharedTexture();
-        Ladder::UnloadSharedTexture();
-        UnloadLevel1Entities();*/
         Mario.isAlive = true;
         Luigi.isAlive = true;
         UnloadSound(HammerSound1);
