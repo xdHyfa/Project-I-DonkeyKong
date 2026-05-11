@@ -49,8 +49,8 @@ void Interactable::SetObject(int x, int y, Items Tag) {
 	}
 	if (Tag == StarItem) {
 		tag = StarItem;
-		SpriteSelector.width = 16;
-		SpriteSelector.height = 16;
+		SpriteSelector.width = 20;
+		SpriteSelector.height = 20;
 		SpriteSelector.x = 0;
 		SpriteSelector.y = 0;
 		Sprite = LoadTexture("Sprites/Star.png");  // <-- añade Star.png a Sprites/

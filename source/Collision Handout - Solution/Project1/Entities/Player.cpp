@@ -157,7 +157,7 @@ void Player::Movement()
     bool moveRight = (PlayerNum == 1) ? IsKeyDown(KEY_RIGHT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_RIGHT, KEY_D);
     bool moveLeft = (PlayerNum == 1) ? IsKeyDown(KEY_LEFT) : P2Down(GAMEPAD_BUTTON_LEFT_FACE_LEFT, KEY_A);
 
-    float speedMult = StarActive ? 3.0f : 1.0f;
+    float speedMult = StarActive ? 1.5f : 1.0f;
 
     if (moveRight)
     {
