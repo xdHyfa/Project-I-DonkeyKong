@@ -340,6 +340,8 @@ void Level15LadderSetter() {
         Ramp15_4L[4].TrussPos.x + 4,
         P15_Ramp3_YPos,
         surf1R - P15_Ramp3_YPos + 8); // +8
+    Level15_Ladders[4].Hitbox.y += 6.0f;
+    Level15_Ladders[4].Hitbox.height -= 6.0f;
 
     for (int i = 0; i < 5; i++) {
         Level15_DownZone[i] = { Level15_Ladders[i].Hitbox.x, Level15_Ladders[i].Hitbox.y - 2, 10, 4 };
