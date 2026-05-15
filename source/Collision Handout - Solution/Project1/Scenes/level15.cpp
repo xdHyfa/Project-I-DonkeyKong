@@ -154,6 +154,16 @@ void runLevel15() {
             ResetLevel15Entities();
         }
 
+        if (BillBalaKilledPlayer()) {
+            PauseMusicStream(level15Music);
+            PlaySound(deathSound15);
+            isDeathSequence15 = true;
+            deathTimer15 = 0.0f;
+            if (Mario.isAlive) Mario.die();
+            if (GetTwoPlayers() && Luigi.isAlive) Luigi.die();
+            ResetLevel15Entities();
+        }
+
         if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
             PauseMusicStream(level15Music);
             PlaySound(deathSound15);
