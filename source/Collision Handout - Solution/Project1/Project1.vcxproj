@@ -182,6 +182,7 @@
     <ClInclude Include="Core\UI.h" />
     <ClInclude Include="Entities\barrel.h" />
     <ClInclude Include="Entities\Barrel_Spawner.h" />
+    <ClInclude Include="Entities\BillBala.h" />
     <ClInclude Include="Entities\Donkey.h" />
     <ClInclude Include="Entities\entity.h" />
     <ClInclude Include="Entities\Fire_Spawner.h" />

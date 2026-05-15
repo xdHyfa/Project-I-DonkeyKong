@@ -10,3 +10,5 @@ void UnloadLevel15Entities();
 void ResetLevel15Entities();
 
 bool GoombaKilledPlayer();
+
+bool BillBalaKilledPlayer();
