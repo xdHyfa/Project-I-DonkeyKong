@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "Core/constants.h"
 
-#define BILLBALA_SPEED          1.2f
+#define BILLBALA_SPEED          1.8f
 #define BILLBALA_FIRE_INTERVAL  3.5f
 #define BILLBALA_SPRITE_W       17
 #define BILLBALA_SPRITE_H       14
@@ -88,9 +88,10 @@ public:
             DrawTextureRec(bulletTex, src, bulletPos, WHITE);
         }
 
-        // Draw base launcher (never flipped - same sprite works for both sides
-        // because positioning handles the wall alignment)
-        DrawTextureRec(baseTex, baseSrc, BasePos, WHITE);
+        // Draw base launcher (flipped for right-side launcher)
+        Rectangle baseSrcDraw = baseSrc;
+        if (direction < 0) baseSrcDraw.width = -baseSrcDraw.width;
+        DrawTextureRec(baseTex, baseSrcDraw, BasePos, WHITE);
     }
 
     // Full body hitbox (kills player on contact)

@@ -1,331 +1,115 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Core\UI.cpp" />
+    <ClCompile Include="Entities\Barrel.cpp" />
+    <ClCompile Include="Entities\Barrel_Spawner.cpp" />
+    <ClCompile Include="Entities\Donkey.cpp" />
+    <ClCompile Include="Entities\Fire_Spawner.cpp" />
+    <ClCompile Include="Entities\Goomba.cpp" />
+    <ClCompile Include="Entities\Ground.cpp" />
+    <ClCompile Include="Entities\Ladders.cpp" />
+    <ClCompile Include="Entities\Lady.cpp" />
+    <ClCompile Include="Entities\Level15Entities.cpp" />
+    <ClCompile Include="Entities\Level1Entities.cpp" />
+    <ClCompile Include="Entities\Level2Entities.cpp" />
+    <ClCompile Include="Entities\objects.cpp" />
+    <ClCompile Include="Entities\Player.cpp" />
+    <ClCompile Include="Core\main.cpp" />
+    <ClCompile Include="Entities\Star.cpp" />
+    <ClCompile Include="EntityCollision.cpp" />
+    <ClCompile Include="Maps\Level15Map.cpp" />
+    <ClCompile Include="Maps\Level1Map.cpp" />
+    <ClCompile Include="Maps\level2Map.cpp" />
+    <ClCompile Include="Scenes\CutScene.cpp" />
+    <ClCompile Include="Scenes\Highscorescreen.cpp" />
+    <ClCompile Include="Scenes\HowHigh.cpp" />
+    <ClCompile Include="Scenes\InitialScreen.cpp" />
+    <ClCompile Include="Scenes\level1.cpp" />
+    <ClCompile Include="Scenes\level15.cpp" />
+    <ClCompile Include="Scenes\level2.cpp" />
+    <ClCompile Include="Scenes\scenes.cpp" />
+    <ClCompile Include="Scenes\TitleScreen.cpp" />
+    <ClCompile Include="Scenes\WinCutScene.cpp" />
+    <ClCompile Include="Scenes\WinCutscene2.cpp" />
+    <ClCompile Include="Scenes\WinCutScene15.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\level1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\TitleScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Barrel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Fire_Spawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Ground.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Ladders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Maps\Level1Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityCollision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\InitialScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Maps\level2Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\level2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\scenes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Level1Entities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Level2Entities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Barrel_Spawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Donkey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Lady.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\HowHigh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\CutScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\WinCutScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\UI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\objects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\WinCutscene2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\Highscorescreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Star.cpp">
-    <ClCompile Include="Maps\Level15Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Level15Entities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\level15.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Goomba.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Core\constants.h" />
+    <ClInclude Include="Core\UI.h" />
+    <ClInclude Include="Entities\barrel.h" />
+    <ClInclude Include="Entities\Barrel_Spawner.h" />
+    <ClInclude Include="Entities\BillBala.h" />
+    <ClInclude Include="Entities\Donkey.h" />
+    <ClInclude Include="Entities\entity.h" />
+    <ClInclude Include="Entities\Fire_Spawner.h" />
+    <ClInclude Include="Entities\Goomba.h" />
+    <ClInclude Include="Entities\Ground.h" />
+    <ClInclude Include="Entities\Ladders.h" />
+    <ClInclude Include="Entities\Lady.h" />
+    <ClInclude Include="Entities\Level15Entities.h" />
+    <ClInclude Include="Entities\Level1Entities.h" />
+    <ClInclude Include="Entities\Level2Entities.h" />
+    <ClInclude Include="Entities\objects.h" />
+    <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\Star.h" />
+    <ClInclude Include="EntityCollision.hpp" />
+    <ClInclude Include="include\resource_dir.h" />
+    <ClInclude Include="libraries\raylib\include\raylib.h" />
+    <ClInclude Include="libraries\raylib\include\raymath.h" />
+    <ClInclude Include="libraries\raylib\include\rlgl.h" />
+    <ClInclude Include="Maps\Level15Map.h" />
+    <ClInclude Include="Maps\Level1Map.h" />
+    <ClInclude Include="Maps\level2Map.h" />
+    <ClInclude Include="Scenes\CutScene.h" />
+    <ClInclude Include="Scenes\Highscorescreen.h" />
+    <ClInclude Include="Scenes\HowHigh.h" />
+    <ClInclude Include="Scenes\InitialScreen.h" />
+    <ClInclude Include="Scenes\level1.h" />
+    <ClInclude Include="Scenes\level15.h" />
+    <ClInclude Include="Scenes\level2.h" />
+    <ClInclude Include="Scenes\scenes.h" />
+    <ClInclude Include="Scenes\TitleScreen.h" />
+    <ClInclude Include="Scenes\WinCutScene.h" />
+    <ClInclude Include="Scenes\WinCutscene2.h" />
+    <ClInclude Include="Scenes\WinCutScene15.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="libraries\raylib\include\raylib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\raylib\include\raymath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\raylib\include\rlgl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\level1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\scenes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\TitleScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\barrel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Fire_Spawner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Ground.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\resource_dir.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Ladders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Maps\Level1Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityCollision.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\InitialScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Maps\level2Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\level2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Level1Entities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Level2Entities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Barrel_Spawner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Donkey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Lady.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\HowHigh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\CutScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\WinCutScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\UI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\objects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\WinCutscene2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\Highscorescreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Star.h">
-    <ClInclude Include="Maps\Level15Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Level15Entities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\level15.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\Goomba.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entities\BillBala.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Sprites\Blue barrel.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Blue truss.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Button stage 3.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\commonbarrel.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\donko 2-0.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\fire.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\FIREBALL.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\FIREBALL2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\game over.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Golden Hammer.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Hammer.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\HEARTS.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\HELP.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\HOW HIGH CAN U GET.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Items.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Kill aura.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\LADY.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Main menu.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\MARIO GOLDEN HAMMER.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\MARIO HAMMER.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\MARIO.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\oil.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\POINTS.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\REAL BONUS.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\red truss.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\ROTOR.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\SAND BOXES.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\SMALLFIREBALL.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\SMALLFIREBALL2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Stairs.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\TRAMPOLIN.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\TRUSS.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\wabbit_alpha.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Yellow grid.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Yellow triangle truss.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Sprites\Yellow truss.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <Image Include="Sprites\Blue barrel.png" />
+    <Image Include="Sprites\Blue truss.png" />
+    <Image Include="Sprites\Button stage 3.png" />
+    <Image Include="Sprites\commonbarrel.png" />
+    <Image Include="Sprites\donko 2-0.png" />
+    <Image Include="Sprites\fire.png" />
+    <Image Include="Sprites\FIREBALL.png" />
+    <Image Include="Sprites\FIREBALL2.png" />
+    <Image Include="Sprites\game over.png" />
+    <Image Include="Sprites\Golden Hammer.png" />
+    <Image Include="Sprites\Hammer.png" />
+    <Image Include="Sprites\HEARTS.png" />
+    <Image Include="Sprites\HELP.png" />
+    <Image Include="Sprites\HOW HIGH CAN U GET.png" />
+    <Image Include="Sprites\Items.png" />
+    <Image Include="Sprites\Kill aura.png" />
+    <Image Include="Sprites\LADY.png" />
+    <Image Include="Sprites\Main menu.png" />
+    <Image Include="Sprites\MARIO GOLDEN HAMMER.png" />
+    <Image Include="Sprites\MARIO HAMMER.png" />
+    <Image Include="Sprites\MARIO.png" />
+    <Image Include="Sprites\oil.png" />
+    <Image Include="Sprites\POINTS.png" />
+    <Image Include="Sprites\REAL BONUS.png" />
+    <Image Include="Sprites\red truss.png" />
+    <Image Include="Sprites\ROTOR.png" />
+    <Image Include="Sprites\SAND BOXES.png" />
+    <Image Include="Sprites\SMALLFIREBALL.png" />
+    <Image Include="Sprites\SMALLFIREBALL2.png" />
+    <Image Include="Sprites\Stairs.png" />
+    <Image Include="Sprites\TRAMPOLIN.png" />
+    <Image Include="Sprites\TRUSS.png" />
+    <Image Include="Sprites\wabbit_alpha.png" />
+    <Image Include="Sprites\Yellow grid.png" />
+    <Image Include="Sprites\Yellow triangle truss.png" />
+    <Image Include="Sprites\Yellow truss.png" />
   </ItemGroup>
 </Project>

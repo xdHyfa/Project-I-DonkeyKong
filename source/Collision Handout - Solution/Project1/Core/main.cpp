@@ -11,6 +11,7 @@
 #include "Scenes/HowHigh.h"
 #include "Scenes/Cutscene.h"
 #include "Scenes/WinCutscene.h"
+#include "Scenes/WinCutscene15.h"
 #include "Core/UI.h"
 #include "Scenes/WinCutscene2.h"
 #include "Scenes/HighScoreScreen.h"
@@ -88,11 +89,11 @@ int main()
 
 		case LEVEL1:
 
-			
+
 			PrintUI();
 			PrintBonus();
 			runLevel1();
-			if(CheckLevel1Players()) CheckPause();
+			if (CheckLevel1Players()) CheckPause();
 			break;
 
 		case LEVEL15:
@@ -102,6 +103,11 @@ int main()
 			runLevel15();
 			CheckPause();
 
+			break;
+
+		case WINCUTSCENE15:
+			PrintUI();
+			runWinCutscene15();
 			break;
 
 		case WINCUTSCENE:

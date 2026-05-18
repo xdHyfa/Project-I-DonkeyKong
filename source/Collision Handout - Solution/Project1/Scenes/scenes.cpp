@@ -4,7 +4,7 @@
 #include "Core/UI.h"
 
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = LEVEL1;
+Scene current_scene = LEVEL15;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
@@ -129,6 +129,10 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == LEVEL15) {
+		current_scene = WINCUTSCENE15;
+		return;
+	}
+	if (current_scene == WINCUTSCENE15) {
 		current_scene = HOWHIGH2;
 		return;
 	}
@@ -165,8 +169,9 @@ Scene GetCurrentScene() {
 	if (current_scene == CUTSCENE)    return CUTSCENE;
 	if (current_scene == HOWHIGH)     return HOWHIGH;
 	if (current_scene == LEVEL1)      return LEVEL1;
-	if (current_scene == LEVEL15)     return LEVEL15;
-	if (current_scene == WINCUTSCENE) return WINCUTSCENE;
+	if (current_scene == LEVEL15)         return LEVEL15;
+	if (current_scene == WINCUTSCENE15)   return WINCUTSCENE15;
+	if (current_scene == WINCUTSCENE)     return WINCUTSCENE;
 	if (current_scene == HOWHIGH2)    return HOWHIGH2;
 	if (current_scene == LEVEL2)      return LEVEL2;
 	if (current_scene == WINCUTSCENE2)return WINCUTSCENE2;

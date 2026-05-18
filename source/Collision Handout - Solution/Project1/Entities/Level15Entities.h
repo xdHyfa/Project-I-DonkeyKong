@@ -12,3 +12,5 @@ void ResetLevel15Entities();
 bool GoombaKilledPlayer();
 
 bool BillBalaKilledPlayer();
+
+bool WinStarCollected15();

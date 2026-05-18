@@ -122,8 +122,6 @@ void runLevel15() {
         return;
     }
 
-    if (Mario.isAlive) Level15CheckWinCondition(Mario);
-    if (GetTwoPlayers() && Luigi.isAlive) Level15CheckWinCondition(Luigi);
 
     if (!win15Triggered) {
         CheckTwoPlayers();
@@ -143,6 +141,11 @@ void runLevel15() {
 
         Level15EntitiesRoutine();
         UpdateBonus();
+
+        if (WinStarCollected15()) {
+            StopMusicStream(level15Music);
+            win15Triggered = true;
+        }
 
         if (GoombaKilledPlayer()) {
             PauseMusicStream(level15Music);

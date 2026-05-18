@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#define GOOMBA_SPEED        0.4f
+#define GOOMBA_SPEED        0.65f
 #define GOOMBA_RESPAWN_SEC  4.0f
 #define GOOMBA_FLAT_SEC     1.0f
 
