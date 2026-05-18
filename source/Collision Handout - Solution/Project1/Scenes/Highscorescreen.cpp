@@ -15,6 +15,8 @@
 #define MAX_SCORES  5
 #define SAVE_FILE   "scores.json"
 
+int AllTimeScore = 0;
+
 // ---------------------------------------------------------------
 //  Estructura de entrada (con nombre de 3 letras)
 // ---------------------------------------------------------------
