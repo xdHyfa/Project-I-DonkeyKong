@@ -414,7 +414,7 @@ void runLevel2() {
         Hat1.CheckInteraction(Luigi);
     }
 
-    if (IsKeyPressed(KEY_ONE)) {
+    if (Option1True && IsKeyPressed(KEY_ONE)) {
         ChangeScene();
     }
 

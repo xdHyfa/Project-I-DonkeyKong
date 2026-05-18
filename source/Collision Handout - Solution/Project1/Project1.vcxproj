@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\UI.cpp" />
+    <ClCompile Include="customData.cpp" />
     <ClCompile Include="Entities\Barrel.cpp" />
     <ClCompile Include="Entities\Barrel_Spawner.cpp" />
     <ClCompile Include="Entities\Donkey.cpp" />

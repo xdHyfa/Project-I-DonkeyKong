@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = INTRO;
+Scene current_scene = DONKEYSHOP;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
@@ -40,10 +40,12 @@ bool GetTwoPlayers() {
 	return TwoPlayerMode;
 }
 
+bool SfxUnloaded = false;
 void StartEntityDeath(Entity& entity) {
 	DeathTimer = 0.0f;
 	hasStarted = true;
 	DeathEffect = LoadTexture("Sprites/Kill aura.png");
+	SfxUnloaded = false;
 	SavedPosition = entity.Position;
 	DeathSFX = LoadSound("Audio/Hammer-kill crop.wav");
 }
@@ -55,7 +57,8 @@ bool GetIsKilling() {
 void EndEntityDeath() {
 	hasStarted = false;
 	UnloadTexture(DeathEffect);
-	UnloadSound(DeathSFX);
+	if (!SfxUnloaded) UnloadSound(DeathSFX), SfxUnloaded = true;;
+
 	SoundPlayed = false;
 }
 

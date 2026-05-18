@@ -13,5 +13,6 @@ extern bool Option2True;
 extern bool Option3True;
 extern bool Option4True;
 
+void SaveScores();
 //Anything the camera looks at / draws ? world space ? SCREEN_WIDTH / HEIGHT
 //Anything describing the window itself ? screen space ? SCALED_WIDTH / HEIGHT

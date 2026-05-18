@@ -23,25 +23,28 @@ bool ChangeThingy = false;
 int selection = 4; 
 Font Shop_Font;
 Vector2 TitlePos = { 40 , 30};
-Vector2 Option1Pos = {30, 90};
-Vector2 Option2Pos = { 120, 90 };
-Vector2 Option3Pos = { 30, 130 };
-Vector2 Option4Pos = { 120, 130 };
+Vector2 Option1Pos = {5, 100};
+Vector2 Option2Pos = { 115, 100 };
+Vector2 Option3Pos = { 5, 135 };
+Vector2 Option4Pos = { 115, 135 };
+char Option2Text[16] = { "HAMMER-UP(100K)" };
+char Option1Text[15] = { "GOD MODE(500K)" };
+char Option3Text[17] = { "Custom Skins(5K)" };
+char Option4Text[18] = {"Custom Music(25K)"};
 Vector2 ExitPos = { 95, 220 };
 
 Texture2D DonkoDance;
 Rectangle recDance = { 85, 2, 46, 32 };
 float DanceTimer = 0.0f;
 
-bool Customize1 = false;
-bool Customize2 = false;
-bool Customize3 = false;
-bool Customize4 = false;
 
 // 0 --> option 1, 1 --> option 2, 2 --> option 3, 3 --> option 4, 4 --> exit 
 
 float hue = 0.0f;
-
+int PointsCount = 0.0f;
+Vector2 PointsPos = { 40 , 60 };
+float PointsTimer = 0.0f;
+bool ChangeColor = false;
 void runDonkeyShop(){
     if (!Scene_Init) {
         SearchAndSetResourceDir("resources");
@@ -51,7 +54,8 @@ void runDonkeyShop(){
        DonkeyShop.looping = true;
        ButtonSound = LoadSound("Audio/Button.wav");
        DonkoDance = LoadTexture("SPRITES/Donko 2-0.png");
-
+       PointsCount = AllTimeScore;
+       AllTimeScore = 500000;
        PlayMusicStream(DonkeyShop);
         Scene_Init = true;
     }
@@ -68,39 +72,39 @@ void runDonkeyShop(){
     DrawTextureRec(DonkoDance, recDance, { 88.0f, 165.0f }, WHITE);
     switch (selection) {
     case 0:
-        DrawTextEx(Shop_Font, "Option 1", Option1Pos, 10, 0.5f, YELLOW);
-        DrawTextEx(Shop_Font, "Option 2", Option2Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 3", Option3Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 4", Option4Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Exit", ExitPos, 10, 0.5f, WHITE);
+        DrawTextEx(Shop_Font, Option1Text, Option1Pos, 7.0f, 0.01f, YELLOW);
+        DrawTextEx(Shop_Font, Option2Text, Option2Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option3Text, Option3Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option4Text, Option4Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, "Exit", ExitPos, 10.0f, 0.1f, WHITE);
         break;
     case 1:
-        DrawTextEx(Shop_Font, "Option 1", Option1Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 2", Option2Pos, 10, 0.5f, YELLOW);
-        DrawTextEx(Shop_Font, "Option 3", Option3Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 4", Option4Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Exit", ExitPos, 10, 0.5f, WHITE);
+        DrawTextEx(Shop_Font, Option1Text, Option1Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option2Text, Option2Pos, 7.0f, 0.01f, YELLOW);
+        DrawTextEx(Shop_Font, Option3Text, Option3Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option4Text, Option4Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, "Exit", ExitPos, 10.0f, 0.1f, WHITE);
         break;
     case 2:
-        DrawTextEx(Shop_Font, "Option 1", Option1Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 2", Option2Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 3", Option3Pos, 10, 0.5f, YELLOW);
-        DrawTextEx(Shop_Font, "Option 4", Option4Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Exit", ExitPos, 10, 0.5f, WHITE);
+        DrawTextEx(Shop_Font, Option1Text, Option1Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option2Text, Option2Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option3Text, Option3Pos, 7.0f, 0.01f, YELLOW);
+        DrawTextEx(Shop_Font, Option4Text, Option4Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, "Exit", ExitPos, 10.0f, 0.1f, WHITE);
         break;
     case 3:
-        DrawTextEx(Shop_Font, "Option 1", Option1Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 2", Option2Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 3", Option3Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 4", Option4Pos, 10, 0.5f, YELLOW);
-        DrawTextEx(Shop_Font, "Exit", ExitPos, 10, 0.5f, WHITE);
+        DrawTextEx(Shop_Font, Option1Text, Option1Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option2Text, Option2Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option3Text, Option3Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option4Text, Option4Pos, 7.0f, 0.01f, YELLOW);
+        DrawTextEx(Shop_Font, "Exit", ExitPos, 10.0f, 0.1f, WHITE);
         break;
     case 4:
-        DrawTextEx(Shop_Font, "Option 1", Option1Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 2", Option2Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 3", Option3Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Option 4", Option4Pos, 10, 0.5f, WHITE);
-        DrawTextEx(Shop_Font, "Exit", ExitPos, 10, 0.5f, YELLOW);
+        DrawTextEx(Shop_Font, Option1Text, Option1Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option2Text, Option2Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option3Text, Option3Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, Option4Text, Option4Pos, 7.0f, 0.01f, WHITE);
+        DrawTextEx(Shop_Font, "Exit", ExitPos, 10.0f, 0.1f, YELLOW);
         break;
     }
     if (IsKeyPressed(KEY_UP)) {
@@ -121,19 +125,19 @@ void runDonkeyShop(){
         switch (selection) {
         case 0:
             PlaySound(ButtonSound);
-            Customize1 = !Customize1;
+            if (!Option1True && AllTimeScore >= 500000) Option1True = true, AllTimeScore -= 500000, SaveScores();
             break;
         case 1:
             PlaySound(ButtonSound);
-            Customize2 = !Customize2;
+            if (!Option2True && AllTimeScore >= 100000) Option2True = true, AllTimeScore -= 100000, SaveScores();
             break;
         case 2:
             PlaySound(ButtonSound);
-            Customize3 = !Customize3;
+            if (!Option3True && AllTimeScore >= 5000) Option3True = true, AllTimeScore -= 5000, SaveScores();
             break;
         case 3:
             PlaySound(ButtonSound);
-            Customize4 = !Customize4;
+            if (!Option4True && AllTimeScore >= 25000) Option4True = true, AllTimeScore -= 25000, SaveScores();
             break;
         case 4:
             PlaySound(ButtonSound);
@@ -143,6 +147,13 @@ void runDonkeyShop(){
     }
     UpdateMusicStream(DonkeyShop);
     DrawTextEx(Shop_Font,"DONKEY SHOP", TitlePos, 10, 0.5f, rainbow);
+    if (PointsTimer >= 0.05f) {
+        PointsTimer = 0;
+        ChangeColor = !ChangeColor;
+    }
+    else PointsTimer += GetFrameTime();
+    if (ChangeColor)  DrawTextEx(Shop_Font, TextFormat("%06d POINTS", AllTimeScore), PointsPos, 10, 0.5f, YELLOW);
+    else DrawTextEx(Shop_Font, TextFormat("%06d POINTS",AllTimeScore), PointsPos, 10, 0.5f, WHITE);
     if (ChangeThingy) {
         ChangeScene();
         UnloadSound(ButtonSound);

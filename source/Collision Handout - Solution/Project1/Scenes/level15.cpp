@@ -161,7 +161,7 @@ void runLevel15() {
             ResetLevel15Entities();
         }
 
-        if (IsKeyPressed(KEY_TWO)) ChangeScene();
+        if (Option1True && IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
         Level15LadderDraw();
@@ -176,7 +176,7 @@ void runLevel15() {
         }
     }
 
-    if (IsKeyPressed(KEY_H)) {
+    if (Option1True && IsKeyPressed(KEY_H)) {
         Hitboxes15_On = !Hitboxes15_On;
     }
     if (Hitboxes15_On) {

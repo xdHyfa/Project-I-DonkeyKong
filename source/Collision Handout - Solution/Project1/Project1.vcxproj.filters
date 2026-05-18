@@ -105,6 +105,9 @@
     <ClCompile Include="Scenes\DonkeyShop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="customData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libraries\raylib\include\raylib.h">

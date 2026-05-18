@@ -311,8 +311,8 @@ void Player::Movement()
     if (Position.x < 0)   Position.x = 0;
 
     // --- Debug keys ---
-    if (IsKeyPressed(KEY_R)) Position.y -= 32;
-    if (IsKeyPressed(KEY_Q)) Position.y += 32;
+    if (Option1True && IsKeyPressed(KEY_R)) Position.y -= 32;
+    if (Option1True && IsKeyPressed(KEY_Q)) Position.y += 32;
 
     // --- Sync floor collider ---
     FloorCollider.x = Position.x + 8;

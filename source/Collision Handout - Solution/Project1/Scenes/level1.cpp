@@ -345,7 +345,7 @@ void runLevel1() {
         }
 
 
-        if (IsKeyPressed(KEY_TWO)) ChangeScene();
+        if (Option1True && IsKeyPressed(KEY_TWO)) ChangeScene();
     }
     else {
         // Win: dibujar y cambiar escena directamente sin reproducir sonido
@@ -356,7 +356,7 @@ void runLevel1() {
         barrelSpawner.Draw();
         ChangeScene();
     }
-    if (IsKeyPressed(KEY_H)) {
+    if (Option1True && IsKeyPressed(KEY_H)) {
         Hitboxes_On = !Hitboxes_On;
     }
 

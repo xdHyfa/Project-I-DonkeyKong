@@ -86,11 +86,15 @@ static void LoadScores() {
         memcpy(scores[idx].name, nm, 4);
         idx++;
     }
-
+    char* at = strstr(buf, "\"alltime\"");
+    if (at) {
+        at = strchr(at, ':');
+        if (at) AllTimeScore = atoi(++at);
+    }
     free(buf);
 }
 
-static void SaveScores() {
+void SaveScores() {
     FILE* f = fopen(SAVE_FILE, "w");
     if (!f) return;
 
@@ -103,12 +107,14 @@ static void SaveScores() {
             (i < MAX_SCORES - 1) ? "," : "");
     }
     fprintf(f, "]\n");
+    fprintf(f, "{\"alltime\": %d}\n", AllTimeScore);
     fclose(f);
 }
 
 // Inserta newEntry y reordena de mayor a menor puntuación.
 // Devuelve el índice final de la entrada insertada (-1 si no entró).
 static int InsertAndSort(ScoreEntry newEntry) {
+    AllTimeScore += newEntry.score;
     int replaceIdx = -1;
     int minScore = newEntry.score;
     for (int i = MAX_SCORES - 1; i >= 0; i--) {
