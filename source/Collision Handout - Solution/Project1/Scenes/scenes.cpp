@@ -1,11 +1,12 @@
 #include "Scenes/scenes.h"
 #include "Entities/entity.h"
+#include "Core/constants.h"
 #include "raylib.h"
 #include "Core/UI.h"
 #include <iostream>
 using namespace std;
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = DONKEYSHOP;
+Scene current_scene = INTRO;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
@@ -25,6 +26,7 @@ Vector2 Text2PlayerPos = { 50, 100 };
 void CheckTwoPlayers() {
 	if (IsKeyPressed(KEY_RIGHT_BRACKET))
 	{
+		if (!Option3True) return;
 		if (!TwoPlayerMode) TwoPlayerMode = true, Start2PTextTimer = true;
 		else TwoPlayerMode = false, Start2PTextTimer = false, TextTimer = 0;
 	}

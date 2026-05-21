@@ -29,7 +29,7 @@ Vector2 Option3Pos = { 5, 135 };
 Vector2 Option4Pos = { 115, 135 };
 char Option2Text[16] = { "HAMMER-UP(100K)" };
 char Option1Text[15] = { "GOD MODE(500K)" };
-char Option3Text[17] = { "Custom Skins(5K)" };
+char Option3Text[17] = { "TWO PLAYERS (5K)" };
 char Option4Text[18] = {"Custom Music(25K)"};
 Vector2 ExitPos = { 95, 220 };
 
