@@ -54,8 +54,13 @@ body {
 }
 
 .footer {
-  margin-top: 30px;
+  margin: 0 auto;
   text-align: center;
+}
+
+#SlopSquadLogo {
+  max-width: 300px;
+  width: 100%;
 }
 
 #ir9u {
@@ -64,7 +69,7 @@ body {
   font-family: Verdana, Geneva, sans-serif;
 }
 
-#i686 {
+#bigfatwhitesquare {
   margin: 10px auto;
   max-width: 1500px;
   width: auto;
@@ -176,6 +181,11 @@ body {
 }
 
 #ihumcj {
+  text-align: center;
+}
+
+#piesesito {
+  margin: 0 auto;
   text-align: center;
 }
 
