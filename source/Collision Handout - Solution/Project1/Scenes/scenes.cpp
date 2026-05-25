@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = LEVEL15;
+Scene current_scene = INTRO;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
