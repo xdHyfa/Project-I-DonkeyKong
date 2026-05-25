@@ -27,10 +27,10 @@ Vector2 Option1Pos = {5, 100};
 Vector2 Option2Pos = { 115, 100 };
 Vector2 Option3Pos = { 5, 135 };
 Vector2 Option4Pos = { 115, 135 };
-char Option2Text[16] = { "HAMMER-UP(100K)" };
 char Option1Text[15] = { "GOD MODE(500K)" };
-char Option3Text[20] = { "TWO PLAYERS (250K)" };
-char Option4Text[18] = {"Custom Music(25K)"};
+char Option2Text[16] = { "HAMMER-UP(100K)" };
+char Option3Text[20] = { "2P MODE(250K)" };
+char Option4Text[18] = {"CUSTOM MUSIC(25K)"};
 Vector2 ExitPos = { 95, 220 };
 
 Texture2D DonkoDance;
@@ -176,6 +176,7 @@ void runDonkeyShop(){
     if (ChangeColor)  DrawTextEx(Shop_Font, TextFormat("%06d POINTS", AllTimeScore), PointsPos, 10, 0.5f, YELLOW);
     else DrawTextEx(Shop_Font, TextFormat("%06d POINTS",AllTimeScore), PointsPos, 10, 0.5f, WHITE);
     if (ChangeThingy) {
+        ChangeThingy = false;
         ChangeScene();
         UnloadSound(ButtonSound);
         UnloadSound(SecretSound);

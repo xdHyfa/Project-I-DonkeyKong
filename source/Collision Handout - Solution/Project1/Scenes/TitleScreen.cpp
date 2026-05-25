@@ -184,6 +184,7 @@ void runMainMenu() {
             UnloadFont(year);
             UnloadSound(titleSound);
             return;
+
             }
             else {
                 KeepGoing = 0;
@@ -204,6 +205,12 @@ void runMainMenu() {
         UnloadFont(year);
         UnloadSound(titleSound);
         ChangeScene();
+        cout << "you cannot cout this " << endl;
+        cout << "you cannot cout this " << endl;
+        cout << "you cannot cout this " << endl;
+        cout << "you cannot cout this " << endl;
+        cout << "you cannot cout this " << endl;
+        cout << "you cannot cout this " << endl;
         return;
     }
 

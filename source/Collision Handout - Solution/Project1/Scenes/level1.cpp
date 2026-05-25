@@ -54,7 +54,8 @@ void runLevel1() {
         barrelSpawner.Init();
         SetStartTime();
         Scene_Init = true;
-        level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");
+        if (!Option4True) level1Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");
+        else level1Music = LoadMusicStream("Audio/DK RAP.wav");
         deathSound2 = LoadSound("Audio/Dead.wav");
         level1Music.looping = true;
         PlayMusicStream(level1Music);
@@ -71,7 +72,11 @@ void runLevel1() {
         Hammer2.SetObject(165, 182, Hammer);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
-
+        CheckTwoPlayers();
+        if (Option2True) {
+            StartHammerTime(1);
+            if (GetTwoPlayers()) StartHammerTime(2);
+        }
     }
 
     if (GetPause()) {
@@ -159,7 +164,6 @@ void runLevel1() {
     if (GetTwoPlayers() && Luigi.isAlive) Level1CheckWinCondition(Luigi);
 
     if (!winTriggered) {
-        CheckTwoPlayers();
         Mario.Movement();
         if (GetTwoPlayers()) Luigi.Movement();
         donkey.Update();
