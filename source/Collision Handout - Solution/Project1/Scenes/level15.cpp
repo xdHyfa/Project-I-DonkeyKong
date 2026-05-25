@@ -122,8 +122,6 @@ void runLevel15() {
         return;
     }
 
-    if (Mario.isAlive) Level15CheckWinCondition(Mario);
-    if (GetTwoPlayers() && Luigi.isAlive) Level15CheckWinCondition(Luigi);
 
     if (!win15Triggered) {
         CheckTwoPlayers();
@@ -143,6 +141,31 @@ void runLevel15() {
 
         Level15EntitiesRoutine();
         UpdateBonus();
+
+        if (WinStarCollected15()) {
+            StopMusicStream(level15Music);
+            win15Triggered = true;
+        }
+
+        if (GoombaKilledPlayer()) {
+            PauseMusicStream(level15Music);
+            PlaySound(deathSound15);
+            isDeathSequence15 = true;
+            deathTimer15 = 0.0f;
+            if (Mario.isAlive) Mario.die();
+            if (GetTwoPlayers() && Luigi.isAlive) Luigi.die();
+            ResetLevel15Entities();
+        }
+
+        if (BillBalaKilledPlayer()) {
+            PauseMusicStream(level15Music);
+            PlaySound(deathSound15);
+            isDeathSequence15 = true;
+            deathTimer15 = 0.0f;
+            if (Mario.isAlive) Mario.die();
+            if (GetTwoPlayers() && Luigi.isAlive) Luigi.die();
+            ResetLevel15Entities();
+        }
 
         if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
             PauseMusicStream(level15Music);

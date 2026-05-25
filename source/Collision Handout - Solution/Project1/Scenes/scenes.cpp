@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 // INTRO ? HIGHSCORE (mostrar tabla al arrancar) ? TITLE ? ...
-Scene current_scene = INTRO;
+Scene current_scene = LEVEL15;
 bool Scene_Init = false;
 bool Hammer_time = false;      // legacy / fallback
 bool Hammer_time_p1 = false;
@@ -150,6 +150,10 @@ void ChangeScene() {
 		return;
 	}
 	if (current_scene == LEVEL15) {
+		current_scene = WINCUTSCENE15;
+		return;
+	}
+	if (current_scene == WINCUTSCENE15) {
 		current_scene = HOWHIGH2;
 		cout << "Howhigh2 scene" << endl;
 		return;

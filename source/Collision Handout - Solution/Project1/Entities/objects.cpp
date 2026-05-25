@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "Entities/objects.h"
+#include "Entities/Star.h"
 #include "Core/UI.h"
 #include "Scenes/scenes.h"
 #include <iostream>
@@ -46,6 +47,17 @@ void Interactable::SetObject(int x, int y, Items Tag) {
 		Sprite = LoadTexture("Sprites/Items.png");
 		UpdateHitbox();
 	}
+	if (Tag == StarItem) {
+		tag = StarItem;
+		SpriteSelector.width = 22;
+		SpriteSelector.height = 22;
+		SpriteSelector.x = 0;
+		SpriteSelector.y = 0;
+		Sprite = LoadTexture("Sprites/Star.png");  // <-- añade Star.png a Sprites/
+		UpdateHitbox();
+		Hitbox.width = 15;
+		Hitbox.height = 15;
+	}
 
 }
 
@@ -55,6 +67,9 @@ void Interactable::OnInteraction(int playerNum)
 
 	if (tag == Hammer) {
 		StartHammerTime(playerNum);
+	}
+	else if (tag == StarItem) {
+		StartStarTime(playerNum);
 	}
 	else if (tag == Hat || tag == Purse || tag == Umbrella) {
 		AddPoints(300);

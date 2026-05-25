@@ -152,6 +152,7 @@
     <ClCompile Include="Entities\Barrel_Spawner.cpp" />
     <ClCompile Include="Entities\Donkey.cpp" />
     <ClCompile Include="Entities\Fire_Spawner.cpp" />
+    <ClCompile Include="Entities\Goomba.cpp" />
     <ClCompile Include="Entities\Ground.cpp" />
     <ClCompile Include="Entities\Ladders.cpp" />
     <ClCompile Include="Entities\Lady.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Entities\objects.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Core\main.cpp" />
+    <ClCompile Include="Entities\Star.cpp" />
     <ClCompile Include="EntityCollision.cpp" />
     <ClCompile Include="Maps\Level15Map.cpp" />
     <ClCompile Include="Maps\Level1Map.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="Scenes\scenes.cpp" />
     <ClCompile Include="Scenes\TitleScreen.cpp" />
     <ClCompile Include="Scenes\WinCutScene.cpp" />
+    <ClCompile Include="Scenes\WinCutScene15.cpp" />
     <ClCompile Include="Scenes\WinCutscene2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -183,9 +186,11 @@
     <ClInclude Include="Core\UI.h" />
     <ClInclude Include="Entities\barrel.h" />
     <ClInclude Include="Entities\Barrel_Spawner.h" />
+    <ClInclude Include="Entities\BillBala.h" />
     <ClInclude Include="Entities\Donkey.h" />
     <ClInclude Include="Entities\entity.h" />
     <ClInclude Include="Entities\Fire_Spawner.h" />
+    <ClInclude Include="Entities\Goomba.h" />
     <ClInclude Include="Entities\Ground.h" />
     <ClInclude Include="Entities\Ladders.h" />
     <ClInclude Include="Entities\Lady.h" />
@@ -194,6 +199,7 @@
     <ClInclude Include="Entities\Level2Entities.h" />
     <ClInclude Include="Entities\objects.h" />
     <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\Star.h" />
     <ClInclude Include="EntityCollision.hpp" />
     <ClInclude Include="include\resource_dir.h" />
     <ClInclude Include="libraries\raylib\include\raylib.h" />
@@ -213,6 +219,7 @@
     <ClInclude Include="Scenes\scenes.h" />
     <ClInclude Include="Scenes\TitleScreen.h" />
     <ClInclude Include="Scenes\WinCutScene.h" />
+    <ClInclude Include="Scenes\WinCutScene15.h" />
     <ClInclude Include="Scenes\WinCutscene2.h" />
   </ItemGroup>
   <ItemGroup>
