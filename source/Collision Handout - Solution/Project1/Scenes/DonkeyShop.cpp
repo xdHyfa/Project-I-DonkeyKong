@@ -29,14 +29,16 @@ Vector2 Option3Pos = { 5, 135 };
 Vector2 Option4Pos = { 115, 135 };
 char Option2Text[16] = { "HAMMER-UP(100K)" };
 char Option1Text[15] = { "GOD MODE(500K)" };
-char Option3Text[17] = { "TWO PLAYERS (5K)" };
+char Option3Text[20] = { "TWO PLAYERS (250K)" };
 char Option4Text[18] = {"Custom Music(25K)"};
 Vector2 ExitPos = { 95, 220 };
 
 Texture2D DonkoDance;
 Rectangle recDance = { 85, 2, 46, 32 };
 float DanceTimer = 0.0f;
-
+bool SecretCode = false;
+float secretTimer = 0.0f;
+Sound SecretSound = { 0 };
 
 // 0 --> option 1, 1 --> option 2, 2 --> option 3, 3 --> option 4, 4 --> exit 
 
@@ -55,11 +57,33 @@ void runDonkeyShop(){
        ButtonSound = LoadSound("Audio/Button.wav");
        DonkoDance = LoadTexture("SPRITES/Donko 2-0.png");
        PointsCount = AllTimeScore;
-       AllTimeScore = 500000;
+       SecretSound = LoadSound("Audio/DonkeyMotif.wav");
        PlayMusicStream(DonkeyShop);
         Scene_Init = true;
     }
 
+    if (IsKeyPressed(KEY_SIX)) {
+        SecretCode = true;
+        cout << "Six seven start" << endl;
+    }
+    if (SecretCode) {
+        int pressedKey = GetKeyPressed();
+        if (pressedKey == KEY_SEVEN) {
+            AllTimeScore = 676767;
+            PlaySound(SecretSound);
+        }
+        else if (pressedKey != 0 && pressedKey != KEY_SIX){
+            SecretCode = false;
+            cout << "failed six seven" << endl;
+            secretTimer = 0.0f;
+        }
+        secretTimer += GetFrameTime();
+    }
+    if (SecretCode && secretTimer > 1.5f) {
+        SecretCode = false;
+        secretTimer = 0.0f;
+        cout << "failed six seven" << endl;
+    }
 
     Color rainbow = GetRainbowColor(&hue);
     if (DanceTimer >= 0.5f) {
@@ -124,20 +148,17 @@ void runDonkeyShop(){
     if (IsKeyPressed(KEY_ENTER)) {
         switch (selection) {
         case 0:
-            PlaySound(ButtonSound);
-            if (!Option1True && AllTimeScore >= 500000) Option1True = true, AllTimeScore -= 500000, SaveScores();
+
+            if (!Option1True && AllTimeScore >= 500000) { PlaySound(ButtonSound); Option1True = true; AllTimeScore -= 500000; SaveScores(); }
             break;
         case 1:
-            PlaySound(ButtonSound);
-            if (!Option2True && AllTimeScore >= 100000) Option2True = true, AllTimeScore -= 100000, SaveScores();
+            if (!Option2True && AllTimeScore >= 100000) { PlaySound(ButtonSound); Option2True = true; AllTimeScore -= 100000; SaveScores(); }
             break;
         case 2:
-            PlaySound(ButtonSound);
-            if (!Option3True && AllTimeScore >= 5000) Option3True = true, AllTimeScore -= 5000, SaveScores();
+            if (!Option3True && AllTimeScore >= 250000) { PlaySound(ButtonSound); Option3True = true; AllTimeScore -= 250000; SaveScores(); }
             break;
         case 3:
-            PlaySound(ButtonSound);
-            if (!Option4True && AllTimeScore >= 25000) Option4True = true, AllTimeScore -= 25000, SaveScores();
+            if (!Option4True && AllTimeScore >= 25000) { PlaySound(ButtonSound); Option4True = true; AllTimeScore -= 25000; SaveScores(); }
             break;
         case 4:
             PlaySound(ButtonSound);
@@ -157,6 +178,7 @@ void runDonkeyShop(){
     if (ChangeThingy) {
         ChangeScene();
         UnloadSound(ButtonSound);
+        UnloadSound(SecretSound);
         UnloadMusicStream(DonkeyShop);
 
     }

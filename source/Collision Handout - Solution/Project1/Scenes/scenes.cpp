@@ -24,9 +24,14 @@ float TextTimer = 0;
 Vector2 Text2PlayerPos = { 50, 100 };
 
 void CheckTwoPlayers() {
-	if (IsKeyPressed(KEY_RIGHT_BRACKET))
+	if (Option3True)
 	{
-		if (!Option3True) return;
+		TwoPlayerMode = true;
+	}
+	else {
+		TwoPlayerMode = false;
+	}
+		/*if (!Option3True) return;
 		if (!TwoPlayerMode) TwoPlayerMode = true, Start2PTextTimer = true;
 		else TwoPlayerMode = false, Start2PTextTimer = false, TextTimer = 0;
 	}
@@ -35,7 +40,7 @@ void CheckTwoPlayers() {
 			TextTimer += GetFrameTime();
 			DrawTextEx(UI_Font, "2 PLAYER MODE ON", Text2PlayerPos, 10, 0.5f, YELLOW);
 		}
-	}
+	}*/
 }
 
 bool GetTwoPlayers() {
