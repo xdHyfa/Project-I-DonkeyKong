@@ -91,7 +91,7 @@ void Player::Setup()
     Position = { 64, SCREEN_HEIGHT - SpriteSize - 17 };
 
     HammerTexture = LoadTexture("Sprites/Hammer.png");
-
+    StarActive = false;
     // Audio is static — only load once (guard with id check)
     if (jumpSound.frameCount == 0)
     {
@@ -407,6 +407,7 @@ void Player::die()
 {
     // NOTE: callers should guard with (!player.StarActive) before calling die()
     // so the star power-up grants invincibility against barrels and enemies.
+    StarActive = false;
     isGrounded = false;
     isJumping = false;
     isAlive = false;

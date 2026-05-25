@@ -14,6 +14,7 @@ using namespace std;
 
 Music level15Music = { 0 };
 Sound deathSound15 = { 0 };
+Music Hammer15Music = { 0 };
 Sound stageCleared15Sound = { 0 };
 float deathTimer15 = 0.0f;
 bool isDeathSequence15 = false;
@@ -45,11 +46,18 @@ void runLevel15() {
 
         deathSound15 = LoadSound("Audio/Dead.wav");
         stageCleared15Sound = LoadSound("Audio/Stage-Cleared-1.wav");
-
+        Hammer15Music = LoadMusicStream("Audio/Hammer-Time_.wav");
+        Hammer15Music.looping = true;
+        if (Option2True) PlayMusicStream(Hammer15Music);
         win15Triggered = false;
         win15SoundPlayed = false;
         deathTimer15 = 0.0f;
         isDeathSequence15 = false;
+        CheckTwoPlayers();
+        if (Option2True) {
+            StartHammerTime(1);
+            if (GetTwoPlayers()) { StartHammerTime(2); }
+        }
     }
 
     if (GetPause()) {
@@ -57,24 +65,26 @@ void runLevel15() {
         Level15RampDraw();
         Level15TrussOverLadderDraw();
         DrawTextureRec(Mario.Texture, Mario.frameRec, Mario.Position, WHITE);
-        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, GREEN);
+        if (GetTwoPlayers()) DrawTextureRec(Luigi.Texture, Luigi.frameRec, Luigi.Position, WHITE);
         PlayEntityDeath();
         return;
     }
 
     if (isDeathSequence15) {
         deathTimer15 += GetFrameTime();
-        if (!Mario.isAlive) Mario.DeathSequence();
-        if (!Luigi.isAlive) Luigi.DeathSequence();
+        if (!Mario.isAlive) Mario.DeathSequence(), StopHammerTime();
+        if (!Luigi.isAlive) Luigi.DeathSequence(), StopHammerTime();
 
         if (deathTimer15 >= 5.0f) {
             bool bothDead = !Mario.isAlive && !Luigi.isAlive;
+            if (GetTwoPlayers() && !bothDead) ResumeMusicStream(level15Music);
             if (!Mario.isAlive && !GetTwoPlayers() || bothDead) {
                 UnloadTexture(Mario.Texture);
                 Truss::UnloadSharedTexture();
                 Ladder::UnloadSharedTexture();
                 UnloadLevel15Entities();
                 UnloadMusicStream(level15Music);
+                UnloadMusicStream(Hammer15Music);
                 UnloadSound(deathSound15);
                 UnloadSound(stageCleared15Sound);
                 ResetLevel15Entities();
@@ -88,18 +98,6 @@ void runLevel15() {
                 ResetBonus();
                 return;
             }
-            if (!Mario.isAlive) {
-                Mario.isAlive = true;
-                Mario.Setup();
-                Mario.PlayerNum = 1;
-            }
-            if (!Luigi.isAlive) {
-                Luigi.isAlive = true;
-                Luigi.Setup();
-                Luigi.PlayerNum = 2;
-                Luigi.Position = { 96, SCREEN_HEIGHT - (float)Luigi.SpriteSize - 17 };
-            }
-            ResumeMusicStream(level15Music);
             isDeathSequence15 = false;
             deathTimer15 = 0.0f;
         }
@@ -124,11 +122,11 @@ void runLevel15() {
 
 
     if (!win15Triggered) {
-        CheckTwoPlayers();
         Mario.Movement();
         if (GetTwoPlayers()) Luigi.Movement();
 
-        UpdateMusicStream(level15Music);
+        if (!GetHammerTime()) UpdateMusicStream(level15Music);
+        else UpdateMusicStream(Hammer15Music);
 
         Level15RampCollisions(Mario);
         if (GetTwoPlayers()) Level15RampCollisions(Luigi);
@@ -140,6 +138,10 @@ void runLevel15() {
         Level15TrussOverLadderDraw();
 
         Level15EntitiesRoutine();
+        if (GetHammerTime()) {
+            if (CheckHammerKills(Mario)) return;
+            if (GetTwoPlayers() && CheckHammerKills(Luigi)) return;
+        }
         UpdateBonus();
 
         if (WinStarCollected15()) {
@@ -147,24 +149,34 @@ void runLevel15() {
             win15Triggered = true;
         }
 
-        if (GoombaKilledPlayer()) {
+        if (GoombaKilledPlayer(1)) {
             PauseMusicStream(level15Music);
             PlaySound(deathSound15);
             isDeathSequence15 = true;
             deathTimer15 = 0.0f;
             if (Mario.isAlive) Mario.die();
-            if (GetTwoPlayers() && Luigi.isAlive) Luigi.die();
-            ResetLevel15Entities();
+        }
+        if (GetTwoPlayers() && GoombaKilledPlayer(2)) {
+            PauseMusicStream(level15Music);
+            PlaySound(deathSound15);
+            isDeathSequence15 = true;
+            deathTimer15 = 0.0f;
+            if (Luigi.isAlive) Luigi.die();
         }
 
-        if (BillBalaKilledPlayer()) {
+        if (BillBalaKilledPlayer(1)) {
             PauseMusicStream(level15Music);
             PlaySound(deathSound15);
             isDeathSequence15 = true;
             deathTimer15 = 0.0f;
             if (Mario.isAlive) Mario.die();
-            if (GetTwoPlayers() && Luigi.isAlive) Luigi.die();
-            ResetLevel15Entities();
+        }
+        if (GetTwoPlayers() && BillBalaKilledPlayer(2)) {
+            PauseMusicStream(level15Music);
+            PlaySound(deathSound15);
+            isDeathSequence15 = true;
+            deathTimer15 = 0.0f;
+            if (Luigi.isAlive) Luigi.die();
         }
 
         if (Mario.isAlive && Mario.marioVelocity.y > 7.0f) {
@@ -173,7 +185,6 @@ void runLevel15() {
             isDeathSequence15 = true;
             deathTimer15 = 0.0f;
             Mario.die();
-            ResetLevel15Entities();
         }
         if (GetTwoPlayers() && Luigi.isAlive && Luigi.marioVelocity.y > 7.0f) {
             PauseMusicStream(level15Music);
@@ -181,7 +192,6 @@ void runLevel15() {
             isDeathSequence15 = true;
             deathTimer15 = 0.0f;
             Luigi.die();
-            ResetLevel15Entities();
         }
 
         if (Option1True && IsKeyPressed(KEY_TWO)) ChangeScene();
@@ -216,6 +226,7 @@ void runLevel15() {
         Mario.isAlive = true;
         Luigi.isAlive = true;
         UnloadMusicStream(level15Music);
+        UnloadMusicStream(Hammer15Music);
         UnloadSound(deathSound15);
         UnloadSound(stageCleared15Sound);
         Truss::UnloadSharedTexture();

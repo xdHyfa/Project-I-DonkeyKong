@@ -149,6 +149,16 @@ void ChangeScene() {
 		cout << "Wincutscene scene" << endl;
 		return;
 	}
+	if (current_scene == WINCUTSCENE) {
+		current_scene = HOWHIGH15;
+		cout << "Howhigh1.5 scene" << endl;
+		return;
+	}
+	if (current_scene == HOWHIGH15) {
+		current_scene = LEVEL15;
+		cout << "level1.5 scene" << endl;
+		return;
+	}
 	if (current_scene == LEVEL15) {
 		current_scene = WINCUTSCENE15;
 		return;
@@ -158,11 +168,7 @@ void ChangeScene() {
 		cout << "Howhigh2 scene" << endl;
 		return;
 	}
-	if (current_scene == WINCUTSCENE) {
-		current_scene = LEVEL15;
-		cout << "level1.5 scene" << endl;
-		return;
-	}
+
 	if (current_scene == HOWHIGH2) {
 		current_scene = LEVEL2;
 		cout << "level2 scene" << endl;

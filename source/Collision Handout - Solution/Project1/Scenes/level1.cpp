@@ -69,7 +69,7 @@ void runLevel1() {
         donkey.hitbox = { 21.0f, 47.0f, 46.0f, 32.0f };
         Hammer1.SetObject(16, 90, Hammer);
         Hammer2.SetObject(165, 182, Hammer);
-        if (GetRandomValue(1, 10) == 1) Star1.SetObject(16, 150, StarItem);
+        if (GetRandomValue(1, 2) == 1) Star1.SetObject(16, 150, StarItem);
         Hammer_Music = LoadMusicStream("Audio/Hammer-Time_.wav");
         Hammer_Music.looping = true;
         CheckTwoPlayers();
