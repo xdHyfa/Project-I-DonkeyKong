@@ -1,6 +1,6 @@
 #pragma once
 #include "Entities/entity.h"
-typedef enum Scene { INTRO, TITLE, CUTSCENE, HOWHIGH, LEVEL1, LEVEL15, WINCUTSCENE15, WINCUTSCENE, HOWHIGH2, LEVEL2, WINCUTSCENE2, HIGHSCORE } Scene;
+typedef enum Scene { INTRO, TITLE, DONKEYSHOP ,CUTSCENE, HOWHIGH, LEVEL1, LEVEL15, WINCUTSCENE, HOWHIGH2, LEVEL2, WINCUTSCENE2, HIGHSCORE } Scene;
 extern bool Scene_Init;
 
 void CheckTwoPlayers();
@@ -10,6 +10,8 @@ bool GetTwoPlayers();
 void ChangeScene();
 
 void ChangeScene(bool NoLives);
+
+void ChangeScene(int Secret);
 
 void StartHammerTime(int playerNum);   // 1 = Mario, 2 = Luigi
 bool GetHammerTime(int playerNum);

@@ -83,7 +83,7 @@ void WinCutsceneInit() {
     Level1LadderSetter();
 
     Mario.Setup();
-    Mario.Position = { 128, 33 };
+    Mario.Position = { 112, 33 };
     Mario.Position.y -= 1.0f;
     Mario.frameRec.width = -abs(Mario.frameRec.width);
 

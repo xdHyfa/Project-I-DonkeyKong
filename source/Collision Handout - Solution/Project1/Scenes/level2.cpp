@@ -88,7 +88,8 @@ void runLevel2() {
         SetStartTime2();
         Scene_Init = true;
 
-        level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");
+        if (!Option4True) level2Music = LoadMusicStream("Audio/Stage-2-Springboard2.wav");
+        else level2Music = LoadMusicStream("Audio/DK RAP.wav");
         deathMusic2 = LoadMusicStream("Audio/Dead.wav");
         deathSound3 = LoadSound("Audio/Dead.wav");
         level2Music.looping = true;
@@ -100,6 +101,11 @@ void runLevel2() {
         Hat1.SetObject(196, 197, Hat);
         Umbrella1.SetObject(28, 65, Umbrella);
         donkey.hitbox = { (float)SCREEN_WIDTH / 2 - 19.0f, (float)Base_5_YPos + 16.0f, 45.0f, 32.0f };
+        CheckTwoPlayers();
+        if (Option2True) {
+            StartHammerTime(1);
+            if (GetTwoPlayers()) StartHammerTime(2);
+        }
     }
 
     if (GetPause()) {
@@ -197,7 +203,6 @@ void runLevel2() {
 
 
     Mario.Movement();
-    CheckTwoPlayers();
     if (GetTwoPlayers()) Luigi.Movement();
     UpdateBonus();
 
@@ -414,7 +419,7 @@ void runLevel2() {
         Hat1.CheckInteraction(Luigi);
     }
 
-    if (IsKeyPressed(KEY_ONE)) {
+    if (Option1True && IsKeyPressed(KEY_ONE)) {
         ChangeScene();
     }
 

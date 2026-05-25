@@ -15,6 +15,9 @@
 #include "Core/UI.h"
 #include "Scenes/WinCutscene2.h"
 #include "Scenes/HighScoreScreen.h"
+#include "Scenes/DonkeyShop.h"
+#include <iostream>
+using namespace std;
 
 
 int main()
@@ -66,6 +69,12 @@ int main()
 
 			runMainMenu();
 
+
+			break;
+
+		case DONKEYSHOP:
+
+			runDonkeyShop();
 
 			break;
 

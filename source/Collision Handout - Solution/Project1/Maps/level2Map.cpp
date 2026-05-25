@@ -20,8 +20,10 @@ using namespace std;
 
 
 //RAMP DATA FOR LEVEL 1 DEFINED HERE
-bool IgnoreCollisions = false;
-float fallTimer = 0;
+bool IgnoreCollisionsMario = false;
+bool IgnoreCollisionsLuigi = false;
+float fallTimerM = 0;
+float fallTimerL = 0;
 
 int Base_0_YPos;
 int Base_1_YPos;
@@ -107,15 +109,27 @@ void Level2RampDraw() {
 }
 void Level2RampCollisions(Entity& entity) {
 
-	if (IgnoreCollisions) {
+	if (IgnoreCollisionsMario) {
 		Mario.isFalling = true;
-		fallTimer += GetFrameTime();
+		fallTimerM += GetFrameTime();
 
-		if (fallTimer >= 0.5f) {
-			IgnoreCollisions = false;
-			fallTimer = 0;
+		if (fallTimerM >= 1.0f) {
+			IgnoreCollisionsMario = false;
+			fallTimerM = 0;
 		}
 		else{
+			return;
+		}
+	}
+	if (IgnoreCollisionsLuigi) {
+		Luigi.isFalling = true;
+		fallTimerL += GetFrameTime();
+
+		if (fallTimerL >= 1.0f) {
+			IgnoreCollisionsLuigi = false;
+			fallTimerL = 0;
+		}
+		else {
 			return;
 		}
 	}
@@ -355,7 +369,8 @@ void Level2CheckButtons(Entity& entity) {
 		}
 		if (Level2Buttons[i].Pressed && Level2Buttons[i].Cooldown > Button_Fall_Cooldown) {
 			if (CheckCollisionPointRec(entity.FloorCollider, Level2Buttons[i].buttonHitbox)) {
-				IgnoreCollisions = true;
+				if (entity.tag ==EntityTag::PLAYER1) IgnoreCollisionsMario = true;
+				if (entity.tag == EntityTag::PLAYER2) IgnoreCollisionsLuigi = true;
 			}
 			
 		}
@@ -386,6 +401,10 @@ void ResetButtons() {
 		Level2Buttons[i].Pressed = false;
 		Level2Buttons[i].Cooldown = 0.0f;
 	}
+	fallTimerL = 0;
+	fallTimerM = 0;
+	IgnoreCollisionsLuigi = false;
+	IgnoreCollisionsMario = false;
 }
 
 void CheckWinCondition() {

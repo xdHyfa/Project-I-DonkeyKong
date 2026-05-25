@@ -52,7 +52,7 @@ bool hasLoaded = false;
 bool firstLoop = true;
 Vector2 PauseText = { 87, 180 };
 void CheckPause() {
-	if (IsKeyPressed(KEY_P)) {
+	if (IsKeyPressed(KEY_P) && !GetHammerTime()) {
 		isPaused = !isPaused;
 	}
 	if (isPaused && !hasLoaded) {
