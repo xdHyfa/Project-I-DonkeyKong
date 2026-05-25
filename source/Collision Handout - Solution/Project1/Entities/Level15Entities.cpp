@@ -31,7 +31,8 @@ static Goomba Goombas[NUM_GOOMBAS];
 static bool GoombaTextureLoaded = false;
 static Texture2D GoombaTexture = { 0 };
 static bool GoombaNeedsInit = true;
-static bool goombaKilledPlayer = false;
+static bool goombaKilledPlayer1 = false;
+static bool goombaKilledPlayer2 = false;
 
 static Sound StompSound = { 0 };
 static bool StompSoundLoaded = false;
@@ -77,10 +78,19 @@ static bool  dk15TextureLoaded = false;
 // --- Lady animation ---
 static bool lady15NeedsInit = true;
 
-bool GoombaKilledPlayer() {
-    bool val = goombaKilledPlayer;
-    goombaKilledPlayer = false;
+bool GoombaKilledPlayer(int playerNum) {
+    if (playerNum == 1) {
+    bool val = goombaKilledPlayer1;
+    
+    goombaKilledPlayer1 = false;
     return val;
+    }
+    if (playerNum == 2) {
+        bool val = goombaKilledPlayer2;
+
+        goombaKilledPlayer2 = false;
+        return val;
+    }
 }
 
 static void InitGoombas() {
@@ -128,12 +138,20 @@ static void InitBillBalas() {
     }
 }
 
-static bool billBalaKilledPlayer = false;
+static bool billBalaKilledPlayer1 = false;
+static bool billBalaKilledPlayer2 = false;
 
-bool BillBalaKilledPlayer() {
-    bool val = billBalaKilledPlayer;
-    billBalaKilledPlayer = false;
-    return val;
+bool BillBalaKilledPlayer(int playerNum) {
+    if (playerNum == 1) { 
+        bool val = billBalaKilledPlayer1; 
+        billBalaKilledPlayer1 = false;
+        return val;
+    }
+    if (playerNum == 2) {
+        bool val = billBalaKilledPlayer2;
+        billBalaKilledPlayer2 = false;
+        return val;
+    }
 }
 
 static void CheckBillBalaPlayerCollisions() {
@@ -161,8 +179,8 @@ static void CheckBillBalaPlayerCollisions() {
             }
 
             if (CheckCollisionRecs(playerRect, bbBody)) {
-                billBalaKilledPlayer = true;
-                return;
+                if (player.tag == EntityTag::PLAYER1 ) billBalaKilledPlayer1 = true;
+                if (player.tag == EntityTag::PLAYER2) billBalaKilledPlayer2 = true;
             }
         }
         };
@@ -198,7 +216,8 @@ static void CheckGoombaPlayerCollisions() {
             }
 
             if (CheckCollisionRecs(playerRect, goombaBody)) {
-                goombaKilledPlayer = true;
+                if (player.tag == EntityTag::PLAYER1) { goombaKilledPlayer1 = true; }
+                if (player.tag == EntityTag::PLAYER2) { goombaKilledPlayer2 = true; }
                 return;
             }
         }
@@ -371,9 +390,11 @@ void ResetLevel15Entities() {
         Goombas[i].Reset();
     }
     GoombaNeedsInit = true;
-    goombaKilledPlayer = false;
+    goombaKilledPlayer1 = false;
+    goombaKilledPlayer2 = false;
     BillBalaNeedsInit = true;
-    billBalaKilledPlayer = false;
+    billBalaKilledPlayer1 = false;
+    billBalaKilledPlayer2 = false;
     BonusItemsNeedInit = true;
     BonusHat.ResetObject();
     BonusPurse.ResetObject();
@@ -385,4 +406,27 @@ void ResetLevel15Entities() {
     dk15PauseTimer = 0.0f;
     dk15IsPaused = false;
     lady15NeedsInit = true;
+}
+
+bool CheckHammerKills(Player& player) {
+    for (int i = 0; i < NUM_GOOMBAS; i++) {
+        if (Goombas[i].isAlive && player.CheckHammerHitbox(Goombas[i])) {
+            Goombas[i].Kill();
+            AddPoints(300);
+            ShowScorePopup(player.Position, 300);
+            StartEntityDeath(Goombas[i]);
+            return true;
+        }
+    }
+    for (int i = 0; i < NUM_BILLBALAS; i++) {
+        if (BillBalas[i].IsActive()) {
+            if (CheckCollisionRecs(player.HammerHitbox, BillBalas[i].GetHitbox())) {
+                BillBalas[i].Stomp();
+                AddPoints(300);
+                ShowScorePopup(player.Position, 300);
+                return true;
+            }
+        }
+    }
+    return false;
 }

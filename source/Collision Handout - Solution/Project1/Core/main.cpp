@@ -105,6 +105,11 @@ int main()
 			if (CheckLevel1Players()) CheckPause();
 			break;
 
+		case HOWHIGH15:
+			PrintUI();
+			runHowHigh();
+			break;
+
 		case LEVEL15:
 
 			PrintUI();

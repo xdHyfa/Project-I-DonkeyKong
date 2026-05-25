@@ -1,5 +1,6 @@
 #pragma once
 #include "Entities/Level1Entities.h"
+#include "Entities/Player.h"
 
 void SetStartTime15();
 
@@ -9,8 +10,10 @@ void UnloadLevel15Entities();
 
 void ResetLevel15Entities();
 
-bool GoombaKilledPlayer();
+bool GoombaKilledPlayer(int playerNum);
 
-bool BillBalaKilledPlayer();
+bool BillBalaKilledPlayer(int playerNum);
 
 bool WinStarCollected15();
+
+bool CheckHammerKills(Player& player);
