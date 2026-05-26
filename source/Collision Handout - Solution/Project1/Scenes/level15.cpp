@@ -40,7 +40,8 @@ void runLevel15() {
         SetStartTime15();
         Scene_Init = true;
 
-        level15Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");
+        if (!Option4True) level15Music = LoadMusicStream("Audio/Stage-1-Bricks3.wav");
+        else level15Music = LoadMusicStream("Audio/DK RAP.wav");
         level15Music.looping = true;
         PlayMusicStream(level15Music);
 
