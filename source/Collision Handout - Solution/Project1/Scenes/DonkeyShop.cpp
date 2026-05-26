@@ -39,6 +39,7 @@ float DanceTimer = 0.0f;
 bool SecretCode = false;
 float secretTimer = 0.0f;
 Sound SecretSound = { 0 };
+bool SecretActivated = false;
 
 // 0 --> option 1, 1 --> option 2, 2 --> option 3, 3 --> option 4, 4 --> exit 
 
@@ -71,6 +72,7 @@ void runDonkeyShop(){
         if (pressedKey == KEY_SEVEN) {
             AllTimeScore = 676767;
             PlaySound(SecretSound);
+            SecretActivated = true;
         }
         else if (pressedKey != 0 && pressedKey != KEY_SIX){
             SecretCode = false;
@@ -177,10 +179,15 @@ void runDonkeyShop(){
     else DrawTextEx(Shop_Font, TextFormat("%06d POINTS",AllTimeScore), PointsPos, 10, 0.5f, WHITE);
     if (ChangeThingy) {
         ChangeThingy = false;
-        ChangeScene();
+        if (SecretActivated) {
+            SecretActivated = false;
+            AllTimeScore = 0;
+            SaveScores();
+        }
         UnloadSound(ButtonSound);
         UnloadSound(SecretSound);
         UnloadMusicStream(DonkeyShop);
-
+        ChangeScene();
+        return;
     }
 }
