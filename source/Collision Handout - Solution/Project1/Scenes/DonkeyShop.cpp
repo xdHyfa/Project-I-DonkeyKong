@@ -39,6 +39,7 @@ float DanceTimer = 0.0f;
 bool SecretCode = false;
 float secretTimer = 0.0f;
 Sound SecretSound = { 0 };
+bool SecretActivated = false;
 
 // Shop item icon textures
 Texture2D IconStar;
@@ -84,6 +85,7 @@ void runDonkeyShop() {
         if (pressedKey == KEY_SEVEN) {
             AllTimeScore = 676767;
             PlaySound(SecretSound);
+            SecretActivated = true;
         }
         else if (pressedKey != 0 && pressedKey != KEY_SIX) {
             SecretCode = false;
@@ -230,6 +232,11 @@ void runDonkeyShop() {
     else DrawTextEx(Shop_Font, TextFormat("%06d POINTS", AllTimeScore), PointsPos, 10, 0.5f, WHITE);
     if (ChangeThingy) {
         ChangeThingy = false;
+        if (SecretActivated) {
+            SecretActivated = false;
+            AllTimeScore = 0;
+            SaveScores();
+        }
         ChangeScene();
         UnloadSound(ButtonSound);
         UnloadSound(SecretSound);
@@ -238,5 +245,6 @@ void runDonkeyShop() {
         UnloadTexture(IconHammer);
         UnloadTexture(IconLuigi);
         UnloadTexture(IconNota);
+        return;
     }
 }
