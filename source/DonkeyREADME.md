@@ -84,25 +84,23 @@ Enter: Accept
 ### Player 1
 
 
-| Action | Keyboard |
-|---|---|
-| Move Left | `←` |
-| Move Right | `→` |
-| Climb Up | `↑` |
-| Climb Down | `↓` |
-| Jump | `Space` |
+| Action        | Keyboard  |
+| Move Left     | `←`       |
+| Move Right    | `→`       |
+| Climb Up      | `↑`       |
+| Climb Down    | `↓`       |
+| Jump          | `Space`   |
 
 
 ### Player 2
 
 
-| Action | Keyboard | Gamepad |
-|---|---|---|
-| Move Left | `A` | D-Pad ◀ |
-| Move Right | `D` | D-Pad ▶ |
-| Climb Up | `W` | D-Pad ▲ |
-| Climb Down | `S` | D-Pad ▼ |
-| Jump | `Shift` | `A` Button |
+| Action        | Keyboard  | Gamepad       |
+| Move Left     | `A`       | D-Pad ◀      |
+| Move Right    | `D`       | D-Pad ▶      |
+| Climb Up      | `W`       | D-Pad ▲       |
+| Climb Down    | `S`       | D-Pad ▼       |
+| Jump          | `Shift`   | `A` Button    |
 
 
 
