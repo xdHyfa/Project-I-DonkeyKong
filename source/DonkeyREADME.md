@@ -17,7 +17,8 @@ Based on Donkey Kong (1981) by Nintendo
 A recreation made by the SlopSquad Team.  
 https://github.com/xdHyfa/Project-I-DonkeyKong  
 
-
+Visit our website!
+https://xdhyfa.github.io/Project-I-DonkeyKong/
 
 
 
