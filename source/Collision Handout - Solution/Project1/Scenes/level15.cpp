@@ -206,7 +206,9 @@ void runLevel15() {
             win15SoundPlayed = true;
         }
         if (win15SoundPlayed) {
+            DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK);
             ChangeScene();
+            return;
         }
     }
 
@@ -237,5 +239,6 @@ void runLevel15() {
         AddBonus();
         Scene_Init = false;
         AddLevel();
+        DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK);
     }
 }
