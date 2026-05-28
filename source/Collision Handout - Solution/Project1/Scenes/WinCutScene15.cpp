@@ -133,6 +133,7 @@ void runWinCutscene15() {
             Ladder::UnloadSharedTexture();
             Scene_Init = false;
             ChangeScene();
+            DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK);
         }
     }
 
